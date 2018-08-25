@@ -1,0 +1,28 @@
+{
+  "name": "dasbyv2",
+  "version": "1.0.0",
+  "description": "dasby-backend",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "mysql2": "^1.6.1",
+    "sequelize": "^4.38.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sefeder/DasbyV2.git"
+  },
+  "author": "Seth Feder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sefeder/DasbyV2/issues"
+  },
+  "homepage": "https://github.com/sefeder/DasbyV2#readme"
+}

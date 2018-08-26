@@ -12,7 +12,7 @@ const generateTwilioJwt = (identity) => {
     return token;
 };
 
-exports.getTwilioJwt = function signIn(req, res) {
+exports.getTwilioJwt = (req, res) => {
     const token = generateTwilioJwt(req.body.identity);
     console.log('this is the twilio token stringified: ' + JSON.stringify(token));
     res.json({

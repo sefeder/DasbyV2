@@ -1,12 +1,11 @@
 const router = require("express").Router();
 
-const signIn = require("../controllers/signIn");
-const signUp = require("../controllers/signUp");
-const getTwilioJwt = require("./twilio");
-const getVirgilJwt = require("./virgil");
+const twilioService = require("./twilio");
+const virgilService = require("./virgil");
 
-router.post('/signin', signIn.signIn);
-router.post('/signup', signUp.signUp);
-router.post('/get-virgil-jwt', getVirgilJwt.getVirgilJwt);
-router.post('/get-twilio-jwt',  getTwilioJwt.getTwilioJwt);
+router.post('/signin', virgilService.signIn);
+router.post('/signup', virgilService.signUp);
+router.post('/get-virgil-jwt', virgilService.getVirgilJwt);
+router.post('/get-twilio-jwt', twilioService.getTwilioJwt);
+
 exports.default = router;

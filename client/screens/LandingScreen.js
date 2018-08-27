@@ -12,11 +12,11 @@ export default class LandingScreen extends Component {
             <KeyboardAvoidingView style={styles.app}>
                 <TouchableHighlight style={styles.button}
                     onPress={() => this.props.navigation.navigate('SignUpScreen')}>
-                    <Text style={styles.buttonText}> Sign Up! </Text>
+                    <Text style={styles.buttonText}> Sign Up </Text>
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.button}
                     onPress={() => this.props.navigation.navigate('LogInScreen')}>
-                    <Text style={styles.buttonText}> Log In! </Text>
+                    <Text style={styles.buttonText}> Log In </Text>
                 </TouchableHighlight>
             </KeyboardAvoidingView>
         )
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'flex-end'
+        justifyContent: 'center'
     },
     button: {
         backgroundColor: 'blue',

@@ -30,29 +30,39 @@ export default class LogInScreen extends Component {
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <View style={styles.inputForm}>
-                    <TextInput
-                        style={styles.textInput}
-                        autoFocus
-                        onChangeText={(emailInput) => this.setState({ emailInput })}
-                        value={this.state.emailInput}
-                        placeholder='Email'
-                        autoCapitalize='none'
-                        textContentType='emailAddress'
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                        value={this.state.passwordInput}
-                        placeholder='Password'
-                        autoCapitalize='none'
-                        textContentType='password'
-                        secureTextEntry={this.state.hiddenPass}
-                    />
-                    <Button
-                    title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                    onPress={this.viewPass}
-                    >
-                    </Button>
+                    <View>
+                        <Text style={styles.inputLabel}>
+                            Email:
+                        </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            autoFocus
+                            onChangeText={(emailInput) => this.setState({ emailInput })}
+                            value={this.state.emailInput}
+                            placeholder='Email'
+                            autoCapitalize='none'
+                            textContentType='emailAddress'
+                        />
+                    </View>
+                    <View style={styles.marginBottom}>
+                        <Text style={styles.inputLabel}>
+                            Password:
+                        </Text>
+                        <TextInput
+                            style={styles.passwordTextInput}
+                            onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                            value={this.state.passwordInput}
+                            placeholder='Password'
+                            autoCapitalize='none'
+                            textContentType='password'
+                            secureTextEntry={this.state.hiddenPass}
+                        />
+                        <Button
+                        title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
+                        onPress={this.viewPass}
+                        >
+                        </Button>
+                    </View>
                     <TouchableHighlight style={styles.button} onPress={this.submitLogIn}>
                         <Text style={styles.buttonText}> Log In </Text>
                     </TouchableHighlight>
@@ -93,11 +103,26 @@ const styles = StyleSheet.create({
         height: 50,
         width: 300
     },
+    passwordTextInput: {
+        borderColor: 'blue',
+        borderWidth: 2,
+        borderRadius: 25,
+        marginBottom: 3,
+        height: 50,
+        width: 300
+    },
+    marginBottom: {
+        marginBottom: 40
+    },
     inputForm: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    inputLabel: {
+        fontSize: 20,
+        fontWeight: 'bold'
     }
 });

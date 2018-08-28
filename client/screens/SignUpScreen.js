@@ -7,7 +7,11 @@ export default class SignUpScreen extends Component {
         emailInput: null,
         passwordInput: null,
         firstInput: null,
-        lastInput: null
+        lastInput: null,
+        hiddenPass: true,
+    }
+    viewPass = () => {
+        this.setState({ hiddenPass: !this.state.hiddenPass })
     }
 
     submitSignUp = () => {
@@ -34,37 +38,61 @@ export default class SignUpScreen extends Component {
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <View style={styles.inputForm}>
-                    <TextInput
-                        autoFocus
-                        style={styles.textInput}
-                        onChangeText={(firstInput) => this.setState({ firstInput })}
-                        value={this.state.firstInput}
-                        placeholder='First Name'
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={(lastInput) => this.setState({ lastInput })}
-                        value={this.state.lastInput}
-                        placeholder='Last Name'
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={(emailInput) => this.setState({ emailInput })}
-                        value={this.state.emailInput}
-                        placeholder='Email'
-                        autoCapitalize='none'
-                        textContentType='emailAddress'
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                        value={this.state.passwordInput}
-                        placeholder='Password'
-                        autoCapitalize='none'
-                        textContentType='password'
-                        secureTextEntry={true}
-                    />
-                    
+                    <View>
+                        <Text style={styles.inputLabel}>
+                            First Name:
+                        </Text>
+                        <TextInput
+                            autoFocus
+                            style={styles.textInput}
+                            onChangeText={(firstInput) => this.setState({ firstInput })}
+                            value={this.state.firstInput}
+                            placeholder='e.g. Joe'
+                        />
+                    </View>
+                    <View>
+                        <Text style={styles.inputLabel}>
+                            Last Name:
+                        </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={(lastInput) => this.setState({ lastInput })}
+                            value={this.state.lastInput}
+                            placeholder='e.g. Smith'
+                        />
+                    </View>
+                    <View>
+                        <Text style={styles.inputLabel}>
+                            Email:
+                        </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={(emailInput) => this.setState({ emailInput })}
+                            value={this.state.emailInput}
+                            placeholder='e.g. joesmith@gmail.com'
+                            autoCapitalize='none'
+                            textContentType='emailAddress'
+                        />
+                    </View>
+                    <View style={styles.marginBottom}>
+                        <Text style={styles.inputLabel}>
+                            Password:
+                        </Text>
+                        <TextInput
+                            style={styles.passwordTextInput}
+                            onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                            value={this.state.passwordInput}
+                            placeholder='At least 6 characters'
+                            autoCapitalize='none'
+                            textContentType='password'
+                            secureTextEntry={this.state.hiddenPass}
+                        />
+                        <Button
+                            title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
+                            onPress={this.viewPass}
+                        >
+                        </Button>
+                    </View>
                     <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
                         <Text style={styles.buttonText}> Sign Up </Text>
                     </TouchableHighlight>
@@ -106,11 +134,26 @@ const styles = StyleSheet.create({
         height: 50,
         width: 300
     },
+    passwordTextInput: {
+        borderColor: 'blue',
+        borderWidth: 2,
+        borderRadius: 25,
+        marginBottom: 3,
+        height: 50,
+        width: 300
+    },
+    marginBottom: {
+        marginBottom: 40
+    },
     inputForm: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    inputLabel: {
+        fontSize: 20,
+        fontWeight: 'bold'
     }
 });

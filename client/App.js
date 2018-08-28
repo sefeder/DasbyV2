@@ -8,11 +8,27 @@ import LogInScreen from './screens/LogInScreen.js'
 
 const RootStack = createStackNavigator(
   {
-    LandingScreen: LandingScreen,
-    SignUpScreen: SignUpScreen,
-    LogInScreen: LogInScreen
-  },
-  {
+    LandingScreen: 
+      {
+        screen: LandingScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Welcome to Dasby',
+        })
+      },
+    SignUpScreen:
+      {
+        screen: SignUpScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Sign Up',
+        })
+      },
+    LogInScreen:
+      {
+        screen: LogInScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Log In',
+        })
+      },
     initialRouteName: "LandingScreen"
   }
 

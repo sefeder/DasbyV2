@@ -17,5 +17,8 @@ module.exports = {
         })
         .catch(err => console.log(err))
         
+    },
+    logIn: function(req, res) {
+
     }
 }

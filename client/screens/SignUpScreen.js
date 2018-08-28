@@ -33,33 +33,42 @@ export default class SignUpScreen extends Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
-                <Text>
-                    Sign Up
-                </Text>
-               
-                <TextInput
-                    onChangeText={(firstInput) => this.setState({ firstInput })}
-                    value={this.state.firstInput}
-                    placeholder='First Name'
-                />
-                <TextInput
-                    onChangeText={(lastInput) => this.setState({ lastInput })}
-                    value={this.state.lastInput}
-                    placeholder='Last Name'
-                />
-                <TextInput
-                    onChangeText={(emailInput) => this.setState({ emailInput })}
-                    value={this.state.emailInput}
-                    placeholder='Email'
-                />
-                <TextInput
-                    onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                    value={this.state.passwordInput}
-                    placeholder='Password'
-                />
-                <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
-                    <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableHighlight>
+                <View style={styles.inputForm}>
+                    <TextInput
+                        autoFocus
+                        style={styles.textInput}
+                        onChangeText={(firstInput) => this.setState({ firstInput })}
+                        value={this.state.firstInput}
+                        placeholder='First Name'
+                    />
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={(lastInput) => this.setState({ lastInput })}
+                        value={this.state.lastInput}
+                        placeholder='Last Name'
+                    />
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={(emailInput) => this.setState({ emailInput })}
+                        value={this.state.emailInput}
+                        placeholder='Email'
+                        autoCapitalize='none'
+                        textContentType='emailAddress'
+                    />
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                        value={this.state.passwordInput}
+                        placeholder='Password'
+                        autoCapitalize='none'
+                        textContentType='password'
+                        secureTextEntry={true}
+                    />
+                    
+                    <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
+                        <Text style={styles.buttonText}> Sign Up </Text>
+                    </TouchableHighlight>
+                </View>
                 
             </KeyboardAvoidingView>
         )
@@ -88,5 +97,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 30
+    },
+    textInput: {
+        borderColor: 'blue',
+        borderWidth: 2,
+        borderRadius: 25,
+        marginBottom: 40,
+        height: 50,
+        width: 300
+    },
+    inputForm: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });

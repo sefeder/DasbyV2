@@ -23,7 +23,6 @@ export default {
         })
     },
     createChatClient: token => {
-        console.log(Chat)
         return new Promise((resolve, reject) => {
             resolve(Chat.Client.create(token.jwt))
         })

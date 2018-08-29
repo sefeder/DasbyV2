@@ -31,10 +31,14 @@ export default {
                     'Accept': 'application/json'
                 }
             })
-            .then(console.log('privateKey stored in db'))
+            .then(res => {
+                console.log('privateKey stored in db')
+                console.log(res.json())
+            })
             .catch(err=>console.log(err))
         
-
+            console.log('upi: ', upi)
+            console.log('password: ', password)
             const rawCard = cardManager.generateRawCard({
                 privateKey: keyPair.privateKey,
                 publicKey: keyPair.publicKey,
@@ -49,11 +53,11 @@ export default {
                 }
             }).then(response => response.json())
                 .then(result => {
+                    console.log(result)
                     const publishedCard = cardManager.importCardFromJson(result.virgil_card);
                     console.log(publishedCard)
                     resolve(publishedCard)
                 }).catch(err => console.log(err));
-            // I took generateAuthHeader function from here 
         }).catch(err => console.log(err))
     }
 }

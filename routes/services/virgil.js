@@ -47,10 +47,13 @@ exports.signUp = (req, res) => {
         // if card sent in JSON string representation
         reqCard = JSON.parse(reqCard);
     }
+    
     // we can publish rawCard created on client and than client can use his
     // private key to sign and encrypt information
     const rawCard = RawSignedModel.fromJson(reqCard);
+    
     const identity = JSON.parse(rawCard.contentSnapshot.toString()).identity;
+    console.log('------------------------', identity)
     return cardManager
         .searchCards(identity)
         .then(cards => {

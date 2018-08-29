@@ -46,12 +46,12 @@ export default class SignUpScreen extends Component {
             .then(res => res.json())
              
             .then(res => {
-                //NOT SURE WE WANNA DO THIS
-                this.setState({userInfo: res})
-                virgil.initializeVirgil(res.upi, res.password)
+                virgil.initializeVirgil(res.user.upi, res.user.password)
+                    //res in line below does not include the user's private_key, this is problem
+                    .then(this.props.navigation.navigate('UserHomeScreen', {userInfo: res}))
+                    .catch(err => console.log('error line 51 SUS: ', err))
             })
-            .then(this.props.navigation.navigate('UserHomeScreen', { userInfo: this.state.userInfo }))
-            .catch(err => console.log(err))
+            .catch(err => console.log('error line 53 SUS: ', err))
     }
 
     render() {

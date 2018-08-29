@@ -13,7 +13,7 @@ module.exports = {
         db.User.create(newUser)
         .then(result => {
             console.log('new user successfully added')
-            res.json(result)
+            res.json({user: result})
         })
         .catch(err => console.log(err))
         
@@ -45,6 +45,12 @@ module.exports = {
             db.User.update(
                 { private_key: JSON.stringify(req.body.privateKey) },
                 { where: { upi: req.body.upi } }
+            )
+            .then(db.User.findOne({
+                    where: {
+                        upi: req.body.upi,
+                    }
+            }).then(data => res.json(data))
             )
     }
 }

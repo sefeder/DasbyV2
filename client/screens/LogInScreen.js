@@ -24,7 +24,6 @@ export default class LogInScreen extends Component {
         })
             .then(res => res.json())
             .then(res => {
-                console.log(res)
                 if (!res.status && res.message === "invalid email") {
                     console.log('that email is invalid')
                     this.setState({emailInput: '', passwordInput: ''})

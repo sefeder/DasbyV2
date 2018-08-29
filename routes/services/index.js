@@ -3,9 +3,13 @@ const router = require("express").Router();
 const twilioService = require("./twilio");
 const virgilService = require("./virgil");
 
-router.post('/signin', virgilService.signIn);
-router.post('/signup', virgilService.signUp);
-router.post('/get-virgil-jwt', virgilService.getVirgilJwt);
-router.post('/get-twilio-jwt', twilioService.getTwilioJwt);
+// router.route('/signin')
+//     .post(virgilService.signIn);
+router.route('/signup')
+    .post(virgilService.signUp);
+router.route('/get-virgil-jwt')
+    .post(virgilService.getVirgilJwt);
+router.route('/get-twilio-jwt')
+    .post(twilioService.getTwilioJwt);
 
-exports.default = router;
+module.exports = router;

@@ -19,9 +19,15 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "chance": "^1.0.16",
+    "events": "^3.0.0",
     "expo": "^27.0.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
-    "react-navigation": "^2.12.1"
+    "react-navigation": "^2.12.1",
+    "twilio-chat": "^3.0.2",
+    "util": "^0.11.0",
+    "virgil-crypto": "^3.0.0",
+    "virgil-sdk": "^5.0.0"
   }
 }

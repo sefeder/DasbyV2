@@ -1,10 +1,11 @@
 const router = require("express").Router();
-const serviceRoutes = require("./services");
+
 
 // Services (twilio, virgil etc.) Routes
-// router.use("/services", serviceRoutes);
+const serviceRoutes = require("./services");
+router.use("/services", serviceRoutes);
 
-// Database routes could go here
+// Database routes
 const databaseRoutes = require('./database')
 router.use("/database", databaseRoutes)
 

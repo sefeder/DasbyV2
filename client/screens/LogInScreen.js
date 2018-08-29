@@ -11,7 +11,7 @@ export default class LogInScreen extends Component {
         this.setState({hiddenPass: !this.state.hiddenPass})
     }
     submitLogIn = () => {
-        return fetch(`http://localhost:3000/database/users/logIn`, {
+        fetch(`http://localhost:3000/database/users/logIn`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,6 +23,20 @@ export default class LogInScreen extends Component {
             })
         })
             .then(res => res.json())
+            .then(res => {
+                console.log(res)
+                if (!res.status && res.message === "invalid email") {
+                    console.log('that email is invalid')
+                    this.setState({emailInput: '', passwordInput: ''})
+                    return;
+                }
+                if (!res.status && res.message === "password does not match") {
+                    console.log('that password does not match that email')
+                    this.setState({ emailInput: '', passwordInput: '' })
+                    return;
+                }
+                this.props.navigation.navigate('UserHomeScreen', {userInfo: res})
+            })
             .catch(err => console.log(err))
     }
 

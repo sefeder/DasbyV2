@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import LandingScreen from './screens/LandingScreen.js'
-import SignUpScreen from './screens/SignUpScreen.js'
-import LogInScreen from './screens/LogInScreen.js'
+import LandingScreen from './screens/LandingScreen.js';
+import SignUpScreen from './screens/SignUpScreen.js';
+import LogInScreen from './screens/LogInScreen.js';
+import UserHomeScreen from './screens/UserHomeScreen.js';
 
 
 const RootStack = createStackNavigator(
@@ -27,6 +28,13 @@ const RootStack = createStackNavigator(
         screen: LogInScreen,
         navigationOptions: ({ navigation }) => ({
           title: 'Log In',
+        })
+      },
+    UserHomeScreen:
+      {
+        screen: UserHomeScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Home',
         })
       },
     initialRouteName: "LandingScreen"

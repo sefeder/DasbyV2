@@ -26,6 +26,11 @@ module.exports = function (sequelize, DataTypes) {
         upi: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        private_key: {
+            //need to figure out correct datatype to store private key array
+            type: DataTypes.JSON,
+            allowNull: true
         }
     })
 

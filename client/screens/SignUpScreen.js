@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { Chance } from 'chance';
+import virgil from '../utils/virgilUtil'
 
 export default class SignUpScreen extends Component {
 
@@ -9,13 +11,21 @@ export default class SignUpScreen extends Component {
         firstInput: null,
         lastInput: null,
         hiddenPass: true,
+
+        // NOT SURE IF WE WANNA DO IT THIS WAY
+        userInfo: null
     }
     viewPass = () => {
         this.setState({ hiddenPass: !this.state.hiddenPass })
     }
 
     submitSignUp = () => {
-        return fetch(`http://localhost:3000/database/users/createNewUser`, {
+
+        //need signup validation here
+
+        let chance = new Chance()
+        
+        fetch(`http://localhost:3000/database/users/createNewUser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,10 +37,20 @@ export default class SignUpScreen extends Component {
                 first_name: this.state.firstInput,
                 last_name: this.state.lastInput,
                 hospital: 'UChicago',
-                upi: 'aaabbbcccddd'
+                upi: chance.string({
+                    length: 10,
+                    pool:'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+                })
              })
         })
             .then(res => res.json())
+             
+            .then(res => {
+                //NOT SURE WE WANNA DO THIS
+                this.setState({userInfo: res})
+                virgil.initializeVirgil(res.upi, res.password)
+            })
+            .then(this.props.navigation.navigate('UserHomeScreen', { userInfo: this.state.userInfo }))
             .catch(err => console.log(err))
     }
 

@@ -13,6 +13,7 @@ module.exports = {
         db.User.create(newUser)
         .then(result => {
             console.log('new user successfully added')
+            console.log('userController create method result: ', result)
             res.json({user: result})
         })
         .catch(err => console.log(err))
@@ -44,13 +45,20 @@ module.exports = {
     update: function (req, res) {
             db.User.update(
                 { private_key: JSON.stringify(req.body.privateKey) },
-                { where: { upi: req.body.upi } }
+                {
+                    where: { upi: req.body.upi }
+                }
             )
-            .then(db.User.findOne({
-                    where: {
-                        upi: req.body.upi,
-                    }
-            }).then(data => res.json(data))
-            )
+            .then(() => {
+                db.User.findOne({
+                    where: {upi: req.body.upi}
+
+                })
+                .then( dbUser => {
+                    console.log('data after pkey update happens: ', dbUser)
+                    res.json({user: dbUser})
+                })
+            })
+            .catch(err=>console.log(err))
     }
 }

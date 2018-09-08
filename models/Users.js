@@ -30,6 +30,7 @@ module.exports = function (sequelize, DataTypes) {
         private_key: {
             //need to figure out correct datatype to store private key array
             type: DataTypes.JSON,
+            default: {"key": "value"},
             allowNull: true
         }
     })

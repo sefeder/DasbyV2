@@ -31,9 +31,11 @@ export default {
                     'Accept': 'application/json'
                 }
             })
-            .then(res => {
+            .then(res => res.json())
+            .then( updatedUser => {
                 console.log('privateKey stored in db')
-                console.log(res.json())
+                console.log('updatedUser: ', updatedUser)
+                resolve(updatedUser)
             })
             .catch(err=>console.log(err))
         
@@ -53,10 +55,10 @@ export default {
                 }
             }).then(response => response.json())
                 .then(result => {
-                    console.log(result)
+                    console.log('virgilUtil line 56 result: ',result)
                     const publishedCard = cardManager.importCardFromJson(result.virgil_card);
-                    console.log(publishedCard)
-                    resolve(publishedCard)
+                    console.log('virgilUtil line 58 publishedCard: ', publishedCard)
+                    // resolve(publishedCard)
                 }).catch(err => console.log(err));
         }).catch(err => console.log(err))
     }

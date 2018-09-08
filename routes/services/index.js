@@ -11,5 +11,7 @@ router.route('/get-virgil-jwt')
     .post(virgilService.getVirgilJwt);
 router.route('/get-twilio-jwt')
     .post(twilioService.getTwilioJwt);
+router.route('/virgil-search')
+    .post(virgilService.virgilSearch);
 
 module.exports = router;

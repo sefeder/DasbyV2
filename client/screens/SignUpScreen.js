@@ -46,9 +46,16 @@ export default class SignUpScreen extends Component {
             .then(res => res.json())
              
             .then(res => {
+                console.log('-------------------------------------------------------')
+                console.log('new user returned from database, begin virgilInitialize')
+                console.log('-------------------------------------------------------')
                 virgil.initializeVirgil(res.user.upi, res.user.password)
                     //res in line below does not include the user's private_key, this is problem
-                    .then(this.props.navigation.navigate('UserHomeScreen', {userInfo: res}))
+                    .then(updatedUser => {
+                        console.log("-- Virgil User Created, Public Card Returned!! --")
+                        console.log('updatedUser: ', updatedUser)
+                        this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser})
+                    })
                     .catch(err => console.log('error line 51 SUS: ', err))
             })
             .catch(err => console.log('error line 53 SUS: ', err))

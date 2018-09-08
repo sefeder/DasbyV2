@@ -68,6 +68,23 @@ exports.signUp = (req, res) => {
         .catch(() => res.status(500));
 };
 
+exports.virgilSearch = (req, res) => {
+    console.log("ello poppit!")
+    cardManager
+        .searchCards(req.body.identity)
+        .then(cards => {
+            console.log("Inside virgilSearch, search results: ", cards)
+            if (cards.length <= 0) {
+                return res.status(400).send("Card with this identity does not exist");
+            }
+            // then we return card to client as JSON
+            return res.json({
+                virgil_card: cards[0]
+            })
+        })
+        .catch(() => res.status(500));
+}
+
 exports.getVirgilJwt = (req, res) => {
     res.json({ token: generator.generateToken(req.body.identity).toString() });
 };

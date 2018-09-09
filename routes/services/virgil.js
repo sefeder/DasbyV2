@@ -77,10 +77,8 @@ exports.virgilSearch = (req, res) => {
             if (cards.length <= 0) {
                 return res.status(400).send("Card with this identity does not exist");
             }
-            // then we return card to client as JSON
-            return res.json({
-                virgil_card: cards[0]
-            })
+            // then we return card to client
+            res.send(cardManager.exportCardAsJson(cards[0]))
         })
         .catch(() => res.status(500));
 }

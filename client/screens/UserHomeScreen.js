@@ -10,6 +10,7 @@ export default class UserHomeScreen extends Component {
         userInfo: this.props.navigation.state.params.userInfo.user
     }
 
+
     componentDidMount() {
         const virgilCrypto = new VirgilCrypto()
         //unsure how to get this.state.userInfo.private_key back into useful format, line below does not work
@@ -18,10 +19,32 @@ export default class UserHomeScreen extends Component {
         console.log('UHS 18: ', privateKeyBytes)
         console.log('userInfo in state on UserHomeScreen: ',this.state.userInfo)
         twilio.getTwilioToken(this.state.userInfo.upi)
-        .then(twilio.createChatClient)
-        .then(twilio.joinChannel)
+        .then(tokenPromise => {
+            console.log("Token Promise: ",tokenPromise)
+            return twilio.createChatClient(tokenPromise)
+        })
+        // .then(twilio.consoleLogging)
+        .then(chatClient => {
+            console.log("UserHomeScreen creating/joining Channel")
+            const channel = twilio.joinChannel(chatClient, this.state.userInfo.upi);
+            console.log("result of joinChannel: ", channel)
+            channel.then(result => console.log("channel promise result: ", result))
+            return channel
+        })
+        // .then(channel => {
+        //     console.log("UserHomeScreen After Join Chat")
+        //     console.log("UserHomeScreen channel: ", channel)
+        // })
+        // .then(channel => {
+        //     console.log("UserHomeScreen Adding Admin to Channel")
+        //     console.log("Channel returned: ", channel)
+        //     return twilio.addAdminToChannel(this.state.userInfo.upi)
+        // })
+        // .then(result => {
+        //     console.log(result)
+        // }).catch(err => console.log(err))
+        .catch(err => console.log(err))
     }
-
 
 
 render () {

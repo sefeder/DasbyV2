@@ -32,6 +32,11 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.JSON,
             default: {"key": "value"},
             allowNull: true
+        },
+        role: {
+            type: DataTypes.STRING,
+            defaultValue: 'user',
+            allowNull: false
         }
     })
 

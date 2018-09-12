@@ -54,7 +54,7 @@ export default class SignUpScreen extends Component {
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
                         console.log('updatedUser: ', updatedUser)
-                        this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser})
+                        this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser, newUser: true})
                     })
                     .catch(err => console.log('error line 51 SUS: ', err))
             })

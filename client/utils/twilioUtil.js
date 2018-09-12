@@ -11,88 +11,61 @@ const cardManager = new CardManager({
     cardVerifier: new VirgilCardVerifier(virgilCardCrypto)
 });
 
-getAdminPublicKey = adminUpi => {
-    return (
+getPublicKey = upi => {
+    return new Promise ((resolve, reject) => {
         fetch('http://localhost:3000/services/virgil-search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ identity: adminUpi })
+            body: JSON.stringify({ identity: upi })
         })
-    )
-}
-
-
-createChannel = (chatClient, upi, adminUpi) => {
-    console.log('createChannel is hitting')
-    const channelName = upi;
-    return new Promise((resolve,reject) => {
-
-    
-    //Get admin public key before creating channel
-//--------------------------Comment Out to Create Admin---------------------------------
-    return getAdminPublicKey(adminUpi)
         .then(res => res.json())
-        .then(adminCard => {
-            adminVrigilCardObject = cardManager.importCardFromJson(adminCard)
-            const adminPublicKey = adminVrigilCardObject.publicKey
-            console.log('adminPublicKey: ', adminPublicKey)
-//--------------------------Comment Out to Create Admin---------------------------------
-
-            // now get user's public key and generate chat cahnnel
-            return fetch('http://localhost:3000/services/virgil-search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify({ identity: upi })
-            })
-                .then(res => res.json())
-                .then(userCards => {
-                    console.log('cards: ', userCards)
-                    userVrigilCardObject = cardManager.importCardFromJson(userCards)
-                    const userPublicKey = userVrigilCardObject.publicKey
-                    console.log('userVirgilCardObject: ', userVrigilCardObject)
-                    console.log('userPublicKey: ', userPublicKey)
-                    // return new Promise((resolve, reject) => {
-                        const channelKeyPair = virgilCrypto.generateKeys();
-                        const channelPrivateKeyBytes = virgilCrypto.exportPrivateKey(channelKeyPair.privateKey);
-                        const encryptedChannelPrivateKeyBytes = virgilCrypto.encrypt(
-                            channelPrivateKeyBytes,
-                            // next line is array of all channel members' public keys. Here it just the creator's
-                            [userPublicKey] //+++++++++++++ add in adminPublicKey ++++++++++++++
-                        );
-                        console.log('creating new channel')
-                        // this.addMessage({ body: `Creating ${this.state.channelInput} channel...` })
-                        return chatClient
-                            .createChannel({
-                                uniqueName: channelName, friendlyName: channelName, attributes: {
-                                    privateKey: encryptedChannelPrivateKeyBytes.toString('base64')
-                                }
-                            })
-                            .then(() => module.exports.joinChannel(chatClient, channelName))
-                            .catch(err => console.log(err))
-                    // })
-                })
-                .catch(err => console.log(err))
-//--------------------------Comment Out to Create Admin---------------------------------
+        .then(virgilCard => {
+            const publicKey = cardManager.importCardFromJson(virgilCard).publicKey
+            console.log('publicKey: ', publicKey)
+            resolve(publicKey)   
+        })
     })
-    .catch(err => console.log(err))
-//--------------------------Comment Out to Create Admin---------------------------------
-    })
-    
-
 }
 
 
+createChannel = (chatClient, userUpi, adminUpi) => {
+    console.log('createChannel is hitting')
+    const channelName = userUpi;
+    return new Promise((resolve,reject) => {
+    //Get admin public key before creating channel
+        getPublicKey(adminUpi)
+        .then(adminPublicKey => {
+            // now get user's public key and generate chat channel
+            getPublicKey(userUpi)
+            .then(userPublicKey => {
+                const channelKeyPair = virgilCrypto.generateKeys();
+                const channelPrivateKeyBytes = virgilCrypto.exportPrivateKey(channelKeyPair.privateKey);
+                const encryptedChannelPrivateKeyBytes = virgilCrypto.encrypt(
+                    channelPrivateKeyBytes,
+                    // next line is array of all channel members' public keys. Here it just the creator's
+                    [userPublicKey, adminPublicKey]
+                );
+                console.log('creating new channel')
+                chatClient
+                    .createChannel({
+                        uniqueName: channelName, friendlyName: channelName, attributes: {
+                            privateKey: encryptedChannelPrivateKeyBytes.toString('base64')
+                        }
+                    })
+                    .then(channel => {
+                        console.log('newly created channel: ', channel)
+                        resolve(channel)
+                    })
+                    .catch(err => console.log(err))  
+            })
+        })                 
+    })
+}
 
-
-
-module.exports =  {
-    getTwilioToken: upi => { 
+    getTwilioToken = upi => { 
         return new Promise((resolve, reject) => {
             fetch('http://localhost:3000/services/get-twilio-jwt', {
                 method: 'POST',
@@ -111,59 +84,66 @@ module.exports =  {
                 reject(Error("Failed to connect."))
             })
         })
-    },
-    createChatClient: token => {
+    }
+
+    createChatClient = token => {
         return new Promise((resolve, reject) => {
             resolve(Chat.Client.create(token.jwt))
         })
-    },
-    joinChannel: (chatClient, userUpi) => {
-        console.log('joinChannel is hitting')
-        const channelName = userUpi;
+    }
+
+    findChannel = (chatClient, channelName) => {
         return new Promise((resolve, reject) => {
-            return chatClient.getChannelByUniqueName(channelName)
-                .then(channel => {
-                    console.log('channel found!')
-                    console.log(channel)
-                    // this.addMessage({ body: `Joining ${channel.sid} channel...` })
-                    // this.setState({ channel: channel })
-
-                    return channel.join()
-                        .then(() => {
-                        console.log('joined channel successfully!')
-                            resolve(channel)
-                        // this.addMessage({ body: `Joined ${channelName} channel as ${this.state.username}` })
-                        // window.addEventListener('beforeunload', () => channel.leave())
-                        })
-                        .catch(() => reject(Error(`Could not join ${channelName} channel.`)))
-
-                    console.log("outside of channel.join")
-                    console.log("channel inside join channel: ", channel)
-                    
-                    // adminUpi is hardcoded for now - will need to find way of doing this progromatically in future
-                })
-                .catch(() => createChannel(chatClient, userUpi, "OE08fM64qx"))
+            chatClient.getChannelByUniqueName(channelName)
+            .then(channel => {
+                console.log('newly found channel: ', channel)
+                resolve(channel)
+            })
         })
-    },
+    }
 
-    getAllChannels: chatClient => {
+    joinChannel = channel => {
+        console.log('joinChannel is hitting')
+        return channel.join()
+       
+    }
+
+    getAllChannels = chatClient => {
         return new Promise((resolve, reject) => {
            resolve(chatClient.getUserChannelDescriptors()) 
         })
-    },
-    consoleLogging: logThis => {
+    }
+
+    consoleLogging = logThis => {
         console.log(logThis)
-    },
+    }
 
 //--------------------------Comment Out to Create Admin---------------------------------
-    addAdminToChannel: (userUpi) => {
+    addAdminToChannel = userUpi => {
+        return new Promise((resolve, reject) => {
         // adminUpi is hardcoded for now - will need to find way of doing this progromatically in future and added as parameter to function above
-        exports.getTwilioToken("OE08fM64qx")
-            .then(exports.createChatClient)
+       getTwilioToken("OE08fM64qx")
+            .then(createChatClient)
             .then(adminChatClient => {
-                return exports.joinChannel(adminChatClient, userUpi)
+                findChannel(adminChatClient, userUpi)
+                .then(joinChannel)
+                .then(channel => {
+                    console.log('admin successfully joined channel')
+                    resolve(channel)
+                })
             })
+        })
     }
 //--------------------------Comment Out to Create Admin---------------------------------
    
+
+export default {
+    createChannel: createChannel,
+    getTwilioToken: getTwilioToken,
+    createChatClient: createChatClient,
+    joinChannel: joinChannel,
+    getAllChannels: getAllChannels,
+    consoleLogging: consoleLogging,
+    addAdminToChannel: addAdminToChannel,
+    findChannel: findChannel
 }

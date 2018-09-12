@@ -34,7 +34,7 @@ export default class LogInScreen extends Component {
                     this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
-                this.props.navigation.navigate('UserHomeScreen', {userInfo: res})
+                this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
             })
             .catch(err => console.log(err))
     }

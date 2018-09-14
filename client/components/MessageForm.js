@@ -40,7 +40,7 @@ class MessageForm extends Component {
 }
 const styles = StyleSheet.create({
     form: {
-        marginTop: 100
+        marginTop: 100,
     },
     button: {
         backgroundColor: 'blue',

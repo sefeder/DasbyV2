@@ -28,7 +28,7 @@ export default class UserHomeScreen extends Component {
                 api.getAdmin()
                 .then(result => {
                     console.log('admin.admin.upi', result.admin.upi)
-                    return twilio.createChannel(chatClient, this.state.userInfo.upi, admin.admin.upi)
+                    return twilio.createChannel(chatClient, this.state.userInfo.upi, result.admin.upi)
                         .then(twilio.joinChannel)
                         .then(channel => {
                             this.setState({ channel })

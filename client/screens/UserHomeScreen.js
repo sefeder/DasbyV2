@@ -4,6 +4,7 @@ import twilio from '../utils/twilioUtil';
 import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
+import api from '../utils/api';
 
 export default class UserHomeScreen extends Component {
 
@@ -24,18 +25,39 @@ export default class UserHomeScreen extends Component {
             if (this.state.newUser) {
                 console.log('if statement newUser')
                 //admin upi is hardcoded below, need to get it programatically
-                return twilio.createChannel(chatClient, this.state.userInfo.upi, "OE08fM64qx")
-                    .then(twilio.joinChannel)
-                    .then(channel => {
-                        this.setState({channel})
-                        console.log(channel)
-                        channel.add("OE08fM64qx")
-                        this.configureChannelEvents(channel)
-                    })
+                api.getAdmin()
+                .then(result => {
+                    console.log('admin.admin.upi', result.admin.upi)
+                    return twilio.createChannel(chatClient, this.state.userInfo.upi, admin.admin.upi)
+                        .then(twilio.joinChannel)
+                        .then(channel => {
+                            this.setState({ channel })
+                            console.log(channel)
+                            channel.add(result.admin.upi)
+                            this.configureChannelEvents(channel)
+                        })
+                })
+               
             }
             else {
                 return twilio.findChannel(chatClient, this.state.userInfo.upi)
-                .then(channel=>this.setState({channel}))
+                .then(channel => {
+                    this.setState({channel})
+                    this.configureChannelEvents(channel)
+                    channel.getMessages().then(result=>{
+                        console.log('result: ',result)
+                        console.log('result.items', result.items)
+                        this.setState({
+                            messages: result.items.map(message => {
+                                return {
+                                    author: message.author,
+                                    body: message.body,
+                                    me: message.author === this.state.userInfo.upi
+                                }
+                            })
+                        })
+                    })
+                })
             } 
         })
        

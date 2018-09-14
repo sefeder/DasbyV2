@@ -60,5 +60,17 @@ module.exports = {
                 })
             })
             .catch(err=>console.log(err))
+    },
+    getAdmin: function (req, res) {
+        db.User.findOne(
+            {
+                where: {role: "admin"}
+            }
+        )
+        .then(admin => {
+            console.log('admin found in getAdmin call: ', admin)
+            res.json({admin: admin})
+        })
     }
+
 }

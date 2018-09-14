@@ -41,7 +41,7 @@ export default class AdminLogInScreen extends Component {
                 } 
 
                 console.log("succesfully loged in as admin!")
-                this.props.navigation.navigate('AdminHomeScreen', { adminInfo: res })
+                this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: res })
             })
             .catch(err => console.log(err))
     }

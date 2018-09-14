@@ -10,4 +10,7 @@ router.route("/logIn")
 router.route("/update")
     .post(userController.update)
 
+router.route('/get-admin')
+    .get(userController.getAdmin)
+
 module.exports = router;

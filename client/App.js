@@ -6,7 +6,8 @@ import SignUpScreen from './screens/SignUpScreen.js';
 import LogInScreen from './screens/LogInScreen.js';
 import UserHomeScreen from './screens/UserHomeScreen.js';
 import AdminLogInScreen from './screens/AdminLogInScreen.js';
-import AdminHomeScreen from './screens/AdminHomeScreen.js';
+import AdminSelectionScreen from './screens/AdminSelectionScreen.js';
+import AdminChatScreen from './screens/AdminChatScreen.js';
 
 const RootStack = createStackNavigator(
   {
@@ -45,11 +46,18 @@ const RootStack = createStackNavigator(
           title: 'Admin Log In',
         })
       },
-    AdminHomeScreen:
+    AdminSelectionScreen:
       {
-        screen: AdminHomeScreen,
+        screen: AdminSelectionScreen,
         navigationOptions: ({ navigation }) => ({
-          title: 'Admin Home',
+          title: 'Channel Selector',
+        })
+      },
+    AdminChatScreen:
+      {
+        screen: AdminChatScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Admin Chat Home',
         })
       },
     initialRouteName: "LandingScreen"

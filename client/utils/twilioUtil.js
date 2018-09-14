@@ -4,6 +4,7 @@ const vCrypto = require('virgil-crypto')
 import { VirgilCrypto, VirgilCardCrypto } from 'virgil-crypto'
 import { CardManager, VirgilCardVerifier, CachingJwtProvider, KeyStorage } from 'virgil-sdk';
 import { resolve } from 'url';
+
 const virgilCrypto = new VirgilCrypto();
 const virgilCardCrypto = new VirgilCardCrypto(virgilCrypto);
 const cardManager = new CardManager({

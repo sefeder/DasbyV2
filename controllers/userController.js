@@ -71,6 +71,16 @@ module.exports = {
             console.log('admin found in getAdmin call: ', admin)
             res.json({admin: admin})
         })
+    },
+    getUser: function (req, res) {
+        db.User.findOne(
+            {
+                where: { upi: req.body.upi }
+            }
+        )
+        .then(user => {
+            res.json({ user: user })
+        })
     }
 
 }

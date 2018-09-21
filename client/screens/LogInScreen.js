@@ -11,7 +11,7 @@ export default class LogInScreen extends Component {
         this.setState({hiddenPass: !this.state.hiddenPass})
     }
     submitLogIn = () => {
-        fetch(`http://localhost:3000/database/users/logIn`, {
+        fetch(`http://91efbe4f.ngrok.io/database/users/logIn`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -10,6 +10,9 @@ router.route("/logIn")
 router.route("/update")
     .post(userController.update)
 
+router.route("/get-user")
+    .post(userController.getUser)
+
 router.route('/get-admin')
     .get(userController.getAdmin)
 

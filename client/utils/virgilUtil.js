@@ -19,7 +19,7 @@ export default {
             const privateKeyBytes = virgilCrypto.exportPrivateKey(keyPair.privateKey, password);
             console.log('exported privateKey: ', privateKeyBytes)
 
-            fetch('http://localhost:3000/database/users/update',
+            fetch('http://91efbe4f.ngrok.io/database/users/update',
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -46,7 +46,7 @@ export default {
                 publicKey: keyPair.publicKey,
                 identity: upi
             });
-            fetch('http://localhost:3000/services/signup', {
+            fetch('http://91efbe4f.ngrok.io/services/signup', {
                 method: 'POST',
                 body: JSON.stringify({ rawCard }),
                 headers: {

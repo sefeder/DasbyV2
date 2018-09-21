@@ -13,7 +13,8 @@ export default class UserHomeScreen extends Component {
         userInfo: this.props.navigation.state.params.userInfo.user,
         newUser: this.props.navigation.state.params.newUser,
         channel: null,
-        messages: []
+        messages: [],
+        memberArray: []
     }
 
 
@@ -57,6 +58,20 @@ export default class UserHomeScreen extends Component {
                             })
                         })
                     })
+                    channel.getMembers().then(result=>{
+                        this.setState({memberArray: 
+                            result.map(member => {
+                                return api.getUser(member.identity).then(dbUser => {
+                                    return {
+                                        upi: dbUser.user.upi,
+                                        first_name: dbUser.user.first_name,
+                                        last_name: dbUser.user.last_name,
+
+                                    }
+                                })
+                            })
+                        }, console.log(this.state.memberArray)) 
+                    })
                 })
             } 
         })
@@ -96,7 +111,7 @@ render () {
             <Text>
                 Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
             </Text>
-            <MessageList username={this.state.userInfo.first_name} messages={this.state.messages} />
+            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} />
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import { VirgilCrypto } from 'virgil-crypto'
 import { ChannelDescriptor } from 'twilio-chat/lib/channeldescriptor';
@@ -40,14 +40,14 @@ export default class AdminSelectionScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.app}>
+            <ScrollView style={styles.app}>
                 <Text>
                     Welcome, {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}, To The Channel Selector
             </Text>
                 <Text>
                     Please select a conversation to join
                 </Text>
-                <View>
+                <View style={styles.chatList}>
 
                     {this.state.channels.map((ChannelDescriptor, index)=>{
                         return (
@@ -60,7 +60,7 @@ export default class AdminSelectionScreen extends Component {
                 </View>
                
                
-            </KeyboardAvoidingView>
+            </ScrollView>
         )
     }
 
@@ -90,4 +90,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30
     },
+    chatList: {
+        overflow: 'scroll'
+    }
 })

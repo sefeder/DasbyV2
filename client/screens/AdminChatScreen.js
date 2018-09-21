@@ -72,7 +72,7 @@ render () {
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
-            <MessageList username={this.state.adminInfo.first_name} messages={this.state.messages} />
+            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} />
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

@@ -25,7 +25,7 @@ export default class SignUpScreen extends Component {
 
         let chance = new Chance()
         
-        fetch(`http://localhost:3000/database/users/createNewUser`, {
+        fetch(`http://91efbe4f.ngrok.io/database/users/createNewUser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

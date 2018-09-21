@@ -14,7 +14,7 @@ const cardManager = new CardManager({
 
 getPublicKey = upi => {
     return new Promise ((resolve, reject) => {
-        fetch('http://localhost:3000/services/virgil-search', {
+        fetch('http://91efbe4f.ngrok.io/services/virgil-search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ createChannel = (chatClient, userUpi, adminUpi) => {
 
     getTwilioToken = upi => { 
         return new Promise((resolve, reject) => {
-            fetch('http://localhost:3000/services/get-twilio-jwt', {
+            fetch('http://91efbe4f.ngrok.io/services/get-twilio-jwt', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

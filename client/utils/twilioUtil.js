@@ -4,6 +4,8 @@ const vCrypto = require('virgil-crypto')
 import { VirgilCrypto, VirgilCardCrypto } from 'virgil-crypto'
 import { CardManager, VirgilCardVerifier, CachingJwtProvider, KeyStorage } from 'virgil-sdk';
 import { resolve } from 'url';
+import config from "../config.json";
+
 
 const virgilCrypto = new VirgilCrypto();
 const virgilCardCrypto = new VirgilCardCrypto(virgilCrypto);
@@ -14,7 +16,7 @@ const cardManager = new CardManager({
 
 getPublicKey = upi => {
     return new Promise ((resolve, reject) => {
-        fetch('http://91efbe4f.ngrok.io/services/virgil-search', {
+        fetch(`${config.apiUrl}/services/virgil-search`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +70,7 @@ createChannel = (chatClient, userUpi, adminUpi) => {
 
     getTwilioToken = upi => { 
         return new Promise((resolve, reject) => {
-            fetch('http://91efbe4f.ngrok.io/services/get-twilio-jwt', {
+            fetch(`${config.apiUrl}/services/get-twilio-jwt`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

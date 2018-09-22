@@ -40,26 +40,29 @@ export default class AdminSelectionScreen extends Component {
 
     render() {
         return (
-            <ScrollView style={styles.app}>
-                <Text>
-                    Welcome, {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}, To The Channel Selector
-            </Text>
-                <Text>
-                    Please select a conversation to join
-                </Text>
-                <View style={styles.chatList}>
+            <ScrollView >
+                <View style={styles.app}>
+                    <Text>
+                        Welcome, {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}, To The Channel Selector
+                    </Text>
+                    <Text>
+                        Please select a conversation to join
+                    </Text>
+                    <View style={styles.chatList}>
 
-                    {this.state.channels.map((ChannelDescriptor, index)=>{
-                        return (
-                            <TouchableHighlight key={index} style={styles.button} onPress={()=> this.channelButtonHandler(ChannelDescriptor)}>
-                                <Text style={styles.buttonText}> {ChannelDescriptor.uniqueName} </Text>
-                            </TouchableHighlight>
-                        )
-                    })}
+                        {this.state.channels.map((ChannelDescriptor, index) => {
+                            return (
+                                <TouchableHighlight key={index} style={styles.button} onPress={() => this.channelButtonHandler(ChannelDescriptor)}>
+                                    <Text style={styles.buttonText}> {ChannelDescriptor.uniqueName} </Text>
+                                </TouchableHighlight>
+                            )
+                        })}
+
+                    </View>
 
                 </View>
-               
-               
+
+
             </ScrollView>
         )
     }
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center'
     },
-     button: {
+    button: {
         backgroundColor: 'blue',
         borderRadius: 40,
         width: 300,

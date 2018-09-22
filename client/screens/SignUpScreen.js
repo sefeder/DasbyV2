@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import { Chance } from 'chance';
-import virgil from '../utils/virgilUtil'
+import virgil from '../utils/virgilUtil';
+import api from '../utils/api';
 
 export default class SignUpScreen extends Component {
 
@@ -24,33 +25,19 @@ export default class SignUpScreen extends Component {
         //need signup validation here
 
         let chance = new Chance()
-        
-        fetch(`http://91efbe4f.ngrok.io/database/users/createNewUser`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.state.emailInput,
-                password: this.state.passwordInput,
-                first_name: this.state.firstInput,
-                last_name: this.state.lastInput,
-                hospital: 'UChicago',
-                upi: chance.string({
-                    length: 10,
-                    pool:'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-                })
-             })
+        api.createUser({
+            email: this.state.emailInput,
+            password: this.state.passwordInput,
+            first_name: this.state.firstInput,
+            last_name: this.state.lastInput,
+            hospital: 'UChicago',
+            upi: chance.string({
+                length: 10,
+                pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+            })
         })
-            .then(res => res.json())
-             
             .then(res => {
-                console.log('-------------------------------------------------------')
-                console.log('new user returned from database, begin virgilInitialize')
-                console.log('-------------------------------------------------------')
                 virgil.initializeVirgil(res.user.upi, res.user.password)
-                    //res in line below does not include the user's private_key, this is problem
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
                         console.log('updatedUser: ', updatedUser)

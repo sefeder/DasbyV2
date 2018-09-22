@@ -8,6 +8,7 @@ import UserHomeScreen from './screens/UserHomeScreen.js';
 import AdminLogInScreen from './screens/AdminLogInScreen.js';
 import AdminSelectionScreen from './screens/AdminSelectionScreen.js';
 import AdminChatScreen from './screens/AdminChatScreen.js';
+import AdminSignUpScreen from './screens/AdminSignUpScreen.js';
 
 const RootStack = createStackNavigator(
   {
@@ -60,6 +61,14 @@ const RootStack = createStackNavigator(
           title: 'Admin Chat Home',
         })
       },
+    AdminSignUpScreen:
+      {
+        screen: AdminSignUpScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Admin Sign Up',
+        })
+      },
+    
     initialRouteName: "LandingScreen"
   }
 

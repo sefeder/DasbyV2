@@ -37,7 +37,7 @@ export default class SignUpScreen extends Component {
             })
         })
             .then(res => {
-                virgil.initializeVirgil(res.user.upi, res.user.password)
+                virgil.initializeVirgil(res.user.upi)
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
                         console.log('updatedUser: ', updatedUser)

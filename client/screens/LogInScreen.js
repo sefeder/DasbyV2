@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight,} from 'react-native';
+import api from '../utils/api';
+
 export default class LogInScreen extends Component {
 
     state = {
@@ -11,18 +13,10 @@ export default class LogInScreen extends Component {
         this.setState({hiddenPass: !this.state.hiddenPass})
     }
     submitLogIn = () => {
-        fetch(`http://localhost:3000/database/users/logIn`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.state.emailInput,
-                password: this.state.passwordInput,
-            })
+        api.logIn({
+            email: this.state.emailInput,
+            password: this.state.passwordInput
         })
-            .then(res => res.json())
             .then(res => {
                 if (!res.status && res.message === "invalid email") {
                     console.log('that email is invalid')
@@ -34,7 +28,7 @@ export default class LogInScreen extends Component {
                     this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
-                this.props.navigation.navigate('UserHomeScreen', {userInfo: res})
+                this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
             })
             .catch(err => console.log(err))
     }

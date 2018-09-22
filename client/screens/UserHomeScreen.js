@@ -34,13 +34,15 @@ export default class UserHomeScreen extends Component {
                     //admin upi is hardcoded below, need to get it programatically
                     api.getAdmin()
                     .then(result => {
-                        console.log('admin.admin.upi', result.admin.upi)
-                        return twilio.createChannel(chatClient, this.state.userInfo.upi, result.admin.upi)
+                        console.log('result.admin', result.admin)
+                        const adminUpiArray = result.admin.map(admin=>admin.upi)
+                        console.log('adminUpiArray: ', adminUpiArray)
+                        return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
                             .then(twilio.joinChannel)
                             .then(channel => {
                                 this.setState({ channel })
                                 console.log(channel)
-                                channel.add(result.admin.upi)
+                                adminUpiArray.forEach(adminUpi=>channel.add(adminUpi))
                                 this.configureChannelEvents(channel)
                             })
                     })

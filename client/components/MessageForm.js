@@ -24,7 +24,7 @@ class MessageForm extends Component {
 
     render() {
         return (
-            <View style={styles.form}>
+            <View>
                 <Form type={Message}
                     ref={c => this._form = c} />
                 <TouchableHighlight
@@ -39,9 +39,6 @@ class MessageForm extends Component {
 
 }
 const styles = StyleSheet.create({
-    form: {
-        marginTop: 100,
-    },
     button: {
         backgroundColor: 'blue',
         borderRadius: 40,

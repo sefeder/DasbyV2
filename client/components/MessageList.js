@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Message from './Message'
-import { View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 
 class MessageList extends Component {
     static propTypes = {
@@ -18,13 +18,19 @@ class MessageList extends Component {
 
     render() {
         return (
-            <View ref={(node) => (this.node = node)}>
+            <ScrollView style={styles.messageList} ref={(node) => (this.node = node)}>
                 {this.props.messages.map((message, i) => (
                     <Message upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray}/>
                 ))}
-            </View>
+            </ScrollView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    messageList: {
+        alignSelf: 'stretch',
+    }
+});
 
 export default MessageList

@@ -116,7 +116,7 @@ render () {
 
             
             <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-            <MessageForm onMessageSend={this.handleNewMessage} />
+            <MessageForm style={styles.messageForm} onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>
     )
@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: 200
     }
 })

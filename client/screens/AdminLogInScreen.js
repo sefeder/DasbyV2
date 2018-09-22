@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight,} from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, } from 'react-native';
 import api from '../utils/api';
 
-export default class LogInScreen extends Component {
+export default class AdminLogInScreen extends Component {
 
     state = {
         emailInput: null,
@@ -10,7 +10,7 @@ export default class LogInScreen extends Component {
         hiddenPass: true,
     }
     viewPass = () => {
-        this.setState({hiddenPass: !this.state.hiddenPass})
+        this.setState({ hiddenPass: !this.state.hiddenPass })
     }
     submitLogIn = () => {
         api.logIn({
@@ -20,7 +20,7 @@ export default class LogInScreen extends Component {
             .then(res => {
                 if (!res.status && res.message === "invalid email") {
                     console.log('that email is invalid')
-                    this.setState({emailInput: '', passwordInput: ''})
+                    this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
                 if (!res.status && res.message === "password does not match") {
@@ -28,7 +28,14 @@ export default class LogInScreen extends Component {
                     this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
-                this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
+                if (res.user.role !== "admin"){
+                    console.log('Unauthorized - you are not an admin, please sign in as user')
+                    this.setState({ emailInput: '', passwordInput: '' })
+                    return;
+                } 
+
+                console.log("succesfully loged in as admin!")
+                this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: res })
             })
             .catch(err => console.log(err))
     }
@@ -65,8 +72,8 @@ export default class LogInScreen extends Component {
                             secureTextEntry={this.state.hiddenPass}
                         />
                         <Button
-                        title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                        onPress={this.viewPass}
+                            title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
+                            onPress={this.viewPass}
                         >
                         </Button>
                     </View>

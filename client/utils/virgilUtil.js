@@ -1,5 +1,6 @@
 import { VirgilCrypto, VirgilCardCrypto } from 'virgil-crypto'
 import { CardManager, VirgilCardVerifier, CachingJwtProvider, KeyStorage } from 'virgil-sdk';
+import config from "../config.json";
 
 export default {
     initializeVirgil: (upi, password) => {
@@ -19,7 +20,7 @@ export default {
             const privateKeyBytes = virgilCrypto.exportPrivateKey(keyPair.privateKey, password);
             console.log('exported privateKey: ', privateKeyBytes)
 
-            fetch('http://localhost:3000/database/users/update',
+            fetch(`${config.apiUrl}/database/users/update`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -46,7 +47,7 @@ export default {
                 publicKey: keyPair.publicKey,
                 identity: upi
             });
-            fetch('http://localhost:3000/services/signup', {
+            fetch(`${config.apiUrl}/services/signup`, {
                 method: 'POST',
                 body: JSON.stringify({ rawCard }),
                 headers: {

@@ -4,19 +4,19 @@ const VirgilCardVerifier = require('virgil-sdk').VirgilCardVerifier;
 const GeneratorJwtProvider = require('virgil-sdk').GeneratorJwtProvider;
 const RawSignedModel = require('virgil-sdk').RawSignedModel;
 
+require('dotenv').config()
 const VirgilCrypto = require('virgil-crypto').VirgilCrypto;
 const VirgilAccessTokenSigner = require('virgil-crypto').VirgilAccessTokenSigner;
 const VirgilCardCrypto = require('virgil-crypto').VirgilCardCrypto;
 
-const configJson = require("./config.json");
 const cardCrypto = new VirgilCardCrypto();
 const cardVerifier = new VirgilCardVerifier(cardCrypto);
 const virgilCrypto = new VirgilCrypto();
 
 const generator = new JwtGenerator({
-    appId: configJson.APP_ID,
-    apiKeyId: configJson.API_KEY_ID,
-    apiKey: virgilCrypto.importPrivateKey(configJson.API_KEY),
+    appId: process.env.APP_ID,
+    apiKeyId: process.env.API_KEY_ID,
+    apiKey: virgilCrypto.importPrivateKey(process.env.API_KEY),
     accessTokenSigner: new VirgilAccessTokenSigner(virgilCrypto)
 });
 const cardManager = new CardManager({
@@ -77,10 +77,8 @@ exports.virgilSearch = (req, res) => {
             if (cards.length <= 0) {
                 return res.status(400).send("Card with this identity does not exist");
             }
-            // then we return card to client as JSON
-            return res.json({
-                virgil_card: cards[0]
-            })
+            // then we return card to client
+            res.send(cardManager.exportCardAsJson(cards[0]))
         })
         .catch(() => res.status(500));
 }

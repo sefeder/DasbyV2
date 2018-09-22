@@ -1,12 +1,12 @@
+require('dotenv').config()
 const twilio = require("twilio");
-const configJson = require("./config.json");
 const AccessToken = twilio.jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
 const chatGrant = new ChatGrant({
-    serviceSid: configJson.TWILIO_SERVICE_SID
+    serviceSid: process.env.TWILIO_SERVICE_SID
 });
 const generateTwilioJwt = (identity) => {
-    const token = new AccessToken(configJson.TWILIO_ACCOUNT_SID, configJson.TWILIO_API_KEY, configJson.TWILIO_API_SECRET);
+    const token = new AccessToken(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_API_KEY, process.env.TWILIO_API_SECRET);
     token.identity = identity;
     token.addGrant(chatGrant);
     return token;

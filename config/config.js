@@ -1,8 +1,9 @@
+require('dotenv').config()
 module.exports = {
     "development": {
-        "username": 'root', //process.env.USER,
-        "password": '', //process.env.PASSWORD,
-        "database": 'dasby_db', //process.env.DATABASE,
+        "username": process.env.DBUSER,
+        "password": process.env.PASS,
+        "database": process.env.DATABASE,
         "host": "127.0.0.1",
         "port": 3306,
         "dialect": "mysql"

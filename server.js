@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 3000;
 const routes = require("./routes");
 const app = express();
-const db = require('./models')
+const db = require('./models');
 
 // Define middleware here
 app.use(bodyParser.urlencoded({ extended: true }));

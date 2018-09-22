@@ -13,7 +13,8 @@ export default class AdminChatScreen extends Component {
         adminInfo: this.props.navigation.state.params.adminInfo,
         channelDescriptor: this.props.navigation.state.params.channelDescriptor,
         channel: null,
-        messages: []
+        messages: [],
+        memberArray: []
     }
 
 
@@ -32,6 +33,22 @@ export default class AdminChatScreen extends Component {
                             body: message.body,
                             me: message.author === this.state.adminInfo.upi
                         }
+                    })
+                })
+            })
+            channel.getMembers().then(result => {
+                console.log("result: ", result)
+                result.forEach(member => {
+                    console.log("member: ", member)
+                    api.getUser(member.identity).then(dbUser => {
+                        console.log("dbUser: ", dbUser.user)
+                        this.setState({
+                            memberArray: [...this.state.memberArray, {
+                                upi: dbUser.user.upi,
+                                firstName: dbUser.user.first_name,
+                                lastName: dbUser.user.last_name
+                            }]
+                        })
                     })
                 })
             })
@@ -72,7 +89,7 @@ render () {
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
-            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} />
+            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

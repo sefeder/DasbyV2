@@ -59,18 +59,20 @@ export default class UserHomeScreen extends Component {
                         })
                     })
                     channel.getMembers().then(result=>{
-                        this.setState({memberArray: 
-                            result.map(member => {
-                                return api.getUser(member.identity).then(dbUser => {
-                                    return {
+                        console.log("result: ", result)
+                        result.forEach(member=>{
+                            console.log("member: ", member)
+                            api.getUser(member.identity).then(dbUser=>{
+                                console.log("dbUser: ", dbUser.user)
+                                this.setState({
+                                    memberArray: [...this.state.memberArray, {
                                         upi: dbUser.user.upi,
-                                        first_name: dbUser.user.first_name,
-                                        last_name: dbUser.user.last_name,
-
-                                    }
+                                        firstName: dbUser.user.first_name,
+                                        lastName: dbUser.user.last_name
+                                    }]
                                 })
                             })
-                        }, console.log(this.state.memberArray)) 
+                        })
                     })
                 })
             } 
@@ -111,7 +113,9 @@ render () {
             <Text>
                 Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
             </Text>
-            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} />
+
+            
+            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

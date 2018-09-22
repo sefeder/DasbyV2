@@ -20,7 +20,7 @@ class MessageList extends Component {
         return (
             <View ref={(node) => (this.node = node)}>
                 {this.props.messages.map((message, i) => (
-                    <Message upi={this.props.upi} key={i} {...message} />
+                    <Message upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray}/>
                 ))}
             </View>
         )

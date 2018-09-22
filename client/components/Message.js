@@ -10,10 +10,23 @@ class Message extends Component {
         me: PropTypes.bool,
     }
 
+    determineAuthor = (authorUpi) => {
+        if(this.props.upi === authorUpi){
+            return <Text style={styles.me}> Me: </Text>
+        }
+        for(let i=0; i< this.props.memberArray.length; i++){
+            if (this.props.memberArray[i].upi === authorUpi) {
+                return < Text style={styles.author} > {this.props.memberArray[i].firstName}: </Text >
+            }
+        }
+    }
+
     render() {
         return (
             <View style={{ flexDirection: 'row' }}>
-                {this.props.upi === this.props.author ? <Text style={styles.me}> Me: </Text> : this.props.author && (<Text style={styles.author}> {this.props.author}: </Text>)}
+                {/* {this.props.upi === this.props.author ? <Text style={styles.me}> Me: </Text> : this.props.author && (<Text style={styles.author}> {this.props.author}: </Text>)} */}
+
+                {this.determineAuthor(this.props.author)}
 
                 <Text>{this.props.body}</Text>
             </View>

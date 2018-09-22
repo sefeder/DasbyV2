@@ -3,13 +3,15 @@ import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextI
 import twilio from '../utils/twilioUtil';
 import { VirgilCrypto } from 'virgil-crypto'
 import { ChannelDescriptor } from 'twilio-chat/lib/channeldescriptor';
+import api from '../utils/api';
 
 export default class AdminSelectionScreen extends Component {
 
     state = {
         //when you get to this page straight from a sign up (not a log in) object below has a private_key that is null
         adminInfo: this.props.navigation.state.params.adminInfo.user,
-        channels: []
+        channels: [],
+        userArray: []
     }
 
     componentDidMount() {
@@ -29,6 +31,18 @@ export default class AdminSelectionScreen extends Component {
                 console.log(result.items)
                 this.setState({channels: result.items})
             })
+        api.getAllUsers().then(result => {
+            result.forEach(user => {
+                this.setState({
+                    userArray: [...this.state.userArray, {
+                        upi: user.upi,
+                        firstName: user.first_name,
+                        lastName: user.last_name
+                    }]
+                })
+            })
+        })
+        
     }
 
     channelButtonHandler = selectedChannel => {
@@ -36,6 +50,14 @@ export default class AdminSelectionScreen extends Component {
         this.props.navigation.navigate('AdminChatScreen', { adminInfo: this.state.adminInfo, channelDescriptor: selectedChannel})
     }
 
+    determineUserName = (userUpi) => {
+        for (let i = 0; i < this.state.userArray.length; i++) {
+            let user = this.state.userArray[i];
+            if (user.upi === userUpi) {
+                return <Text style={styles.buttonText}> {user.firstName} {user.lastName} </Text>
+            }
+        }
+    }
 
 
     render() {
@@ -53,7 +75,7 @@ export default class AdminSelectionScreen extends Component {
                         {this.state.channels.map((ChannelDescriptor, index) => {
                             return (
                                 <TouchableHighlight key={index} style={styles.button} onPress={() => this.channelButtonHandler(ChannelDescriptor)}>
-                                    <Text style={styles.buttonText}> {ChannelDescriptor.uniqueName} </Text>
+                                    {this.determineUserName(ChannelDescriptor.uniqueName)}
                                 </TouchableHighlight>
                             )
                         })}

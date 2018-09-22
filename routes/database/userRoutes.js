@@ -16,4 +16,7 @@ router.route("/get-user")
 router.route('/get-admin')
     .get(userController.getAdmin)
 
+router.route('/get-all-users')
+    .get(userController.getAllUsers)
+
 module.exports = router;

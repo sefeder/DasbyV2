@@ -19,29 +19,32 @@ module.exports = {
         .catch(err => console.log(err))
         
     },
+    getAllUsers: function(req,res){
+        db.User.findAll().then(dbUsers=>res.json(dbUsers))
+    },
     authenticateUser: function(req, res) {
-            db.User.findOne({
-                where: {
-                    email: req.body.email,
-                }
-            }).then(function (data) {
-                if (!data) {
-                    res.json({status: false, message: "invalid email"})
-                    console.log('invalid email')
-                    return;
-                }
-                if (data.password !== req.body.password) {
-                    res.json({ status: false, message: "password does not match" })
-                    console.log('incorrect password')
-                    return;
-                }
-                res.json({ status: true, message: "login successful", user: data })
-                
-            }).catch(function (error) {
-                console.log(error)
-                res.send(error);
-            })
-        },
+        db.User.findOne({
+            where: {
+                email: req.body.email,
+            }
+        }).then(function (data) {
+            if (!data) {
+                res.json({status: false, message: "invalid email"})
+                console.log('invalid email')
+                return;
+            }
+            if (data.password !== req.body.password) {
+                res.json({ status: false, message: "password does not match" })
+                console.log('incorrect password')
+                return;
+            }
+            res.json({ status: true, message: "login successful", user: data })
+            
+        }).catch(function (error) {
+            console.log(error)
+            res.send(error);
+        })
+    },
     update: function (req, res) {
             db.User.update(
                 { private_key: JSON.stringify(req.body.privateKey) },

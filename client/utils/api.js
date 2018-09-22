@@ -12,6 +12,16 @@ export default {
         })
             .then(res => res.json())
     },
+    getAllUsers: () => {
+        return fetch(`${config.apiUrl}/database/users/get-all-users`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+        })
+            .then(res => res.json())
+    },
     logIn: userInfo => {
        return fetch(`${config.apiUrl}/database/users/logIn`, {
             method: 'POST',

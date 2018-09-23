@@ -45,11 +45,8 @@ export default class AdminChatScreen extends Component {
                 })
             })
             channel.getMembers().then(result => {
-                console.log("result: ", result)
                 result.forEach(member => {
-                    console.log("member: ", member)
                     api.getUser(member.identity).then(dbUser => {
-                        console.log("dbUser: ", dbUser.user)
                         this.setState({
                             memberArray: [...this.state.memberArray, {
                                 upi: dbUser.user.upi,
@@ -99,8 +96,6 @@ export default class AdminChatScreen extends Component {
             const virgilCrypto = new VirgilCrypto();
             const importedPublicKey = virgilCrypto.importPublicKey(this.state.channel.attributes.publicKey)
             const encryptedMessage = virgilCrypto.encrypt(text, importedPublicKey)
-            console.log("encrypted message: ", encryptedMessage)
-            console.log("stringified encrypted message: ", encryptedMessage.toString('base64'))
             this.state.channel.sendMessage(encryptedMessage.toString('base64'))
         }
     }

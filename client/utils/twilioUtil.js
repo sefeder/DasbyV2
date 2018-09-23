@@ -34,28 +34,31 @@ getPublicKey = upi => {
 }
 
 
-createChannel = (chatClient, userUpi, adminUpi) => {
+createChannel = (chatClient, userUpi, adminUpiArray) => {
     console.log('createChannel is hitting')
     const channelName = userUpi;
     return new Promise((resolve,reject) => {
     //Get admin public key before creating channel
-        getPublicKey(adminUpi)
-        .then(adminPublicKey => {
+        getAdminPublicKeyArray(adminUpiArray)
+        .then(adminPublicKeyArray => {
             // now get user's public key and generate chat channel
             getPublicKey(userUpi)
             .then(userPublicKey => {
                 const channelKeyPair = virgilCrypto.generateKeys();
                 const channelPrivateKeyBytes = virgilCrypto.exportPrivateKey(channelKeyPair.privateKey);
+                console.log("[userPublicKey].concat(adminPublicKeyArray)", [userPublicKey].concat(adminPublicKeyArray))
                 const encryptedChannelPrivateKeyBytes = virgilCrypto.encrypt(
                     channelPrivateKeyBytes,
-                    // next line is array of all channel members' public keys. Here it just the creator's
-                    [userPublicKey, adminPublicKey]
+                    // next line is array of all channel members' public keys. Here it just the creator's and all admins
+                    [userPublicKey].concat(adminPublicKeyArray)
                 );
+                const channelPublicKeyBytes = virgilCrypto.exportPublicKey(channelKeyPair.publicKey);    
                 console.log('creating new channel')
                 chatClient
                     .createChannel({
                         uniqueName: channelName, friendlyName: channelName, attributes: {
-                            privateKey: encryptedChannelPrivateKeyBytes.toString('base64')
+                            privateKey: encryptedChannelPrivateKeyBytes.toString('base64'),
+                            publicKey: channelPublicKeyBytes.toString('base64')
                         }
                     })
                     .then(channel => {
@@ -67,6 +70,16 @@ createChannel = (chatClient, userUpi, adminUpi) => {
         })                 
     })
 }
+
+    getAdminPublicKeyArray = async adminUpiArray => {
+        let adminPublicKeyArray = []
+        for (let i=0; i < adminUpiArray.length; i++) {
+            const adminPublicKey = await this.getPublicKey(adminUpiArray[i])
+            adminPublicKeyArray.push(adminPublicKey)
+        }
+        console.log('adminPublicKeyArray: ', adminPublicKeyArray)
+        return adminPublicKeyArray
+    }
 
     getTwilioToken = upi => { 
         return new Promise((resolve, reject) => {
@@ -148,5 +161,6 @@ export default {
     getAllChannels: getAllChannels,
     consoleLogging: consoleLogging,
     addAdminToChannel: addAdminToChannel,
-    findChannel: findChannel
+    findChannel: findChannel,
+    getAdminPublicKeyArray: getAdminPublicKeyArray
 }

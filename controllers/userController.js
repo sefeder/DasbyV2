@@ -8,7 +8,8 @@ module.exports = {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             hospital: req.body.hospital,
-            upi: req.body.upi
+            upi: req.body.upi,
+            role: req.body.role
         }
         db.User.create(newUser)
         .then(result => {
@@ -65,13 +66,13 @@ module.exports = {
             .catch(err=>console.log(err))
     },
     getAdmin: function (req, res) {
-        db.User.findOne(
+        db.User.findAll(
             {
                 where: {role: "admin"}
             }
         )
         .then(admin => {
-            console.log('admin found in getAdmin call: ', admin)
+            console.log('admin(s) found in getAdmin call: ', admin)
             res.json({admin: admin})
         })
     },

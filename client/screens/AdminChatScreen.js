@@ -5,6 +5,7 @@ import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
+import virgil from '../utils/virgilUtil';
 
 export default class AdminChatScreen extends Component {
 
@@ -13,14 +14,21 @@ export default class AdminChatScreen extends Component {
         adminInfo: this.props.navigation.state.params.adminInfo,
         channelDescriptor: this.props.navigation.state.params.channelDescriptor,
         channel: null,
+        adminPrivateKey: null,
         messages: [],
         memberArray: []
     }
 
 
     componentDidMount() {
-        console.log('this.state.adminInfo', this.state.adminInfo)
-        console.log('this.state.channelDescriptor', this.state.channelDescriptor)
+        virgil.getPrivateKey(this.state.adminInfo.upi)
+            .then(adminPrivateKey => {
+                this.setState({
+                    adminPrivateKey: adminPrivateKey
+                })
+            })
+            .catch(err => console.log(err))
+
         this.state.channelDescriptor.getChannel()
         .then(channel => {
             this.setState({channel})
@@ -68,18 +76,23 @@ export default class AdminChatScreen extends Component {
             this.addMessage({ author, body })
         })
 
-        channel.on('memberJoined', (member) => {
-            this.addMessage({ body: `${member.identity} has joined the channel.` })
-        })
+        // channel.on('memberJoined', (member) => {
+        //     this.addMessage({ body: `${member.identity} has joined the channel.` })
+        // })
 
-        channel.on('memberLeft', (member) => {
-            this.addMessage({ body: `${member.identity} has left the channel.` })
-        })
+        // channel.on('memberLeft', (member) => {
+        //     this.addMessage({ body: `${member.identity} has left the channel.` })
+        // })
     }
 
     handleNewMessage = (text) => {
         if (this.state.channel) {
-            this.state.channel.sendMessage(text)
+            const virgilCrypto = new VirgilCrypto();
+            const importedPublicKey = virgilCrypto.importPublicKey(this.state.channel.attributes.publicKey)
+            const encryptedMessage = virgilCrypto.encrypt(text, importedPublicKey)
+            console.log("encrypted message: ", encryptedMessage)
+            console.log("stringified encrypted message: ", encryptedMessage.toString('base64'))
+            this.state.channel.sendMessage(encryptedMessage.toString('base64'))
         }
     }
 
@@ -89,7 +102,7 @@ render () {
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
-            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
+            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} channel={this.state.channel} userPrivateKey={this.state.adminPrivateKey}/>
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

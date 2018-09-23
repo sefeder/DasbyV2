@@ -19,6 +19,10 @@ export default class LandingScreen extends Component {
                     <Text style={styles.buttonText}> User Log In </Text>
                 </TouchableHighlight>
                 <TouchableHighlight style={styles.button}
+                    onPress={() => this.props.navigation.navigate('AdminSignUpScreen')}>
+                    <Text style={styles.buttonText}> Admin Sign Up </Text>
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.button}
                     onPress={() => this.props.navigation.navigate('AdminLogInScreen')}>
                     <Text style={styles.buttonText}> Admin Log In </Text>
                 </TouchableHighlight>

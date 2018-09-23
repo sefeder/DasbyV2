@@ -46,16 +46,19 @@ createChannel = (chatClient, userUpi, adminUpiArray) => {
             .then(userPublicKey => {
                 const channelKeyPair = virgilCrypto.generateKeys();
                 const channelPrivateKeyBytes = virgilCrypto.exportPrivateKey(channelKeyPair.privateKey);
+                console.log("[userPublicKey].concat(adminPublicKeyArray)", [userPublicKey].concat(adminPublicKeyArray))
                 const encryptedChannelPrivateKeyBytes = virgilCrypto.encrypt(
                     channelPrivateKeyBytes,
                     // next line is array of all channel members' public keys. Here it just the creator's and all admins
                     [userPublicKey].concat(adminPublicKeyArray)
                 );
+                const channelPublicKeyBytes = virgilCrypto.exportPublicKey(channelKeyPair.publicKey);    
                 console.log('creating new channel')
                 chatClient
                     .createChannel({
                         uniqueName: channelName, friendlyName: channelName, attributes: {
-                            privateKey: encryptedChannelPrivateKeyBytes.toString('base64')
+                            privateKey: encryptedChannelPrivateKeyBytes.toString('base64'),
+                            publicKey: channelPublicKeyBytes.toString('base64')
                         }
                     })
                     .then(channel => {

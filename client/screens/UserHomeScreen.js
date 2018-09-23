@@ -14,6 +14,7 @@ export default class UserHomeScreen extends Component {
         userInfo: this.props.navigation.state.params.userInfo.user,
         newUser: this.props.navigation.state.params.newUser,
         channel: null,
+        userPrivateKey: null,
         messages: [],
         memberArray: []
     }
@@ -22,7 +23,11 @@ export default class UserHomeScreen extends Component {
     componentDidMount() {
         console.log("hello?")
         virgil.getPrivateKey(this.state.userInfo.upi)
-            .then(result => console.log("private key", result))
+            .then(userPrivateKey => {
+                this.setState({
+                    userPrivateKey: userPrivateKey
+                })
+            })
             .catch(err => console.log(err))
 
         const virgilCrypto = new VirgilCrypto()
@@ -100,18 +105,23 @@ export default class UserHomeScreen extends Component {
             this.addMessage({ author, body })
         })
 
-        channel.on('memberJoined', (member) => {
-            this.addMessage({ body: `${member.identity} has joined the channel.` })
-        })
+        // channel.on('memberJoined', (member) => {
+        //     this.addMessage({ body: `${member.identity} has joined the channel.` })
+        // })
 
-        channel.on('memberLeft', (member) => {
-            this.addMessage({ body: `${member.identity} has left the channel.` })
-        })
+        // channel.on('memberLeft', (member) => {
+        //     this.addMessage({ body: `${member.identity} has left the channel.` })
+        // })
     }
 
     handleNewMessage = (text) => {
         if (this.state.channel) {
-            this.state.channel.sendMessage(text)
+            const virgilCrypto = new VirgilCrypto();
+            const importedPublicKey = virgilCrypto.importPublicKey(this.state.channel.attributes.publicKey)
+            const encryptedMessage = virgilCrypto.encrypt(text, importedPublicKey)
+            console.log("encrypted message: ", encryptedMessage)
+            console.log("stringified encrypted message: ", encryptedMessage.toString('base64'))
+            this.state.channel.sendMessage(encryptedMessage.toString('base64'))
         }
     }
 
@@ -123,7 +133,7 @@ render () {
             </Text>
 
             
-            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
+            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} channel={this.state.channel} userPrivateKey={this.state.userPrivateKey}/>
             <MessageForm style={styles.messageForm} onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

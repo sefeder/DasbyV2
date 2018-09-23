@@ -65,7 +65,7 @@ export default class UserHomeScreen extends Component {
                                 messages: result.items.map(message => {
                                     return {
                                         author: message.author,
-                                        body: message.body,
+                                        body: this.decryptMessage(message.body),
                                         me: message.author === this.state.userInfo.upi
                                     }
                                 })
@@ -93,6 +93,15 @@ export default class UserHomeScreen extends Component {
        
     }
 
+    decryptMessage = (encrytpedMessage) => {
+        const virgilCrypto = new VirgilCrypto();
+        const channelPrivateKeyBytes = this.state.channel.attributes.privateKey;
+        const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes,this.state.userPrivateKey)
+        const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
+        const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
+        return decryptedMessage
+    }
+
     addMessage = (message) => {
         const messageData = { ...message, me: message.author === this.state.userInfo.first_name }
         this.setState({
@@ -102,7 +111,7 @@ export default class UserHomeScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            this.addMessage({ author, body })
+            this.addMessage({ author, body: this.decryptMessage(body) })
         })
 
         // channel.on('memberJoined', (member) => {
@@ -133,7 +142,7 @@ render () {
             </Text>
 
             
-            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} channel={this.state.channel} userPrivateKey={this.state.userPrivateKey}/>
+            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
             <MessageForm style={styles.messageForm} onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

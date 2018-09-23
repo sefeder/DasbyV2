@@ -38,7 +38,7 @@ export default class AdminChatScreen extends Component {
                     messages: result.items.map(message => {
                         return {
                             author: message.author,
-                            body: message.body,
+                            body: this.decryptMessage(message.body),
                             me: message.author === this.state.adminInfo.upi
                         }
                     })
@@ -64,6 +64,15 @@ export default class AdminChatScreen extends Component {
         
     }
 
+    decryptMessage = (encrytpedMessage) => {
+        const virgilCrypto = new VirgilCrypto();
+        const channelPrivateKeyBytes = this.state.channel.attributes.privateKey;
+        const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes, this.state.adminPrivateKey)
+        const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
+        const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
+        return decryptedMessage
+    }
+
     addMessage = (message) => {
         const messageData = { ...message, me: message.author === this.state.adminInfo.first_name }
         this.setState({
@@ -73,7 +82,7 @@ export default class AdminChatScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            this.addMessage({ author, body })
+            this.addMessage({ author, body: this.decryptMessage(body) })
         })
 
         // channel.on('memberJoined', (member) => {
@@ -102,7 +111,7 @@ render () {
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
-            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} channel={this.state.channel} userPrivateKey={this.state.adminPrivateKey}/>
+            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>

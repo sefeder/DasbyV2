@@ -35,7 +35,6 @@ getPublicKey = upi => {
 
 
 createChannel = (chatClient, userUpi, adminUpiArray) => {
-    console.log('createChannel is hitting')
     const channelName = userUpi;
     return new Promise((resolve,reject) => {
     //Get admin public key before creating channel
@@ -46,7 +45,6 @@ createChannel = (chatClient, userUpi, adminUpiArray) => {
             .then(userPublicKey => {
                 const channelKeyPair = virgilCrypto.generateKeys();
                 const channelPrivateKeyBytes = virgilCrypto.exportPrivateKey(channelKeyPair.privateKey);
-                console.log("[userPublicKey].concat(adminPublicKeyArray)", [userPublicKey].concat(adminPublicKeyArray))
                 const encryptedChannelPrivateKeyBytes = virgilCrypto.encrypt(
                     channelPrivateKeyBytes,
                     // next line is array of all channel members' public keys. Here it just the creator's and all admins
@@ -77,7 +75,6 @@ createChannel = (chatClient, userUpi, adminUpiArray) => {
             const adminPublicKey = await this.getPublicKey(adminUpiArray[i])
             adminPublicKeyArray.push(adminPublicKey)
         }
-        console.log('adminPublicKeyArray: ', adminPublicKeyArray)
         return adminPublicKeyArray
     }
 
@@ -93,7 +90,6 @@ createChannel = (chatClient, userUpi, adminUpiArray) => {
             })
             .then(res => res.json())
             .then((token) => {
-                console.log('this is the token identity: ' + token.identity)
                 resolve(token)
             })
             .catch(() => {
@@ -130,10 +126,6 @@ createChannel = (chatClient, userUpi, adminUpiArray) => {
         })
     }
 
-    consoleLogging = logThis => {
-        console.log(logThis)
-    }
-
 //--------------------------Comment Out to Create Admin---------------------------------
     addAdminToChannel = userUpi => {
         return new Promise((resolve, reject) => {
@@ -159,7 +151,6 @@ export default {
     createChatClient: createChatClient,
     joinChannel: joinChannel,
     getAllChannels: getAllChannels,
-    consoleLogging: consoleLogging,
     addAdminToChannel: addAdminToChannel,
     findChannel: findChannel,
     getAdminPublicKeyArray: getAdminPublicKeyArray

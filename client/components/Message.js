@@ -26,8 +26,6 @@ class Message extends Component {
     render() {
         return (
             <View style={{ flexDirection: 'row' }}>
-                {/* {this.props.upi === this.props.author ? <Text style={styles.me}> Me: </Text> : this.props.author && (<Text style={styles.author}> {this.props.author}: </Text>)} */}
-
                 {this.determineAuthor(this.props.author)}
                 < Text>{this.props.body}</Text>
             </View>

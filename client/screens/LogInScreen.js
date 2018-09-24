@@ -35,7 +35,7 @@ export default class LogInScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.app}>
+            <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
                 <View style={styles.inputForm}>
                     <View>
                         <Text style={styles.inputLabel}>

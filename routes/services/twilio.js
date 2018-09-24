@@ -14,7 +14,6 @@ const generateTwilioJwt = (identity) => {
 
 exports.getTwilioJwt = (req, res) => {
     const token = generateTwilioJwt(req.body.identity);
-    console.log('this is the twilio token stringified: ' + JSON.stringify(token));
     res.json({
         jwt: token.toJwt(),
         identity: token.identity

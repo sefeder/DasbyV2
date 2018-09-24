@@ -21,7 +21,6 @@ export default class UserHomeScreen extends Component {
 
 
     componentDidMount() {
-        console.log("hello?")
         virgil.getPrivateKey(this.state.userInfo.upi)
             .then(userPrivateKey => {
                 this.setState({
@@ -35,7 +34,6 @@ export default class UserHomeScreen extends Component {
             .then(twilio.createChatClient)
             .then(chatClient => {
                 if (this.state.newUser) {
-                    console.log('if statement newUser')
                     api.getAdmin()
                     .then(result => {
                         const adminUpiArray = result.admin.map(admin=>admin.upi)
@@ -43,7 +41,6 @@ export default class UserHomeScreen extends Component {
                             .then(twilio.joinChannel)
                             .then(channel => {
                                 this.setState({ channel })
-                                console.log(channel)
                                 adminUpiArray.forEach(adminUpi=>channel.add(adminUpi))
                                 this.configureChannelEvents(channel)
                             })
@@ -126,15 +123,12 @@ export default class UserHomeScreen extends Component {
 
 render () {
     return (
-        <KeyboardAvoidingView style={styles.app}>
+        <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
             <Text>
                 Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
             </Text>
-
-            
-            <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-            <MessageForm style={styles.messageForm} onMessageSend={this.handleNewMessage} />
-           
+                <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
+                <MessageForm onMessageSend={this.handleNewMessage} />
         </KeyboardAvoidingView>
     )
 }
@@ -149,6 +143,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 200
-    }
+        height: 200,
+        marginBottom: 25
+    },
 })

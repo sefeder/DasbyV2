@@ -102,7 +102,7 @@ export default class AdminChatScreen extends Component {
 
 render () {
     return (
-        <KeyboardAvoidingView style={styles.app}>
+        <KeyboardAvoidingView style={styles.app} enabled behavior="padding">
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 25
     }
 })

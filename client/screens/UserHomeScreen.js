@@ -54,11 +54,12 @@ export default class UserHomeScreen extends Component {
                         this.configureChannelEvents(channel)
                         channel.getMessages().then(result=>{
                             this.setState({
-                                messages: result.items.map(message => {
+                                messages: result.items.map((message, i, items) => {
                                     return {
                                         author: message.author,
                                         body: this.decryptMessage(message.body),
-                                        me: message.author === this.state.userInfo.upi
+                                        me: message.author === this.state.userInfo.upi,
+                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
                                     }
                                 })
                             })

@@ -59,7 +59,6 @@ export default {
         }).catch(err => console.log(err))
     },
     getPrivateKey: (userUpi) => {
-        console.log("hitting getPrivatekey - hello!!")
         return new Promise((resolve, reject) => {
             const virgilCrypto = new VirgilCrypto();
             api.getUser(userUpi)

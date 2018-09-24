@@ -19,7 +19,7 @@ class Message extends Component {
         }
         for(let i=0; i< this.props.memberArray.length; i++){
             if (this.props.memberArray[i].upi === authorUpi) {
-                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
+                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
             }
         }
     }
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
         maxWidth: 300,
         padding: 10,
         borderRadius: 20,
-        marginBottom: 5
+        marginBottom: 2.5,
+        marginLeft: 25
     },
     meBubble: {
         backgroundColor: '#3377FF',
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
         maxWidth: 300,
         padding: 10,
         borderRadius: 20,
-        marginBottom: 5
+        marginBottom: 2.5,
+        marginRight: 25
     },
     meMessageText: {
         fontSize: 18,
@@ -57,6 +59,11 @@ const styles = StyleSheet.create({
     },
     notMeMessageText: {
         fontSize: 18
+    },
+    notMeAuthor: {
+        marginLeft: 35,
+        marginTop: 10,
+        marginBottom: 2.5
     }
 });
 

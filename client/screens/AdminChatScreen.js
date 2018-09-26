@@ -35,11 +35,12 @@ export default class AdminChatScreen extends Component {
             this.configureChannelEvents(channel)
             channel.getMessages().then(result => {
                 this.setState({
-                    messages: result.items.map(message => {
+                    messages: result.items.map((message, i, items) => {
                         return {
                             author: message.author,
                             body: this.decryptMessage(message.body),
-                            me: message.author === this.state.adminInfo.upi
+                            me: message.author === this.state.adminInfo.upi,
+                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }
                     })
                 })
@@ -102,7 +103,7 @@ export default class AdminChatScreen extends Component {
 
 render () {
     return (
-        <KeyboardAvoidingView style={styles.app}>
+        <KeyboardAvoidingView style={styles.app} enabled behavior="padding">
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 25
     }
 })

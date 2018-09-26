@@ -10,26 +10,24 @@ class Message extends Component {
         author: PropTypes.string,
         // body: PropTypes.string.isRequired,
         me: PropTypes.bool,
+        sameAsPrevAuthor: PropTypes.bool
     }
 
     determineAuthor = (authorUpi) => {
         if(this.props.upi === authorUpi){
-            return <Text style={styles.me}> Me: </Text>
+            return <View style={styles.meBubble}>< Text style={styles.meMessageText}>{this.props.body}</Text></View>
         }
         for(let i=0; i< this.props.memberArray.length; i++){
             if (this.props.memberArray[i].upi === authorUpi) {
-                return < Text style={styles.author} > {this.props.memberArray[i].firstName}: </Text >
+                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
             }
         }
     }
 
     render() {
         return (
-            <View style={{ flexDirection: 'row' }}>
-                {/* {this.props.upi === this.props.author ? <Text style={styles.me}> Me: </Text> : this.props.author && (<Text style={styles.author}> {this.props.author}: </Text>)} */}
-
+            <View style={{ flexDirection: 'column' }}>
                 {this.determineAuthor(this.props.author)}
-                < Text>{this.props.body}</Text>
             </View>
 
         )
@@ -37,13 +35,35 @@ class Message extends Component {
 }
 
 const styles = StyleSheet.create({
-    author: {
-        color: 'red',
-        fontWeight: 'bold'
+    notMeBubble: {
+        backgroundColor: '#D5D6D7',
+        alignSelf: 'flex-start',
+        maxWidth: 300,
+        padding: 10,
+        borderRadius: 20,
+        marginBottom: 2.5,
+        marginLeft: 25
     },
-    me: {
-        color: 'grey',
-        fontWeight: 'bold'
+    meBubble: {
+        backgroundColor: '#3377FF',
+        alignSelf: 'flex-end',
+        maxWidth: 300,
+        padding: 10,
+        borderRadius: 20,
+        marginBottom: 2.5,
+        marginRight: 25
+    },
+    meMessageText: {
+        fontSize: 18,
+        color: 'white'
+    },
+    notMeMessageText: {
+        fontSize: 18
+    },
+    notMeAuthor: {
+        marginLeft: 35,
+        marginTop: 10,
+        marginBottom: 2.5
     }
 });
 

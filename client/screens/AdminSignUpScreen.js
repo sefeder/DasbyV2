@@ -52,7 +52,6 @@ export default class AdminSignUpScreen extends Component {
                 virgil.initializeVirgil(res.user.upi)
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
-                        console.log('updatedUser: ', updatedUser)
                         this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: updatedUser })
                     })
                     .catch(err => console.log('error line 51 SUS: ', err))
@@ -62,7 +61,7 @@ export default class AdminSignUpScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView style={styles.app}>
+            <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
                 <ScrollView>
                     <View style={styles.inputForm}>
                         <View>

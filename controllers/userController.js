@@ -14,7 +14,6 @@ module.exports = {
         db.User.create(newUser)
         .then(result => {
             console.log('new user successfully added')
-            console.log('userController create method result: ', result)
             res.json({user: result})
         })
         .catch(err => console.log(err))
@@ -59,7 +58,6 @@ module.exports = {
 
                 })
                 .then( dbUser => {
-                    console.log('data after pkey update happens: ', dbUser)
                     res.json({user: dbUser})
                 })
             })
@@ -72,7 +70,6 @@ module.exports = {
             }
         )
         .then(admin => {
-            console.log('admin(s) found in getAdmin call: ', admin)
             res.json({admin: admin})
         })
     },

@@ -35,21 +35,19 @@ export default class AdminChatScreen extends Component {
             this.configureChannelEvents(channel)
             channel.getMessages().then(result => {
                 this.setState({
-                    messages: result.items.map(message => {
+                    messages: result.items.map((message, i, items) => {
                         return {
                             author: message.author,
-                            body: message.body,
-                            me: message.author === this.state.adminInfo.upi
+                            body: this.decryptMessage(message.body),
+                            me: message.author === this.state.adminInfo.upi,
+                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }
                     })
                 })
             })
             channel.getMembers().then(result => {
-                console.log("result: ", result)
                 result.forEach(member => {
-                    console.log("member: ", member)
                     api.getUser(member.identity).then(dbUser => {
-                        console.log("dbUser: ", dbUser.user)
                         this.setState({
                             memberArray: [...this.state.memberArray, {
                                 upi: dbUser.user.upi,
@@ -64,6 +62,15 @@ export default class AdminChatScreen extends Component {
         
     }
 
+    decryptMessage = (encrytpedMessage) => {
+        const virgilCrypto = new VirgilCrypto();
+        const channelPrivateKeyBytes = this.state.channel.attributes.privateKey;
+        const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes, this.state.adminPrivateKey)
+        const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
+        const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
+        return decryptedMessage
+    }
+
     addMessage = (message) => {
         const messageData = { ...message, me: message.author === this.state.adminInfo.first_name }
         this.setState({
@@ -73,7 +80,7 @@ export default class AdminChatScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            this.addMessage({ author, body })
+            this.addMessage({ author, body: this.decryptMessage(body) })
         })
 
         // channel.on('memberJoined', (member) => {
@@ -90,19 +97,17 @@ export default class AdminChatScreen extends Component {
             const virgilCrypto = new VirgilCrypto();
             const importedPublicKey = virgilCrypto.importPublicKey(this.state.channel.attributes.publicKey)
             const encryptedMessage = virgilCrypto.encrypt(text, importedPublicKey)
-            console.log("encrypted message: ", encryptedMessage)
-            console.log("stringified encrypted message: ", encryptedMessage.toString('base64'))
             this.state.channel.sendMessage(encryptedMessage.toString('base64'))
         }
     }
 
 render () {
     return (
-        <KeyboardAvoidingView style={styles.app}>
+        <KeyboardAvoidingView style={styles.app} enabled behavior="padding">
             <Text>
                 Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
             </Text>
-            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} channel={this.state.channel} userPrivateKey={this.state.adminPrivateKey}/>
+            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
             <MessageForm onMessageSend={this.handleNewMessage} />
            
         </KeyboardAvoidingView>
@@ -118,6 +123,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 25
     }
 })

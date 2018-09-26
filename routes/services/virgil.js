@@ -53,7 +53,6 @@ exports.signUp = (req, res) => {
     const rawCard = RawSignedModel.fromJson(reqCard);
     
     const identity = JSON.parse(rawCard.contentSnapshot.toString()).identity;
-    console.log('------------------------', identity)
     return cardManager
         .searchCards(identity)
         .then(cards => {
@@ -69,11 +68,9 @@ exports.signUp = (req, res) => {
 };
 
 exports.virgilSearch = (req, res) => {
-    console.log("ello poppit!")
     cardManager
         .searchCards(req.body.identity)
         .then(cards => {
-            console.log("Inside virgilSearch, search results: ", cards)
             if (cards.length <= 0) {
                 return res.status(400).send("Card with this identity does not exist");
             }

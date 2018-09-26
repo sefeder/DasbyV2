@@ -12,15 +12,14 @@ class MessageList extends Component {
         messages: [],
     }
 
-    componentDidUpdate = () => {
-        this.node.scrollTop = this.node.scrollHeight
-    }
-
     render() {
         return (
-            <ScrollView style={styles.messageList} ref={(node) => (this.node = node)}>
+            <ScrollView style={styles.messageList} ref={ref => this.scrollView = ref}
+                onContentSizeChange={(contentWidth, contentHeight) => {
+                    this.scrollView.scrollToEnd({ animated: true });
+                }}>
                 {this.props.messages.map((message, i) => (
-                    <Message upi={this.props.upi} channel={this.props.channel} key={i} {...message} memberArray={this.props.memberArray} userPrivateKey={this.props.userPrivateKey}/>
+                    <Message sameAsPrevAuthor={message.sameAsPrevAuthor} upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray}/>
                 ))}
             </ScrollView>
         )

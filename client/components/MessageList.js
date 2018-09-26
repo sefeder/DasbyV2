@@ -29,6 +29,7 @@ class MessageList extends Component {
 const styles = StyleSheet.create({
     messageList: {
         alignSelf: 'stretch',
+        flex: 1
     }
 });
 

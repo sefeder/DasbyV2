@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
@@ -103,14 +103,15 @@ export default class AdminChatScreen extends Component {
 
 render () {
     return (
-        <KeyboardAvoidingView style={styles.app} enabled behavior="padding">
-            <Text>
-                Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
-            </Text>
-            <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-            <MessageForm onMessageSend={this.handleNewMessage} />
-           
-        </KeyboardAvoidingView>
+        <SafeAreaView style={{ flex: 1 }}>
+            <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
+                <Text>
+                    Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
+                </Text>
+                <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
+                <MessageForm onMessageSend={this.handleNewMessage} />
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     )
 }
 
@@ -124,6 +125,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 25
+        marginBottom: 10
     }
 })

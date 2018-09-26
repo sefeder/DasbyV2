@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
@@ -124,13 +124,15 @@ export default class UserHomeScreen extends Component {
 
 render () {
     return (
-        <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
-            <Text>
-                Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
-            </Text>
+        <SafeAreaView style={{flex:1}}>
+            <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
+                <Text>
+                    Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
+                </Text>
                 <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
                 <MessageForm onMessageSend={this.handleNewMessage} />
-        </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     )
 }
 
@@ -144,7 +146,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: 200,
-        marginBottom: 25
+        marginBottom: 10
     },
 })

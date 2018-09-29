@@ -50,7 +50,12 @@ class MessageForm extends Component {
                         >
                         <Text style={{ color: 'white' }}>Send</Text>
                     </TouchableOpacity> :
-                    <View/>
+                    <TouchableOpacity
+                        disabled
+                        style={styles.disabledSubmitButton}
+                    >
+                        <Text style={{ color: 'white' }}>Send</Text>
+                    </TouchableOpacity>
                 }
                 </View>
             </View >
@@ -62,6 +67,16 @@ const styles = StyleSheet.create({
    
     submitButton: {
         backgroundColor: '#3377FF',
+        width: 50,
+        padding: 5,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginRight: 5
+    },
+    disabledSubmitButton: {
+        backgroundColor: '#D5D6D7',
         width: 50,
         padding: 5,
         borderRadius: 20,

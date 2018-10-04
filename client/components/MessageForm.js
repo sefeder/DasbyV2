@@ -1,58 +1,89 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableHighlight, Text } from 'react-native';
-import PropTypes from 'prop-types'
-import t from 'tcomb-form-native'; // 0.6.9
-
-const Form = t.form.Form;
-
-const Message = t.struct({
-    message: t.String,
-});
+import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 class MessageForm extends Component {
-    static propTypes = {
-        onMessageSend: PropTypes.func.isRequired,
+   
+    state = {
+        textInput: null,
+        height: 0
     }
 
-    handleFormSubmit = (event) => {
-        event.preventDefault()
-        let value = this._form.getValue();
-        console.log(value.message);
-        this.props.onMessageSend(value.message)
+    handleSubmit = (text) => {
+        this.props.onMessageSend(text)
+        this.setState({
+            textInput: null 
+        })
     }
-
 
     render() {
         return (
-            <View>
-                <Form type={Message}
-                    ref={c => this._form = c} />
-                <TouchableHighlight
-                    onPress={this.handleFormSubmit}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}> Send </Text>
-                </TouchableHighlight>
-            </View>
+            <View style={{
+                flexDirection: 'row',
+                width: 380,
+                margin: 10,
+                padding: 4,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderWidth: 1,
+                borderColor: '#888',
+                borderRadius: 5,
+                backgroundColor: '#fff',
+                height: Math.max(45, this.state.height)
+            }}>
+                < View style={{flex: 1}}>
+                    <TextInput
+                        onChangeText={(textEntry) => { this.setState({ textInput: textEntry }) }}
+                        value={this.state.textInput}
+                        placeholder= 'Type here'
+                        multiline
+                        onContentSizeChange={event => {
+                            this.setState({ height: event.nativeEvent.contentSize.height })
+                        }}
+                        style={{ backgroundColor: 'transparent', fontSize: 18, width: 308, height: Math.max(35, this.state.height) }}
+                    />
+                </View >
+                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                    {this.state.textInput !== null && this.state.textInput !== '' ?
+                    <TouchableOpacity
+                        onPress={() => this.handleSubmit(this.state.textInput)}
+                        style={styles.submitButton}
+                        >
+                        <Text style={{ color: 'white' }}>Send</Text>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        disabled
+                        style={styles.disabledSubmitButton}
+                    >
+                        <Text style={{ color: 'white' }}>Send</Text>
+                    </TouchableOpacity>
+                }
+                </View>
+            </View >
         )
     }
 
 }
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
-        width: 300,
-        height: 80,
-        alignItems: 'center',
+   
+    submitButton: {
+        backgroundColor: '#3377FF',
+        width: 50,
+        padding: 5,
+        borderRadius: 20,
         justifyContent: 'center',
-        alignSelf: 'center',
-        marginBottom: 10
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginRight: 5
     },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 30
+    disabledSubmitButton: {
+        backgroundColor: '#D5D6D7',
+        width: 50,
+        padding: 5,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        marginRight: 5
     }
 });
 

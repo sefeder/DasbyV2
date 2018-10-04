@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import { Chance } from 'chance';
 import virgil from '../utils/virgilUtil';
 import api from '../utils/api';
@@ -49,70 +49,72 @@ export default class SignUpScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
-                <ScrollView>
-                    <View style={styles.inputForm}>
-                        <View>
-                            <Text style={styles.inputLabel}>
-                                First Name:
-                            </Text>
-                            <TextInput
-                                autoFocus
-                                style={styles.textInput}
-                                onChangeText={(firstInput) => this.setState({ firstInput })}
-                                value={this.state.firstInput}
-                                placeholder='e.g. Joe'
-                            />
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}> 
+                    <ScrollView>
+                        <View style={styles.inputForm}>
+                            <View>
+                                <Text style={styles.inputLabel}>
+                                    First Name:
+                                </Text>
+                                <TextInput
+                                    autoFocus
+                                    style={styles.textInput}
+                                    onChangeText={(firstInput) => this.setState({ firstInput })}
+                                    value={this.state.firstInput}
+                                    placeholder='e.g. Joe'
+                                />
+                            </View>
+                            <View>
+                                <Text style={styles.inputLabel}>
+                                    Last Name:
+                                </Text>
+                                <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(lastInput) => this.setState({ lastInput })}
+                                    value={this.state.lastInput}
+                                    placeholder='e.g. Smith'
+                                />
+                            </View>
+                            <View>
+                                <Text style={styles.inputLabel}>
+                                    Email:
+                                </Text>
+                                <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(emailInput) => this.setState({ emailInput })}
+                                    value={this.state.emailInput}
+                                    placeholder='e.g. joesmith@gmail.com'
+                                    autoCapitalize='none'
+                                    textContentType='emailAddress'
+                                />
+                            </View>
+                            <View style={styles.marginBottom}>
+                                <Text style={styles.inputLabel}>
+                                    Password:
+                                </Text>
+                                <TextInput
+                                    style={styles.passwordTextInput}
+                                    onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                                    value={this.state.passwordInput}
+                                    placeholder='At least 6 characters'
+                                    autoCapitalize='none'
+                                    textContentType='password'
+                                    secureTextEntry={this.state.hiddenPass}
+                                />
+                                <Button
+                                    title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
+                                    onPress={this.viewPass}
+                                >
+                                </Button>
+                            </View>
+                            <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
+                                <Text style={styles.buttonText}> Sign Up </Text>
+                            </TouchableHighlight>
                         </View>
-                        <View>
-                            <Text style={styles.inputLabel}>
-                                Last Name:
-                            </Text>
-                            <TextInput
-                                style={styles.textInput}
-                                onChangeText={(lastInput) => this.setState({ lastInput })}
-                                value={this.state.lastInput}
-                                placeholder='e.g. Smith'
-                            />
-                        </View>
-                        <View>
-                            <Text style={styles.inputLabel}>
-                                Email:
-                            </Text>
-                            <TextInput
-                                style={styles.textInput}
-                                onChangeText={(emailInput) => this.setState({ emailInput })}
-                                value={this.state.emailInput}
-                                placeholder='e.g. joesmith@gmail.com'
-                                autoCapitalize='none'
-                                textContentType='emailAddress'
-                            />
-                        </View>
-                        <View style={styles.marginBottom}>
-                            <Text style={styles.inputLabel}>
-                                Password:
-                            </Text>
-                            <TextInput
-                                style={styles.passwordTextInput}
-                                onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                                value={this.state.passwordInput}
-                                placeholder='At least 6 characters'
-                                autoCapitalize='none'
-                                textContentType='password'
-                                secureTextEntry={this.state.hiddenPass}
-                            />
-                            <Button
-                                title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                                onPress={this.viewPass}
-                            >
-                            </Button>
-                        </View>
-                        <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
-                            <Text style={styles.buttonText}> Sign Up </Text>
-                        </TouchableHighlight>
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         )
     }
 }

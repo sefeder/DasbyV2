@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight,} from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight,} from 'react-native';
 import api from '../utils/api';
 
 export default class LogInScreen extends Component {
@@ -35,46 +35,48 @@ export default class LogInScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView enabled behavior="padding" style={styles.app}>
-                <View style={styles.inputForm}>
-                    <View>
-                        <Text style={styles.inputLabel}>
-                            Email:
-                        </Text>
-                        <TextInput
-                            style={styles.textInput}
-                            autoFocus
-                            onChangeText={(emailInput) => this.setState({ emailInput })}
-                            value={this.state.emailInput}
-                            placeholder='Email'
-                            autoCapitalize='none'
-                            textContentType='emailAddress'
-                        />
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}> 
+                    <View style={styles.inputForm}>
+                        <View>
+                            <Text style={styles.inputLabel}>
+                                Email:
+                            </Text>
+                            <TextInput
+                                style={styles.textInput}
+                                autoFocus
+                                onChangeText={(emailInput) => this.setState({ emailInput })}
+                                value={this.state.emailInput}
+                                placeholder='Email'
+                                autoCapitalize='none'
+                                textContentType='emailAddress'
+                            />
+                        </View>
+                        <View style={styles.marginBottom}>
+                            <Text style={styles.inputLabel}>
+                                Password:
+                            </Text>
+                            <TextInput
+                                style={styles.passwordTextInput}
+                                onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                                value={this.state.passwordInput}
+                                placeholder='Password'
+                                autoCapitalize='none'
+                                textContentType='password'
+                                secureTextEntry={this.state.hiddenPass}
+                            />
+                            <Button
+                            title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
+                            onPress={this.viewPass}
+                            >
+                            </Button>
+                        </View>
+                        <TouchableHighlight style={styles.button} onPress={this.submitLogIn}>
+                            <Text style={styles.buttonText}> Log In </Text>
+                        </TouchableHighlight>
                     </View>
-                    <View style={styles.marginBottom}>
-                        <Text style={styles.inputLabel}>
-                            Password:
-                        </Text>
-                        <TextInput
-                            style={styles.passwordTextInput}
-                            onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                            value={this.state.passwordInput}
-                            placeholder='Password'
-                            autoCapitalize='none'
-                            textContentType='password'
-                            secureTextEntry={this.state.hiddenPass}
-                        />
-                        <Button
-                        title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                        onPress={this.viewPass}
-                        >
-                        </Button>
-                    </View>
-                    <TouchableHighlight style={styles.button} onPress={this.submitLogIn}>
-                        <Text style={styles.buttonText}> Log In </Text>
-                    </TouchableHighlight>
-                </View>
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         )
     }
 }

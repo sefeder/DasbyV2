@@ -5,6 +5,7 @@ import api from '../utils/api';
 
 export default {
     initializeVirgil: (upi) => {
+        console.log('front end: hitting initialize virgil')
         return new Promise((resolve, reject) => {
             const virgilCrypto = new VirgilCrypto();
             const virgilCardCrypto = new VirgilCardCrypto(virgilCrypto);

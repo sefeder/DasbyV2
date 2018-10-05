@@ -6,6 +6,11 @@ import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
+import QuickReply from '../components/QuickReply';
+
+const payloadDataSample = '{ "fromDasby": true, "message": "Hello", "payload": [{ "message": "Hi?", "chapter": "0", "section": 0, "block": 1 }] }';
+
+const normalMessageSample = "hello there good sir";
 
 export default class UserHomeScreen extends Component {
 
@@ -16,7 +21,10 @@ export default class UserHomeScreen extends Component {
         channel: null,
         userPrivateKey: null,
         messages: [],
-        memberArray: []
+        memberArray: [],
+        // need to get dasby upi programatically
+        DasbyUpi: '5L9jVNof2r',
+        responseArray: []
     }
 
 
@@ -92,6 +100,17 @@ export default class UserHomeScreen extends Component {
         return decryptedMessage
     }
 
+    parsePayloadData = payloadDataString => {
+        const payloadData = JSON.parse(payloadDataString)
+        const message = payloadData.message
+        this.setState({
+            responseArray: payloadData.payload
+        })
+
+        this.addMessage({ author: this.state.DasbyUpi, body: message })
+
+    }
+
     addMessage = (message) => {
         const messageData = { ...message, me: message.author === this.state.userInfo.first_name }
         this.setState({
@@ -101,7 +120,13 @@ export default class UserHomeScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
+            if(author === this.state.DasbyUpi){
+                console.log('davids consolelog')
+                this.parsePayloadData(this.decryptMessage(body))
+            }else{
+                console.log('seths console.log')
             this.addMessage({ author, body: this.decryptMessage(body) })
+            }
         })
 
         // channel.on('memberJoined', (member) => {
@@ -130,7 +155,8 @@ render () {
                     Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
                 </Text>
                 <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-                <MessageForm onMessageSend={this.handleNewMessage} />
+                {/* <MessageForm onMessageSend={this.handleNewMessage} /> */}
+                <QuickReply responseArray={this.state.responseArray} />
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

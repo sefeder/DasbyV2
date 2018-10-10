@@ -23,10 +23,7 @@ app.use(routes)
 //     .catch(err => console.log(err))
 
 
-db.sequelize.sync()
-.then(function () {
-    app.listen(PORT, function () {
-        console.log(`🌎 ==> Server now on port ${PORT}!`);
-    });
+app.listen(PORT, function () {
+    console.log(`🌎 ==> Server now on port ${PORT}!`);
 });
 

@@ -37,7 +37,7 @@ findAll = function () {
 		});
 	})
 }
-findAllWhere = function (searchParameter, searchValue) {
+findAllWhere = function (searchObject) {
 	return new Promise((resolve,reject) =>{
 		dbPool.getConnection(function(error, connection){
 
@@ -45,10 +45,10 @@ findAllWhere = function (searchParameter, searchValue) {
 				console.log(error);
 			}
 			else{
-				const queryString = 'SELECT * FROM ' +  table + ' WHERE ? = ? ORDER BY `createdAt` DESC';
+				const queryString = 'SELECT * FROM ' +  table + ' WHERE ? ORDER BY `createdAt` DESC';
 				connection.query(
 				queryString,
-				[searchParameter, valuesearchValue],
+				[searchObject],
 				function(err, results) {
 					if (err) {
 						console.log(err);
@@ -64,7 +64,7 @@ findAllWhere = function (searchParameter, searchValue) {
 	})
 }
 
-findOne = function (searchParameter, searchValue) {
+findOne = function (searchObject) {
 	return new Promise((resolve,reject) =>{
 		dbPool.getConnection(function(error, connection){
 
@@ -72,16 +72,16 @@ findOne = function (searchParameter, searchValue) {
 				console.log(error);
 			}
 			else{
-				const queryString = 'SELECT * FROM ' +  table + ' WHERE ? = ? ORDER BY `createdAt` DESC LIMIT 1';
+				const queryString = 'SELECT * FROM ' +  table + ' WHERE ? ORDER BY `createdAt` DESC LIMIT 1';
 				connection.query(
 				queryString,
-				[searchParameter, valuesearchValue],
+				[searchObject],
 				function(err, results) {
 					if (err) {
 						console.log(err);
 					}
 					else{
-						resolve(results);
+						resolve(results[0]);
 					}
 				}
 				);
@@ -91,7 +91,7 @@ findOne = function (searchParameter, searchValue) {
 	})
 }
 
-update = function(searchParameter, searchValue, newData) {
+update = function (searchObject, newData) {
 	return new Promise((resolve,reject) =>{
 		const newDate = getTimestamp(new Date());
 		newData.updatedAt = newDate;
@@ -101,16 +101,17 @@ update = function(searchParameter, searchValue, newData) {
 				console.log(error)
 			}
 			else{
-				const queryString = 'UPDATE ' + table + ' SET ? WHERE ? = ? ';
+				const queryString = 'UPDATE ' + table + ' SET ? WHERE ? ';
 				connection.query(
 					queryString, 
-					[newData, searchParameter, searchValue], 
+                    [newData, searchObject], 
 					function (err, results) {
+                        console.log("user model update results: ", results)
 						if (err) {
 							console.log(err);
 						}
 						else{
-							resolve(results);
+							resolve(results[0]);
 						}
 				});
 				dbPool.releaseConnection(connection);
@@ -135,6 +136,7 @@ create = function(userData) {
 					queryString, 
 					userData, 
 					function(err, results) {
+                        console.log("user model create results: ", results)
 						if (err) {
 							console.log(err);
 						}

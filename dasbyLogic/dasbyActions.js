@@ -1,5 +1,7 @@
 const twilio = require('./dasbyTwilio')
 const virgil = require('./dasbyVirgil')
+const dialogue = require('../models/dialogue')
+
 const dasbyUpi = '5L9jVNof2r'
 
 const sendResponse = (channel) => {

@@ -12,9 +12,12 @@ module.exports = {
             role: req.body.role
         }
         dbUsers.create(newUser)
-        .then(result => {
-            console.log('new user successfully added')
-            res.json({user: result})
+        .then(() => {
+            dbUsers.findOne({ upi: req.body.upi })
+                .then(dbUser => {
+                    console.log('new user successfully added')
+                    res.json({ user: dbUser })
+                })
         })
         .catch(err => console.log(err))
         
@@ -24,8 +27,9 @@ module.exports = {
         dbUsers.findAll().then(dbUsers=>res.json(dbUsers))
     },
     authenticateUser: function(req, res) {
-        dbUsers.findOne(email, req.body.email)
+        dbUsers.findOne({email:req.body.email})
         .then(function (data) {
+            console.log('data: ', data)
             if (!data) {
                 res.json({status: false, message: "invalid email"})
                 console.log('invalid email')
@@ -45,12 +49,11 @@ module.exports = {
     },
     update: function (req, res) {
             dbUsers.update(
-                upi, 
-                req.body.upi,
+                {upi: req.body.upi},
                 { private_key: JSON.stringify(req.body.privateKey) }
             )
             .then(() => {
-                dbUsers.findOne(upi, req.body.upi)
+                dbUsers.findOne({upi: req.body.upi})
                 .then( dbUser => {
                     res.json({user: dbUser})
                 })
@@ -58,13 +61,13 @@ module.exports = {
             .catch(err=>console.log(err))
     },
     getAdmin: function (req, res) {
-        dbUsers.findAllWhere(role,"admin")
+        dbUsers.findAllWhere({role:"admin"})
         .then(admin => {
             res.json({admin: admin})
         })
     },
     getUser: function (req, res) {
-        dbUsers.findOne(upi,req.body.upi)
+        dbUsers.findOne({upi: req.body.upi})
         .then(user => {
             res.json({ user: user })
         })

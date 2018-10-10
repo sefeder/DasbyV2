@@ -10,9 +10,6 @@ class QuickReply extends Component {
 
     handleSubmit = (text) => {
         this.props.onMessageSend(text)
-        this.setState({
-            textInput: null
-        })
     }
 
     render() {
@@ -21,7 +18,7 @@ class QuickReply extends Component {
                 < View style={styles.quickReplyView}>
                     {this.props.responseArray.map((response, idx) => {
                         return [
-                        <TouchableHighlight style={styles.submitButton} key={idx}>
+                        <TouchableHighlight onPress={()=>this.handleSubmit(JSON.stringify(response))}style={styles.submitButton} key={idx}>
                             <Text>
                                 {response.message}
                             </Text>

@@ -156,7 +156,7 @@ render () {
                 </Text>
                 <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
                 {/* <MessageForm onMessageSend={this.handleNewMessage} /> */}
-                <QuickReply responseArray={this.state.responseArray} />
+                <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

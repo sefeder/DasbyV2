@@ -12,22 +12,25 @@ const table = "dialogue";
  Queries 
 ************************************************/
 find = function (chapter, section, block) {
-	dbPool.getConnection(function(error, connection) {
-        return new Promise((resolve,reject) =>{
+    return new Promise((resolve, reject) => {
+    dbPool.getConnection(function(error, connection) {
             if (error) {
                 console.log(error);
             }
             else{
-                const queryString = 'SELECT * FROM ' +  table + ' WHERE `chapter` = ? AND `section` = ? AND `block` > ? ORDER BY `block`';
+                const queryString = 'SELECT * FROM ' +  table + ' WHERE `chapter` = ? AND `section` = ? AND `block` = ? ORDER BY `block`';
                 connection.query(
                     queryString,
-                    [chapter, section, block-1],
+                    [chapter, section, block],
                     function(err, results) {
                         if (err) {
                             console.log(err);
                         }
                         else{
-                            resolve(results);
+                            console.log('===============================')
+                            console.log('results in dia.find: ', results)
+                            console.log('=============================')
+                            resolve(results[0]);
                         }
                     }
                 );

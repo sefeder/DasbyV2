@@ -10,7 +10,7 @@ const getChannelAsDasby = (identity, channelSid) => {
         .then(createChatClient)
         .then(chatClient => {
             return chatClient.getChannelBySid(channelSid)
-        })
+        }).catch(err=>console.log("gettwilioToken and creatChateClient catch: ", err))
 }
 
 getTwilioToken = identity => {

@@ -8,10 +8,6 @@ import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
 
-const payloadDataSample = '{ "fromDasby": true, "message": "Hello", "payload": [{ "message": "Hi?", "chapter": "0", "section": 0, "block": 1 }] }';
-
-const normalMessageSample = "hello there good sir";
-
 export default class UserHomeScreen extends Component {
 
     state = {
@@ -100,15 +96,45 @@ export default class UserHomeScreen extends Component {
         return decryptedMessage
     }
 
-    parsePayloadData = payloadDataString => {
-        const payloadData = JSON.parse(payloadDataString)
-        const message = payloadData.message
-        this.setState({
-            responseArray: payloadData.payload
-        })
+    canParseStr = str => {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
 
-        this.addMessage({ author: this.state.DasbyUpi, body: message })
+    parseDasbyPayloadData = payloadDataString => {
+        if (this.canParseStr(payloadDataString)) {
+            const payloadData = JSON.parse(payloadDataString)
+            const message = payloadData.message
+            if (payloadData.payload !== undefined){
+                this.setState({
+                    responseArray: payloadData.payload
+                })
+            } else {
+                this.setState({
+                    responseArray: []
+                })
+            }
+            this.addMessage({ author: this.state.DasbyUpi, body: message })
+        } else {
+            const message = payloadDataString
+            this.addMessage({ author: this.state.DasbyUpi, body: message })
+        }
+    }
 
+    parseUserPayloadData = payloadDataString => {
+        if (this.canParseStr(payloadDataString)) {
+            const payloadData = JSON.parse(payloadDataString)
+            const message = payloadData.message
+            return message
+        } else {
+            const message = payloadDataString
+            return message
+        }
+        
     }
 
     addMessage = (message) => {
@@ -121,11 +147,10 @@ export default class UserHomeScreen extends Component {
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
             if(author === this.state.DasbyUpi){
-                console.log('davids consolelog')
-                this.parsePayloadData(this.decryptMessage(body))
+                this.parseDasbyPayloadData(this.decryptMessage(body))
             }else{
-                console.log('seths console.log')
-            this.addMessage({ author, body: this.decryptMessage(body) })
+
+                this.addMessage({ author, body: this.parseUserPayloadData(this.decryptMessage(body)) })
             }
         })
 
@@ -155,8 +180,10 @@ render () {
                     Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
                 </Text>
                 <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-                {/* <MessageForm onMessageSend={this.handleNewMessage} /> */}
-                <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
+                {this.state.responseArray.length === 0 ? 
+                    <MessageForm onMessageSend={this.handleNewMessage} /> :
+                    <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
+                }
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

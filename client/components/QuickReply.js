@@ -18,10 +18,10 @@ class QuickReply extends Component {
                 < View style={styles.quickReplyView}>
                     {this.props.responseArray.map((response, idx) => {
                         return [
-                        <TouchableHighlight onPress={()=>this.handleSubmit(JSON.stringify(response))}style={styles.submitButton} key={idx}>
-                            <Text>
+                            <TouchableHighlight onPress={() => this.handleSubmit(JSON.stringify(response))} style={styles.quickReplyButton} key={idx}>
+                                <Text style={styles.quickReplyText}>
                                 {response.message}
-                            </Text>
+                                </Text>
                         </TouchableHighlight>
                         ]
                     })}
@@ -40,25 +40,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center'
     },
-    submitButton: {
-        backgroundColor: '#3377FF',
-        width: 50,
+    quickReplyButton: {
+        backgroundColor: 'white',
+        borderColor: '#3377FF',
+        borderWidth: 2,
+        width: 100,
         padding: 5,
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: 'flex-end',
         marginRight: 5
     },
-    disabledSubmitButton: {
-        backgroundColor: '#D5D6D7',
-        width: 50,
-        padding: 5,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        marginRight: 5
+    quickReplyText: {
+        color: '#3377FF'
     }
 });
 

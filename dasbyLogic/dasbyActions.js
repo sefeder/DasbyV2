@@ -9,21 +9,32 @@ const sendResponse = (channel, message) => {
     channel.sendMessage(virgil.encryptMessage(channel, message))
 }
 
+canParseStr = str => {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 handleNewMessage = (channelSid, body, author) => {
     if (author !== dasbyUpi) {
         twilio.getChannelAsDasby(dasbyUpi, channelSid)
             .then(currentChannel =>{
                 console.log("handleNewMessage currentChannel: ", currentChannel)
-                const decryptedMessage = virgil.decryptMessage(currentChannel, body)
-                console.log('decryptedMessage: ', decryptedMessage)
+                const decryptedMessageString = virgil.decryptMessage(currentChannel, body)
+                console.log('decryptedMessageString: ', decryptedMessageString)
                 // parse decryptedMessage for chapter, section, and block and pass in to sendResponse
-                const chapter = JSON.parse(decryptedMessage).chapter
-                const section = JSON.parse(decryptedMessage).section
-                const block = JSON.parse(decryptedMessage).block
-                dialogue.find(chapter, section, block).then(dialogueRow => {
-                    console.log("dialogueRow: ",dialogueRow)
-                    sendResponse(currentChannel, dialogueRow.payloadData);
-                }).catch(err => console.log("dialogue.find catch: ",err))
+                if (canParseStr(decryptedMessageString)) {
+                    const decryptedMessage = JSON.parse(decryptedMessageString)
+                    dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block).then(dialogueRow => {
+                        console.log("dialogueRow: ",dialogueRow)
+                        sendResponse(currentChannel, dialogueRow.payloadData);
+                    }).catch(err => console.log("dialogue.find catch: ",err))
+                } else {
+                    sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');
+                }
                 
             }).catch(err=>console.log("getChannelAsDasby catch",err))
     }

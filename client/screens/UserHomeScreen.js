@@ -59,11 +59,20 @@ export default class UserHomeScreen extends Component {
                         channel.getMessages().then(result=>{
                             this.setState({
                                 messages: result.items.map((message, i, items) => {
-                                    return {
-                                        author: message.author,
-                                        body: this.decryptMessage(message.body),
-                                        me: message.author === this.state.userInfo.upi,
-                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
+                                    if (message.author === this.state.DasbyUpi) {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
+                                        }
+                                    } else {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseUserPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                        }
                                     }
                                 })
                             })
@@ -118,10 +127,10 @@ export default class UserHomeScreen extends Component {
                     responseArray: []
                 })
             }
-            this.addMessage({ author: this.state.DasbyUpi, body: message })
+            return message
         } else {
             const message = payloadDataString
-            this.addMessage({ author: this.state.DasbyUpi, body: message })
+            return message
         }
     }
 
@@ -147,9 +156,8 @@ export default class UserHomeScreen extends Component {
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
             if(author === this.state.DasbyUpi){
-                this.parseDasbyPayloadData(this.decryptMessage(body))
+                this.addMessage({ author, body: this.parseDasbyPayloadData(this.decryptMessage(body)) })
             }else{
-
                 this.addMessage({ author, body: this.parseUserPayloadData(this.decryptMessage(body)) })
             }
         })

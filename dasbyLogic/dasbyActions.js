@@ -19,7 +19,7 @@ canParseStr = str => {
 }
 
 handleNewMessage = (channelSid, body, author) => {
-    if (author !== dasbyUpi) {
+    if (author !== dasbyUpi ) {
         twilio.getChannelAsDasby(dasbyUpi, channelSid)
             .then(currentChannel =>{
                 console.log("handleNewMessage currentChannel: ", currentChannel)
@@ -33,7 +33,7 @@ handleNewMessage = (channelSid, body, author) => {
                         sendResponse(currentChannel, dialogueRow.payloadData);
                     }).catch(err => console.log("dialogue.find catch: ",err))
                 } else {
-                    sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');
+                    // sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');
                 }
                 
             }).catch(err=>console.log("getChannelAsDasby catch",err))

@@ -147,7 +147,7 @@ export default class UserHomeScreen extends Component {
     }
 
     addMessage = (message) => {
-        const messageData = { ...message, me: message.author === this.state.userInfo.first_name }
+        const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length-1] === undefined ? false : this.state.messages[this.state.messages.length-1].author === message.author}
         this.setState({
             messages: [...this.state.messages, messageData],
         })

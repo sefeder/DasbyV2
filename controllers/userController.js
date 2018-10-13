@@ -71,6 +71,12 @@ module.exports = {
         .then(user => {
             res.json({ user: user })
         })
+    },
+    getDasbyUpi: function (req, res) {
+        dbUsers.findOne({ first_name: 'Dasby' })
+            .then(dasby => {
+                res.json({ dasby: dasby })
+            })
     }
 
 }

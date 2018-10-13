@@ -18,8 +18,7 @@ export default class UserHomeScreen extends Component {
         userPrivateKey: null,
         messages: [],
         memberArray: [],
-        // need to get dasby upi programatically
-        DasbyUpi: '5L9jVNof2r',
+        DasbyUpi: null,
         responseArray: []
     }
 
@@ -29,6 +28,13 @@ export default class UserHomeScreen extends Component {
             .then(userPrivateKey => {
                 this.setState({
                     userPrivateKey: userPrivateKey
+                })
+            })
+            .catch(err => console.log(err))
+        api.getDasbyUpi()
+            .then(dasbyInfo => {
+                this.setState({
+                    DasbyUpi: dasbyInfo.dasby.upi
                 })
             })
             .catch(err => console.log(err))
@@ -145,7 +151,7 @@ export default class UserHomeScreen extends Component {
         }
         
     }
-
+// may not need undefined clause in ternary below
     addMessage = (message) => {
         const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length-1] === undefined ? false : this.state.messages[this.state.messages.length-1].author === message.author}
         this.setState({

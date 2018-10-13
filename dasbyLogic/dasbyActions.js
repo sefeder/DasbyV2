@@ -1,8 +1,8 @@
 const twilio = require('./dasbyTwilio')
 const virgil = require('./dasbyVirgil')
 const dialogue = require('../models/dialogue')
+const Users = require('../models/Users')
 
-const dasbyUpi = '5L9jVNof2r'
 
 const sendResponse = (channel, message) => {
     console.log('send response hit!!!')
@@ -19,8 +19,10 @@ canParseStr = str => {
 }
 
 handleNewMessage = (channelSid, body, author) => {
-    if (author !== dasbyUpi ) {
-        twilio.getChannelAsDasby(dasbyUpi, channelSid)
+    Users.findOne({ first_name: 'Dasby' })
+    .then(dasby => {
+        if (author !== dasby.upi ) {
+            twilio.getChannelAsDasby(dasby.upi, channelSid)
             .then(currentChannel =>{
                 console.log("handleNewMessage currentChannel: ", currentChannel)
                 const decryptedMessageString = virgil.decryptMessage(currentChannel, body)
@@ -37,7 +39,8 @@ handleNewMessage = (channelSid, body, author) => {
                 }
                 
             }).catch(err=>console.log("getChannelAsDasby catch",err))
-    }
+        }
+    })
 }
 
 module.exports = {

@@ -36,7 +36,7 @@ export default class AdminChatScreen extends Component {
                     messages: result.items.map((message, i, items) => {
                         return {
                             author: message.author,
-                            body: this.decryptMessage(message.body),
+                            body: this.parseIncomingPayloadData(this.decryptMessage(message.body)),
                             me: message.author === this.state.adminInfo.upi,
                             sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }

@@ -25,7 +25,7 @@ handleNewMessage = (channelSid, body, author) => {
             twilio.getChannelAsDasby(dasby.upi, channelSid)
             .then(currentChannel =>{
                 console.log("handleNewMessage currentChannel: ", currentChannel)
-                const decryptedMessageString = virgil.decryptMessage(currentChannel, body)
+                const decryptedMessageString = virgil.decryptMessage(currentChannel, body, dasby.private_key, dasby.upi)
                 console.log('decryptedMessageString: ', decryptedMessageString)
                 // parse decryptedMessage for chapter, section, and block and pass in to sendResponse
                 if (canParseStr(decryptedMessageString)) {

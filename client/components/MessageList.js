@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Message from './Message'
 import { ScrollView, StyleSheet } from 'react-native';
+import TypingIndicator from './TypingIndicator'
 
 class MessageList extends Component {
     static propTypes = {
@@ -19,8 +20,9 @@ class MessageList extends Component {
                     this.scrollView.scrollToEnd({ animated: true });
                 }}>
                 {this.props.messages.map((message, i) => (
-                    <Message sameAsPrevAuthor={message.sameAsPrevAuthor} upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray}/>
+                    <Message sameAsPrevAuthor={message.sameAsPrevAuthor} upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray} />
                 ))}
+                <TypingIndicator memberTyping={this.props.memberTyping} isTyping={this.props.isTyping} upi={this.props.upi} memberArray={this.props.memberArray} />
             </ScrollView>
         )
     }

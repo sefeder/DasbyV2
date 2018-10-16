@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
 import twilio from '../utils/twilioUtil';
-import {VirgilCrypto} from 'virgil-crypto';
+import { VirgilCrypto } from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
@@ -19,7 +19,9 @@ export default class UserHomeScreen extends Component {
         messages: [],
         memberArray: [],
         DasbyUpi: null,
-        responseArray: []
+        responseArray: [],
+        isTyping: false,
+        memberTyping: null,
     }
 
 
@@ -45,67 +47,67 @@ export default class UserHomeScreen extends Component {
             .then(chatClient => {
                 if (this.state.newUser) {
                     api.getAdmin()
-                    .then(result => {
-                        const adminUpiArray = result.admin.map(admin=>admin.upi)
-                        return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
-                            .then(twilio.joinChannel)
-                            .then(channel => {
-                                this.setState({ channel })
-                                adminUpiArray.forEach(adminUpi=>channel.add(adminUpi))
-                                this.configureChannelEvents(channel)
-                            })
-                    })
-                
+                        .then(result => {
+                            const adminUpiArray = result.admin.map(admin => admin.upi)
+                            return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
+                                .then(twilio.joinChannel)
+                                .then(channel => {
+                                    this.setState({ channel })
+                                    adminUpiArray.forEach(adminUpi => channel.add(adminUpi))
+                                    this.configureChannelEvents(channel)
+                                })
+                        })
+
                 }
                 else {
                     return twilio.findChannel(chatClient, this.state.userInfo.upi)
-                    .then(channel => {
-                        this.setState({channel})
-                        this.configureChannelEvents(channel)
-                        channel.getMessages().then(result=>{
-                            this.setState({
-                                messages: result.items.map((message, i, items) => {
-                                    if (message.author === this.state.DasbyUpi) {
-                                        return {
-                                            author: message.author,
-                                            body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
-                                            me: message.author === this.state.userInfo.upi,
-                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
+                        .then(channel => {
+                            this.setState({ channel })
+                            this.configureChannelEvents(channel)
+                            channel.getMessages().then(result => {
+                                this.setState({
+                                    messages: result.items.map((message, i, items) => {
+                                        if (message.author === this.state.DasbyUpi) {
+                                            return {
+                                                author: message.author,
+                                                body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
+                                                me: message.author === this.state.userInfo.upi,
+                                                sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                            }
+                                        } else {
+                                            return {
+                                                author: message.author,
+                                                body: this.parseUserPayloadData(this.decryptMessage(message.body)),
+                                                me: message.author === this.state.userInfo.upi,
+                                                sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                            }
                                         }
-                                    } else {
-                                        return {
-                                            author: message.author,
-                                            body: this.parseUserPayloadData(this.decryptMessage(message.body)),
-                                            me: message.author === this.state.userInfo.upi,
-                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
-                                        }
-                                    }
+                                    })
                                 })
                             })
-                        })
-                        channel.getMembers().then(result=>{
-                            result.forEach(member=>{
-                                api.getUser(member.identity).then(dbUser=>{
-                                    this.setState({
-                                        memberArray: [...this.state.memberArray, {
-                                            upi: dbUser.user.upi,
-                                            firstName: dbUser.user.first_name,
-                                            lastName: dbUser.user.last_name
-                                        }]
+                            channel.getMembers().then(result => {
+                                result.forEach(member => {
+                                    api.getUser(member.identity).then(dbUser => {
+                                        this.setState({
+                                            memberArray: [...this.state.memberArray, {
+                                                upi: dbUser.user.upi,
+                                                firstName: dbUser.user.first_name,
+                                                lastName: dbUser.user.last_name
+                                            }]
+                                        })
                                     })
                                 })
                             })
                         })
-                    })
-                } 
+                }
             })
-       
+
     }
 
     decryptMessage = (encrytpedMessage) => {
         const virgilCrypto = new VirgilCrypto();
         const channelPrivateKeyBytes = this.state.channel.attributes.privateKey;
-        const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes,this.state.userPrivateKey)
+        const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes, this.state.userPrivateKey)
         const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
         const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
         return decryptedMessage
@@ -124,7 +126,7 @@ export default class UserHomeScreen extends Component {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
             const message = payloadData.message
-            if (payloadData.payload !== undefined){
+            if (payloadData.payload !== undefined) {
                 this.setState({
                     responseArray: payloadData.payload
                 })
@@ -149,24 +151,46 @@ export default class UserHomeScreen extends Component {
             const message = payloadDataString
             return message
         }
-        
+
     }
-// may not need undefined clause in ternary below
+    // may not need undefined clause in ternary below
     addMessage = (message) => {
-        const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length-1] === undefined ? false : this.state.messages[this.state.messages.length-1].author === message.author}
+        const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length - 1] === undefined ? false : this.state.messages[this.state.messages.length - 1].author === message.author }
         this.setState({
             messages: [...this.state.messages, messageData],
         })
     }
 
+    updateTypingIndicator = (memberTyping, isTyping) => {
+        if (isTyping) {
+            console.log('member typing: ', memberTyping.identity)
+            this.setState({ isTyping: true, memberTyping: memberTyping.identity })
+        } else {
+            console.log("ID " + memberTyping.identity + " has stopped typing")
+            this.setState({ isTyping: false, memberTyping: memberTyping.identity })
+        }
+    }
+
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            if(author === this.state.DasbyUpi){
+            if (author === this.state.DasbyUpi) {
                 this.addMessage({ author, body: this.parseDasbyPayloadData(this.decryptMessage(body)) })
-            }else{
+            } else {
                 this.addMessage({ author, body: this.parseUserPayloadData(this.decryptMessage(body)) })
             }
         })
+
+        //set up the listener for the typing started Channel event
+        channel.on('typingStarted', member => {
+            //process the member to show typing
+            this.updateTypingIndicator(member, true);
+        });
+
+        //set  the listener for the typing ended Channel event
+        channel.on('typingEnded', member => {
+            //process the member to stop showing typing
+            this.updateTypingIndicator(member, false);
+        });
 
         // channel.on('memberJoined', (member) => {
         //     this.addMessage({ body: `${member.identity} has joined the channel.` })
@@ -186,22 +210,22 @@ export default class UserHomeScreen extends Component {
         }
     }
 
-render () {
-    return (
-        <SafeAreaView style={{flex:1}}>
-            <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
-                <Text>
-                    Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
-                </Text>
-                <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-                {this.state.responseArray.length === 0 ? 
-                    <MessageForm onMessageSend={this.handleNewMessage} /> :
-                    <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
-                }
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-    )
-}
+    render() {
+        return (
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
+                    <Text>
+                        Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
+                    </Text>
+                    <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
+                    {this.state.responseArray.length === 0 ?
+                        <MessageForm onMessageSend={this.handleNewMessage} /> :
+                        <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
+                    }
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        )
+    }
 
 
 }

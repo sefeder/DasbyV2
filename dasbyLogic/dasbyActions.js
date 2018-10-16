@@ -31,8 +31,10 @@ handleNewMessage = (channelSid, body, author) => {
                 if (canParseStr(decryptedMessageString)) {
                     const decryptedMessage = JSON.parse(decryptedMessageString)
                     dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block).then(dialogueRow => {
-                        console.log("dialogueRow: ",dialogueRow)
-                        sendResponse(currentChannel, dialogueRow.payloadData);
+                        currentChannel.typing()
+                        setTimeout(() => {
+                            sendResponse(currentChannel, dialogueRow.payloadData);
+                        }, 1000);
                     }).catch(err => console.log("dialogue.find catch: ",err))
                 } else {
                     // sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');

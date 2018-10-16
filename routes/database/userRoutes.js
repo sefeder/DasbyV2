@@ -19,4 +19,7 @@ router.route('/get-admin')
 router.route('/get-all-users')
     .get(userController.getAllUsers)
 
+router.route('/get-dasby-upi')
+    .get(userController.getDasbyUpi)
+
 module.exports = router;

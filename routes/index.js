@@ -9,4 +9,8 @@ router.use("/services", serviceRoutes);
 const databaseRoutes = require('./database')
 router.use("/database", databaseRoutes)
 
+// Dasby routes
+const dasbyRoutes = require('./dasby')
+router.use("/dasby", dasbyRoutes)
+
 module.exports = router;

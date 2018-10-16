@@ -15,11 +15,11 @@ class Message extends Component {
 
     determineAuthor = (authorUpi) => {
         if(this.props.upi === authorUpi){
-            return <View style={styles.meBubble}>< Text style={styles.meMessageText}>{this.props.body}</Text></View>
+            return <View style={styles.meBubble}>< Text selectable style={styles.meMessageText}>{this.props.body}</Text></View>
         }
         for(let i=0; i< this.props.memberArray.length; i++){
             if (this.props.memberArray[i].upi === authorUpi) {
-                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
+                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
             }
         }
     }

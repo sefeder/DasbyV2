@@ -6,6 +6,7 @@ import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
+import QuickReply from '../components/QuickReply';
 
 export default class UserHomeScreen extends Component {
 
@@ -16,7 +17,9 @@ export default class UserHomeScreen extends Component {
         channel: null,
         userPrivateKey: null,
         messages: [],
-        memberArray: []
+        memberArray: [],
+        DasbyUpi: null,
+        responseArray: []
     }
 
 
@@ -25,6 +28,13 @@ export default class UserHomeScreen extends Component {
             .then(userPrivateKey => {
                 this.setState({
                     userPrivateKey: userPrivateKey
+                })
+            })
+            .catch(err => console.log(err))
+        api.getDasbyUpi()
+            .then(dasbyInfo => {
+                this.setState({
+                    DasbyUpi: dasbyInfo.dasby.upi
                 })
             })
             .catch(err => console.log(err))
@@ -55,11 +65,20 @@ export default class UserHomeScreen extends Component {
                         channel.getMessages().then(result=>{
                             this.setState({
                                 messages: result.items.map((message, i, items) => {
-                                    return {
-                                        author: message.author,
-                                        body: this.decryptMessage(message.body),
-                                        me: message.author === this.state.userInfo.upi,
-                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
+                                    if (message.author === this.state.DasbyUpi) {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i-1].author === message.author
+                                        }
+                                    } else {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseUserPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                        }
                                     }
                                 })
                             })
@@ -92,8 +111,49 @@ export default class UserHomeScreen extends Component {
         return decryptedMessage
     }
 
+    canParseStr = str => {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    parseDasbyPayloadData = payloadDataString => {
+        if (this.canParseStr(payloadDataString)) {
+            const payloadData = JSON.parse(payloadDataString)
+            const message = payloadData.message
+            if (payloadData.payload !== undefined){
+                this.setState({
+                    responseArray: payloadData.payload
+                })
+            } else {
+                this.setState({
+                    responseArray: []
+                })
+            }
+            return message
+        } else {
+            const message = payloadDataString
+            return message
+        }
+    }
+
+    parseUserPayloadData = payloadDataString => {
+        if (this.canParseStr(payloadDataString)) {
+            const payloadData = JSON.parse(payloadDataString)
+            const message = payloadData.message
+            return message
+        } else {
+            const message = payloadDataString
+            return message
+        }
+        
+    }
+// may not need undefined clause in ternary below
     addMessage = (message) => {
-        const messageData = { ...message, me: message.author === this.state.userInfo.first_name }
+        const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length-1] === undefined ? false : this.state.messages[this.state.messages.length-1].author === message.author}
         this.setState({
             messages: [...this.state.messages, messageData],
         })
@@ -101,7 +161,11 @@ export default class UserHomeScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            this.addMessage({ author, body: this.decryptMessage(body) })
+            if(author === this.state.DasbyUpi){
+                this.addMessage({ author, body: this.parseDasbyPayloadData(this.decryptMessage(body)) })
+            }else{
+                this.addMessage({ author, body: this.parseUserPayloadData(this.decryptMessage(body)) })
+            }
         })
 
         // channel.on('memberJoined', (member) => {
@@ -130,7 +194,10 @@ render () {
                     Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
                 </Text>
                 <MessageList upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray}/>
-                <MessageForm onMessageSend={this.handleNewMessage} />
+                {this.state.responseArray.length === 0 ? 
+                    <MessageForm onMessageSend={this.handleNewMessage} /> :
+                    <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
+                }
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

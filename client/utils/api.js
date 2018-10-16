@@ -54,5 +54,15 @@ export default {
         })
             .then(res => res.json())
     },
+    getDasbyUpi: () => {
+        return fetch(`${config.apiUrl}/database/users/get-dasby-upi`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+        })
+            .then(res => res.json())
+    },
 
 } 

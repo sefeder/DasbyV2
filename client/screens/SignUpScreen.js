@@ -34,7 +34,8 @@ export default class SignUpScreen extends Component {
             upi: chance.string({
                 length: 10,
                 pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-            })
+            }),
+            role: 'user'
         })
             .then(res => {
                 virgil.initializeVirgil(res.user.upi)

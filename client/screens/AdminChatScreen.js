@@ -10,7 +10,6 @@ import virgil from '../utils/virgilUtil';
 export default class AdminChatScreen extends Component {
 
     state = {
-        //when you get to this page straight from a sign up (not a log in) object below has a private_key that is null
         adminInfo: this.props.navigation.state.params.adminInfo,
         channelDescriptor: this.props.navigation.state.params.channelDescriptor,
         channel: null,
@@ -18,7 +17,6 @@ export default class AdminChatScreen extends Component {
         messages: [],
         memberArray: []
     }
-
 
     componentDidMount() {
         virgil.getPrivateKey(this.state.adminInfo.upi)
@@ -38,7 +36,7 @@ export default class AdminChatScreen extends Component {
                     messages: result.items.map((message, i, items) => {
                         return {
                             author: message.author,
-                            body: this.decryptMessage(message.body),
+                            body: this.parseIncomingPayloadData(this.decryptMessage(message.body)),
                             me: message.author === this.state.adminInfo.upi,
                             sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }
@@ -71,8 +69,29 @@ export default class AdminChatScreen extends Component {
         return decryptedMessage
     }
 
+    canParseStr = str => {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
+    parseIncomingPayloadData = payloadDataString => {
+        if (this.canParseStr(payloadDataString)) {
+            const payloadData = JSON.parse(payloadDataString)
+            const message = payloadData.message
+            return message
+        } else {
+            const message = payloadDataString
+            return message
+        }
+    }
+
+// may not need undefined clause in ternary below
     addMessage = (message) => {
-        const messageData = { ...message, me: message.author === this.state.adminInfo.first_name }
+        const messageData = { ...message, me: message.author === this.state.adminInfo.first_name, sameAsPrevAuthor: this.state.messages[this.state.messages.length - 1] === undefined ? false : this.state.messages[this.state.messages.length - 1].author === message.author }
         this.setState({
             messages: [...this.state.messages, messageData],
         })
@@ -80,7 +99,7 @@ export default class AdminChatScreen extends Component {
 
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
-            this.addMessage({ author, body: this.decryptMessage(body) })
+            this.addMessage({ author, body: this.parseIncomingPayloadData(this.decryptMessage(body)) })
         })
 
         // channel.on('memberJoined', (member) => {

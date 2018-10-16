@@ -219,7 +219,7 @@ export default class UserHomeScreen extends Component {
                     </Text>
                     <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                     {this.state.responseArray.length === 0 ?
-                        <MessageForm onMessageSend={this.handleNewMessage} /> :
+                        <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
                         <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
                     }
                 </KeyboardAvoidingView>

@@ -15,7 +15,9 @@ export default class AdminChatScreen extends Component {
         channel: null,
         adminPrivateKey: null,
         messages: [],
-        memberArray: []
+        memberArray: [],
+        isTyping: false,
+        memberTyping: null,
     }
 
     componentDidMount() {
@@ -97,10 +99,32 @@ export default class AdminChatScreen extends Component {
         })
     }
 
+    updateTypingIndicator = (memberTyping, isTyping) => {
+        if (isTyping) {
+            console.log('member typing: ', memberTyping.identity)
+            this.setState({ isTyping: true, memberTyping: memberTyping.identity })
+        } else {
+            console.log("ID " + memberTyping.identity + " has stopped typing")
+            this.setState({ isTyping: false, memberTyping: memberTyping.identity })
+        }
+    }
+
     configureChannelEvents = (channel) => {
         channel.on('messageAdded', ({ author, body }) => {
             this.addMessage({ author, body: this.parseIncomingPayloadData(this.decryptMessage(body)) })
         })
+
+        //set up the listener for the typing started Channel event
+        channel.on('typingStarted', member => {
+            //process the member to show typing
+            this.updateTypingIndicator(member, true);
+        });
+
+        //set  the listener for the typing ended Channel event
+        channel.on('typingEnded', member => {
+            //process the member to stop showing typing
+            this.updateTypingIndicator(member, false);
+        });
 
         // channel.on('memberJoined', (member) => {
         //     this.addMessage({ body: `${member.identity} has joined the channel.` })
@@ -127,8 +151,8 @@ render () {
                 <Text>
                     Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
                 </Text>
-                <MessageList upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
-                <MessageForm onMessageSend={this.handleNewMessage} />
+                <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
+                <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} />
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

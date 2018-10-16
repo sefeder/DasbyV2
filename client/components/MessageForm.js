@@ -32,7 +32,13 @@ class MessageForm extends Component {
             }}>
                 < View style={{flex: 1}}>
                     <TextInput
-                        onChangeText={(textEntry) => { this.setState({ textInput: textEntry }) }}
+                        onChangeText={(textEntry) => {
+                            this.setState({ textInput: textEntry })
+                            // not sure next line should go here!!!!!!!!!!!!!!!!!!!
+                            if (this.state.textInput !== null) {
+                                this.props.channel.typing();
+                            }
+                        }}
                         value={this.state.textInput}
                         placeholder= 'Type here'
                         multiline

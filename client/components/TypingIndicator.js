@@ -12,16 +12,17 @@ class TypingIndicator extends Component {
         me: PropTypes.bool,
         // sameAsPrevAuthor: PropTypes.bool,
         isTyping: PropTypes.bool,
-        memberTyping: PropTypes.string
+        memberTyping: PropTypes.string,
+        prevMessage: PropTypes.object
     }
 
-    //this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>TYPING</Text></View> :
+    
 
     showTypingIndicator = (memberTyping) => {
         if (memberTyping !== this.props.upi) {
             for (let i = 0; i < this.props.memberArray.length; i++) {
                 if (this.props.memberArray[i].upi === memberTyping) {
-                    return <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>TYPING</Text></View></View>
+                    return this.props.prevMessage.author === memberTyping ? <View style={styles.notMeBubble}>< Text style={styles.notMeMessageText}>TYPING</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>TYPING</Text></View></View>
                 }
             }
         }

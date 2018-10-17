@@ -126,8 +126,7 @@ export default class UserHomeScreen extends Component {
     parseDasbyPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
-            const message = payloadData.message
-            if (payloadData.payload !== undefined) {
+            if (payloadData.payload) {
                 this.setState({
                     responseArray: payloadData.payload,
                     isQrVisible: true
@@ -137,7 +136,14 @@ export default class UserHomeScreen extends Component {
                     responseArray: []
                 })
             }
-            return message
+            if (payloadData.imageURL || payloadData.videoURL) {
+                const message = payloadData
+                return message
+            } else {
+                const message = payloadData.message
+                return message
+            }
+            
         } else {
             const message = payloadDataString
             return message
@@ -147,8 +153,13 @@ export default class UserHomeScreen extends Component {
     parseUserPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
-            const message = payloadData.message
-            return message
+            if (payloadData.imageURL || payloadData.videoURL) {
+                const message = payloadData
+                return message
+            } else {
+                const message = payloadData.message
+                return message
+            }
         } else {
             const message = payloadDataString
             return message

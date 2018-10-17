@@ -103,7 +103,7 @@ function messageRouter(channel, allSectionData, currentBlockData, iteration) {
             channel.typing()
             // In order to have a small delay between messages, we need to set a timeout.
             setTimeout(() => {
-                sendResponse(channel, 'this will be an image');
+                sendResponse(channel, currentBlockData.payloadData);
                 if (iteration < allSectionData.length) {
                     messageRouter(channel, allSectionData, allSectionData[iteration], iteration);
                 }

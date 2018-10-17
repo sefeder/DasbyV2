@@ -83,8 +83,13 @@ export default class AdminChatScreen extends Component {
     parseIncomingPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
-            const message = payloadData.message
-            return message
+            if (payloadData.imageURL || payloadData.videoURL) {
+                const message = payloadData
+                return message
+            } else {
+                const message = payloadData.message
+                return message
+            }
         } else {
             const message = payloadDataString
             return message

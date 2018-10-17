@@ -22,6 +22,7 @@ export default class UserHomeScreen extends Component {
         responseArray: [],
         isTyping: false,
         memberTyping: null,
+        isQrVisible: true
     }
 
 
@@ -128,7 +129,8 @@ export default class UserHomeScreen extends Component {
             const message = payloadData.message
             if (payloadData.payload !== undefined) {
                 this.setState({
-                    responseArray: payloadData.payload
+                    responseArray: payloadData.payload,
+                    isQrVisible: true
                 })
             } else {
                 this.setState({
@@ -207,6 +209,7 @@ export default class UserHomeScreen extends Component {
             const importedPublicKey = virgilCrypto.importPublicKey(this.state.channel.attributes.publicKey)
             const encryptedMessage = virgilCrypto.encrypt(text, importedPublicKey)
             this.state.channel.sendMessage(encryptedMessage.toString('base64'))
+            this.setState({isQrVisible: false})
         }
     }
 
@@ -220,7 +223,7 @@ export default class UserHomeScreen extends Component {
                     <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
-                        <QuickReply onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} />
+                        <QuickReply ref={ref => this.QuickReply = ref} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                 </KeyboardAvoidingView>
             </SafeAreaView>

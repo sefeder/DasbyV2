@@ -16,15 +16,17 @@ class QuickReply extends Component {
         return (
             <View >
                 < View style={styles.quickReplyView}>
-                    {this.props.responseArray.map((response, idx) => {
-                        return [
-                            <TouchableHighlight onPress={() => this.handleSubmit(JSON.stringify(response))} style={styles.quickReplyButton} key={idx}>
-                                <Text style={styles.quickReplyText}>
-                                {response.message}
-                                </Text>
-                        </TouchableHighlight>
-                        ]
-                    })}
+                    {this.props.isQrVisible &&
+                        this.props.responseArray.map((response, idx) => {
+                            return [
+                                <TouchableHighlight onPress={() => this.handleSubmit(JSON.stringify(response))} style={styles.quickReplyButton} key={idx}>
+                                    <Text style={styles.quickReplyText}>
+                                    {response.message}
+                                    </Text>
+                            </TouchableHighlight>
+                            ]
+                        })
+                    }
                 </View >
                 
             </View >

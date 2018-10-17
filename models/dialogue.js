@@ -18,10 +18,10 @@ find = function (chapter, section, block) {
                 console.log(error);
             }
             else{
-                const queryString = 'SELECT * FROM ' +  table + ' WHERE `chapter` = ? AND `section` = ? AND `block` = ? ORDER BY `block`';
+                const queryString = 'SELECT * FROM ' +  table + ' WHERE `chapter` = ? AND `section` = ? AND `block` > ? ORDER BY `block`';
                 connection.query(
                     queryString,
-                    [chapter, section, block],
+                    [chapter, section, block-1],
                     function(err, results) {
                         if (err) {
                             console.log(err);
@@ -30,7 +30,7 @@ find = function (chapter, section, block) {
                             console.log('===============================')
                             console.log('results in dia.find: ', results)
                             console.log('=============================')
-                            resolve(results[0]);
+                            resolve(results);
                         }
                     }
                 );

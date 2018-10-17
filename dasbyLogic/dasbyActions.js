@@ -28,13 +28,14 @@ handleNewMessage = (channelSid, body, author) => {
                 const decryptedMessageString = virgil.decryptMessage(currentChannel, body, dasby.private_key, dasby.upi)
                 console.log('decryptedMessageString: ', decryptedMessageString)
                 // parse decryptedMessage for chapter, section, and block and pass in to sendResponse
+                // the below case will only be false if the user types a free response message (not a json object)
                 if (canParseStr(decryptedMessageString)) {
                     const decryptedMessage = JSON.parse(decryptedMessageString)
-                    currentChannel.typing()
-                    dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block).then(dialogueRow => {
-                        setTimeout(() => {
-                            sendResponse(currentChannel, dialogueRow.payloadData);
-                        }, 1800);
+                    //NEED TO ASK JONNY: why do some rows have a payload without a block? thats why we added the bottom
+                    dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block || 0).then(allSectionData => {
+                        let iteration = 0;
+                        let currentBlockData = allSectionData[0];
+                        messageRouter(currentChannel, allSectionData, currentBlockData, iteration);
                     }).catch(err => console.log("dialogue.find catch: ",err))
                 } else {
                     // sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');
@@ -43,6 +44,146 @@ handleNewMessage = (channelSid, body, author) => {
             }).catch(err=>console.log("getChannelAsDasby catch",err))
         }
     })
+}
+
+function messageRouter(channel, allSectionData, currentBlockData, iteration) {
+
+    console.log("Running through chapterData")
+    console.log(currentBlockData);
+    if (!currentBlockData) { return; }
+    const payloadType = currentBlockData.payloadType;
+    const payloadData = JSON.parse(currentBlockData.payloadData);
+    const message = payloadData.message;
+
+    let delay = 1500;
+    if (currentBlockData.typeDelay) {
+        delay = Math.round(Number(currentBlockData.typeDelay * 3000));
+    }
+
+    switch (payloadType) {
+        case 0: // Plain text
+            console.log("In case 0, PLAIN TEXT")
+            console.log(payloadData)
+            // Show typing indicator.
+            iteration++;
+
+            channel.typing()
+                // In order to have a small delay between messages, we need to set a timeout.
+            setTimeout(() => {
+                sendResponse(channel, currentBlockData.payloadData);
+                if (iteration < allSectionData.length) {
+                    messageRouter(channel, allSectionData, allSectionData[iteration], iteration);
+                }
+            }, delay);
+                
+            break;
+
+        case 1: // Quick-replies
+            channel.typing()
+            // In order to have a small delay between messages, we need to set a timeout.
+            setTimeout(() => {
+                sendResponse(channel, currentBlockData.payloadData);
+            }, delay);
+
+            break;
+
+        case 2: //Images
+
+            var imageURL = payloadData.imageURL;
+            iteration++;
+            var messagePayload = {
+                attachment: {
+                    type: "image",
+                    payload: {
+                        url: imageURL
+                    }
+                }
+            };
+
+            channel.typing()
+            // In order to have a small delay between messages, we need to set a timeout.
+            setTimeout(() => {
+                sendResponse(channel, 'this will be an image');
+                if (iteration < allSectionData.length) {
+                    messageRouter(channel, allSectionData, allSectionData[iteration], iteration);
+                }
+            }, delay);
+
+            break;
+
+        case 3: // Video
+
+            var videoURL = payloadData.videoURL;
+            iteration++;
+            var messagePayload = {
+                attachment: {
+                    type: "template",
+                    payload: {
+                        template_type: "open_graph",
+                        elements: [
+                            {
+                                url: videoURL
+                            }
+                        ]
+                    }
+                }
+            };
+
+            channel.typing()
+            // In order to have a small delay between messages, we need to set a timeout.
+            setTimeout(() => {
+                sendResponse(channel, 'this will be a video');
+                if (iteration < allSectionData.length) {
+                    messageRouter(channel, allSectionData, allSectionData[iteration], iteration);
+                }
+            }, delay);
+
+            break;
+
+        case 4: // Generic Template
+            iteration++;
+
+            channel.typing()
+            // In order to have a small delay between messages, we need to set a timeout.
+            setTimeout(() => {
+                sendResponse(channel, 'this will be a generic template');
+                if (iteration < allSectionData.length) {
+                    messageRouter(channel, allSectionData, allSectionData[iteration], iteration);
+                }
+            }, delay);
+
+            break;
+
+        // case 5: // Modules
+        //     console.log("Attempting to run module with payload: ");
+        //     console.log(payloadData);
+
+        //     if (message) {
+        //         // Send FB message
+        //         FB.sendMessage(sender, message, null);
+        //     }
+
+        //     var moduleName = payloadData.module;
+        //     console.log("Module Named: ");
+        //     console.log(moduleName);
+
+        //     if (moduleName == "resultsModule") {
+        //         resultsModule.displayResults(sender);
+        //     }
+
+        //     const suicideInterventionModule = require("./dasby_modules/suicideInterventionModule");
+        //     if (moduleName == "suicideInterventionModule") {
+        //         var action = payloadData.action;
+        //         suicideInterventionModule.takeAction(sender, action);
+
+        //     }
+
+        //     break;
+
+        default:
+            break;
+    }
+
 }
 
 module.exports = {

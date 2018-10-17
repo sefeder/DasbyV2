@@ -22,7 +22,7 @@ class MessageList extends Component {
                 {this.props.messages.map((message, i) => (
                     <Message sameAsPrevAuthor={message.sameAsPrevAuthor} upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray} />
                 ))}
-                <TypingIndicator memberTyping={this.props.memberTyping} isTyping={this.props.isTyping} upi={this.props.upi} memberArray={this.props.memberArray} />
+                <TypingIndicator prevMessage={this.props.messages[this.props.messages.length-1]} memberTyping={this.props.memberTyping} isTyping={this.props.isTyping} upi={this.props.upi} memberArray={this.props.memberArray} />
             </ScrollView>
         )
     }

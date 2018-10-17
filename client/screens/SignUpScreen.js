@@ -149,7 +149,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: 40,
         height: 50,
-        width: 300
+        width: 300,
+        paddingLeft: 15,
+        paddingRight: 15
     },
     passwordTextInput: {
         borderColor: 'blue',
@@ -157,7 +159,9 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: 3,
         height: 50,
-        width: 300
+        width: 300,
+        paddingLeft: 15,
+        paddingRight: 15
     },
     marginBottom: {
         marginBottom: 40

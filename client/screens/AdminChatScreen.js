@@ -21,8 +21,12 @@ export default class AdminChatScreen extends Component {
     }
 
     componentDidMount() {
+        const startTime = Date.now();
+        console.log("----------------------------------------------------------")
+        console.log("hitting compoenentDidMount at: ", (Date.now() - startTime) / 1000)
         virgil.getPrivateKey(this.state.adminInfo.upi)
             .then(adminPrivateKey => {
+                console.log("Virgil Private Key Retrieved: ", (Date.now() - startTime) / 1000)
                 this.setState({
                     adminPrivateKey: adminPrivateKey
                 })
@@ -31,11 +35,15 @@ export default class AdminChatScreen extends Component {
 
         this.state.channelDescriptor.getChannel()
         .then(channel => {
+            console.log("Channel Gotten from Channel Descriptor: ", (Date.now() - startTime) / 1000)
             this.setState({channel})
             this.configureChannelEvents(channel)
             channel.getMessages().then(result => {
+                console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
+                console.log("----------------------------------------------------------------------------------------")
                 this.setState({
                     messages: result.items.map((message, i, items) => {
+                        console.log("Messages Map Function - message #", i, " at: ", (Date.now() - startTime) / 1000)
                         return {
                             author: message.author,
                             body: this.parseIncomingPayloadData(this.decryptMessage(message.body)),
@@ -43,10 +51,13 @@ export default class AdminChatScreen extends Component {
                             sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }
                     })
+                }, () => {
+                    console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
                 })
             })
             channel.getMembers().then(result => {
-                result.forEach(member => {
+                console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
+                result.forEach((member,i) => {
                     api.getUser(member.identity).then(dbUser => {
                         this.setState({
                             memberArray: [...this.state.memberArray, {
@@ -54,6 +65,8 @@ export default class AdminChatScreen extends Component {
                                 firstName: dbUser.user.first_name,
                                 lastName: dbUser.user.last_name
                             }]
+                        }, () => {
+                            console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
                         })
                     })
                 })

@@ -9,6 +9,7 @@ import AdminLogInScreen from './screens/AdminLogInScreen.js';
 import AdminSelectionScreen from './screens/AdminSelectionScreen.js';
 import AdminChatScreen from './screens/AdminChatScreen.js';
 import AdminSignUpScreen from './screens/AdminSignUpScreen.js';
+import SurveyScreen from './screens/SurveyScreen.js';
 
 const RootStack = createStackNavigator(
   {
@@ -66,6 +67,13 @@ const RootStack = createStackNavigator(
         screen: AdminSignUpScreen,
         navigationOptions: ({ navigation }) => ({
           title: 'Admin Sign Up',
+        })
+      },
+    SurveyScreen:
+      {
+        screen: SurveyScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Survey',
         })
       },
     

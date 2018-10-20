@@ -8,8 +8,12 @@ class QuickReply extends Component {
         height: 0
     }
 
-    handleSubmit = (text) => {
-        this.props.onMessageSend(text)
+    handleSubmit = (responseObject) => {
+        responseObjectString = JSON.stringify(responseObject)
+        this.props.onMessageSend(responseObjectString)
+        if(responseObject.chapter === "Survey"){
+            this.props.navigate('SurveyScreen', null)  
+        }
     }
 
     render() {
@@ -17,11 +21,11 @@ class QuickReply extends Component {
             <View >
                 < View style={styles.quickReplyView}>
                     {this.props.isQrVisible &&
-                        this.props.responseArray.map((response, idx) => {
+                        this.props.responseArray.map((responseObject, idx) => {
                             return [
-                                <TouchableHighlight onPress={() => this.handleSubmit(JSON.stringify(response))} style={styles.quickReplyButton} key={idx}>
+                                <TouchableHighlight onPress={() => this.handleSubmit(responseObject)} style={styles.quickReplyButton} key={idx}>
                                     <Text style={styles.quickReplyText}>
-                                    {response.message}
+                                    {responseObject.message}
                                     </Text>
                             </TouchableHighlight>
                             ]

@@ -27,8 +27,12 @@ export default class UserHomeScreen extends Component {
 
 
     componentDidMount() {
+        const startTime = Date.now();
+        console.log("----------------------------------------------------------")
+        console.log("hitting compoenentDidMount at: ", (Date.now()-startTime)/1000)
         virgil.getPrivateKey(this.state.userInfo.upi)
             .then(userPrivateKey => {
+                console.log("Virgil Private Key Retrieved: ", (Date.now() - startTime) / 1000)
                 this.setState({
                     userPrivateKey: userPrivateKey
                 })
@@ -36,6 +40,7 @@ export default class UserHomeScreen extends Component {
             .catch(err => console.log(err))
         api.getDasbyUpi()
             .then(dasbyInfo => {
+                console.log("Dasby UPI Retrieved: ", (Date.now() - startTime) / 1000)                
                 this.setState({
                     DasbyUpi: dasbyInfo.dasby.upi
                 })
@@ -46,6 +51,7 @@ export default class UserHomeScreen extends Component {
         twilio.getTwilioToken(this.state.userInfo.upi)
             .then(twilio.createChatClient)
             .then(chatClient => {
+                console.log("Twilio Chat Client Recieved: ", (Date.now() - startTime) / 1000)
                 if (this.state.newUser) {
                     api.getAdmin()
                         .then(result => {
@@ -53,6 +59,7 @@ export default class UserHomeScreen extends Component {
                             return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
                                 .then(twilio.joinChannel)
                                 .then(channel => {
+                                    console.log("New Twilio Channel Created and Joined Retrieved: ", (Date.now() - startTime) / 1000)
                                     this.setState({ channel })
                                     adminUpiArray.forEach(adminUpi => channel.add(adminUpi))
                                     this.configureChannelEvents(channel)
@@ -63,11 +70,15 @@ export default class UserHomeScreen extends Component {
                 else {
                     return twilio.findChannel(chatClient, this.state.userInfo.upi)
                         .then(channel => {
+                            console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
                             this.setState({ channel })
                             this.configureChannelEvents(channel)
                             channel.getMessages().then(result => {
+                                console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
+                                console.log("----------------------------------------------------------------------------------------")
                                 this.setState({
                                     messages: result.items.map((message, i, items) => {
+                                        console.log("Messages Map Function - message #",i, " at: " ,(Date.now() - startTime) / 1000)
                                         if (message.author === this.state.DasbyUpi) {
                                             return {
                                                 author: message.author,
@@ -84,10 +95,14 @@ export default class UserHomeScreen extends Component {
                                             }
                                         }
                                     })
+                                    
+                                }, ()=> {
+                                    console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
                                 })
                             })
                             channel.getMembers().then(result => {
-                                result.forEach(member => {
+                                console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
+                                result.forEach((member,i) => {
                                     api.getUser(member.identity).then(dbUser => {
                                         this.setState({
                                             memberArray: [...this.state.memberArray, {
@@ -95,7 +110,9 @@ export default class UserHomeScreen extends Component {
                                                 firstName: dbUser.user.first_name,
                                                 lastName: dbUser.user.last_name
                                             }]
-                                        })
+                                        }, ()=> {
+                                            console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
+                                            })
                                     })
                                 })
                             })
@@ -112,6 +129,10 @@ export default class UserHomeScreen extends Component {
         const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
         const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
         return decryptedMessage
+    }
+
+    navigate = (screenName, objectToPass) => {
+        this.props.navigation.navigate(screenName, objectToPass)
     }
 
     canParseStr = str => {
@@ -234,7 +255,7 @@ export default class UserHomeScreen extends Component {
                     <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
-                        <QuickReply ref={ref => this.QuickReply = ref} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
+                        <QuickReply ref={ref => this.QuickReply = ref} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                 </KeyboardAvoidingView>
             </SafeAreaView>

@@ -89,16 +89,16 @@ function messageRouter(channel, allSectionData, currentBlockData, iteration) {
 
         case 2: //Images
 
-            var imageURL = payloadData.imageURL;
+            // var imageURL = payloadData.imageURL;
             iteration++;
-            var messagePayload = {
-                attachment: {
-                    type: "image",
-                    payload: {
-                        url: imageURL
-                    }
-                }
-            };
+            // var messagePayload = {
+            //     attachment: {
+            //         type: "image",
+            //         payload: {
+            //             url: imageURL
+            //         }
+            //     }
+            // };
 
             channel.typing()
             // In order to have a small delay between messages, we need to set a timeout.

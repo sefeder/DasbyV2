@@ -55,9 +55,9 @@ function messageRouter(channel, allSectionData, currentBlockData, iteration) {
     const payloadData = JSON.parse(currentBlockData.payloadData);
     const message = payloadData.message;
 
-    let delay = 1500;
+    let delay = 1000;
     if (currentBlockData.typeDelay) {
-        delay = Math.round(Number(currentBlockData.typeDelay * 3000));
+        delay = Math.round(Number(currentBlockData.typeDelay * 2000));
     }
 
     switch (payloadType) {

@@ -64,5 +64,21 @@ export default {
         })
             .then(res => res.json())
     },
+    getCatmhSurvey: (surveyType, userUpi) => {
+        return fetch(`${config.apiUrl}/services/get-catmh-survey`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    surveyType: surveyType,
+                    userUpi: userUpi 
+                }
+            )
+        })
+            .then(res => res.json())
+    }
 
 } 

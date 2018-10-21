@@ -255,7 +255,7 @@ export default class UserHomeScreen extends Component {
                     <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
-                        <QuickReply ref={ref => this.QuickReply = ref} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
+                        <QuickReply ref={ref => this.QuickReply = ref} upi={this.state.userInfo.upi} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                 </KeyboardAvoidingView>
             </SafeAreaView>

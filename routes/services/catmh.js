@@ -38,8 +38,10 @@ module.exports = {
                    // STEP 4. Start interview / get first item
                    getItem(cookies)
                    .then(item => {
-                       console.log("ITEM: ", item);
-                       resolve(item)
+                       const itemJSON = JSON.parse(item)
+                       const newItem = {...itemJSON, cookies: cookies}
+                       console.log("newItem", newItem);
+                       resolve(newItem)
                    })
                })
            })
@@ -49,68 +51,49 @@ module.exports = {
     /************************************************
     Next Item
     ************************************************/
-    // nextItem: function (userUpi, choice, payload, sendMessage) {
+    nextItem: (userUpi, choice, currentQuestion) => {
+        return new Promise((resolve, reject)=>{
 
-    //     // Cookies from payload
-    //     var cookies = {
-    //         AWSELB: payload.AWSELB,
-    //         JSESSIONID: payload.JSESSIONID
-    //     };
+            // Cookies from currentQuestion
+            const cookies = {
+                AWSELB: currentQuestion.cookies.AWSELB,
+                JSESSIONID: currentQuestion.cookies.JSESSIONID
+            };
+    
+            // Step 1. Send Answer Choice
+            sendAnswers(cookies, currentQuestion.questionID, choice)
+            .then(body => {
+                console.log(body)
+                // Step 2. Get next item
+                getItem(cookies) 
+                .then(item => {
+                    console.log("ITEM: ", item);
+                    // STEP 3. Item message
+                    const itemJSON = JSON.parse(item);
+                    console.log("QuestionId: ", itemJSON.questionID);
+                    if (itemJSON.questionID === -1 || itemJSON.questionID === "-1") {
+                        
+                         console.log("Thank you, the interview has been completed.")
+                         // NEED TO BUILD THIS CONDITION OUT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                       
+                        // completedInterview(userUpi, function () {
+            
+                        //     // Save Results
+                        //     saveResults(userUpi, currentQuestion, function (message) {
+                        //         sendMessage(message);
+                        //     });
+            
+                       // });
+                    } else {
+                        const newItem = { ...itemJSON, cookies: cookies }
+                        resolve(newItem)
+                    }
+                })
+            })
+        })
+    }
 
-    //     // Step 1. Send Answer Choice
-    //     sendAnswers(cookies, payload.questionID, choice, function (error) {
-
-    //         if (error) {
-    //             sendMessage({
-    //                 text: error
-    //             });
-    //             console.log("ERROR Sending Answer: ");
-    //             console.log(error);
-    //         } else {
-    //             console.log("ANSWER SENT");
-
-    //             // Step 2. Get next item
-    //             getItem(cookies, function (error, item) {
-
-    //                 if (error) {
-    //                     sendMessage({
-    //                         text: error
-    //                     });
-    //                     console.log("ITEM ERROR: ");
-    //                     console.log(error);
-    //                 } else {
-    //                     console.log("ITEM: ");
-    //                     console.log(item);
-
-    //                     // STEP 3. Item message
-    //                     var itemJSON = JSON.parse(item);
-    //                     console.log("QuestionId: ", itemJSON.questionID);
-    //                     if (itemJSON.questionID === -1 || itemJSON.questionID === "-1") {
-    //                         // sendMessage({
-    //                         //   text: "Thank you, the interview has been completed."
-    //                         // });
-    //                         completedInterview(userUpi, function () {
-
-    //                             // Save Results
-    //                             saveResults(userUpi, payload, function (message) {
-    //                                 sendMessage(message);
-    //                             });
-
-    //                         });
-    //                     } else {
-    //                         getItemMessage(cookies, item, function (message) {
-
-    //                             sendMessage(message);
-
-    //                         });
-    //                     }
-    //                 }
-
-    //             });
-    //         }
-
-    //     });
-    // },
+    
 
     /************************************************
     Get Results
@@ -201,52 +184,52 @@ module.exports = {
 /************************************************
  Functions (Network)
 ************************************************/
-// function sendAnswers(cookies, questionId, response, callback) {
-
-//     var url = "https://www.cat-mh.com/interview/rest/interview/test/question";
-
-//     var j = request.jar();
-//     var jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
-//     var awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
-//     j.setCookie(jsessionCookie, url);
-//     j.setCookie(awselbCokkie, url);
-
-//     var seconds = new Date().getTime() / 1000;
-//     var parameters = JSON.stringify({
-//         "questionID": questionId,
-//         "response": response,
-//         "duration": seconds,
-//         "curT1": 0,
-//         "curT2": 0,
-//         "curT3": 0
-//     });
-
-//     request.post({
-//         url: url,
-//         headers: {
-//             'content-type': 'application/json;charset=utf-8',
-//             "accept": "application/json",
-//             "JSESSIONID": cookies.JSESSIONID,
-//             "AWSELB": cookies.AWSELB
-//         },
-//         body: parameters,
-//         jar: j
-//     }, function (error, response, body) {
-
-//         if (error) {
-//             callback(error);
-
-//         } else {
-//             console.log("ANSWER SENT DATA: ");
-//             // console.log(response.headers);
-//             // console.log(response);
-//             // console.log(body);
-//             callback(null);
-//         }
-
-//     });
-
-// }
+sendAnswers = (cookies, questionId, response) => {
+    return new Promise((resolve, reject) => {
+        
+        const url = "https://www.cat-mh.com/interview/rest/interview/test/question";
+    
+        const j = request.jar();
+        const jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
+        const awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
+        j.setCookie(jsessionCookie, url);
+        j.setCookie(awselbCokkie, url);
+    
+        const seconds = new Date().getTime() / 1000;
+        const parameters = JSON.stringify({
+            "questionID": questionId,
+            "response": response,
+            "duration": seconds,
+            "curT1": 0,
+            "curT2": 0,
+            "curT3": 0
+        });
+    
+        request.post({
+            url: url,
+            headers: {
+                'content-type': 'application/json;charset=utf-8',
+                "accept": "application/json",
+                "JSESSIONID": cookies.JSESSIONID,
+                "AWSELB": cookies.AWSELB
+            },
+            body: parameters,
+            jar: j
+        }, function (error, response, body) {
+    
+            if (error) {
+                console.log(error);
+    
+            } else {
+                console.log("ANSWER SENT DATA: ");
+                // console.log(response.headers);
+                // console.log(response);
+                // console.log(body);
+                resolve(body);
+            }
+        });
+    })
+}
 
 getItem = (cookies, callback) => {
     return new Promise((resolve, reject) => {
@@ -332,7 +315,7 @@ getCookies = (userUpi, keysJSON) => {
         }, (error, response, body) => {
     
             if (error) {
-                console.log(error);
+                console.log('error getting cookies: ', error);
     
             } else {
                 // console.log("RESPONSE: ");

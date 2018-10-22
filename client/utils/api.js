@@ -79,6 +79,23 @@ export default {
             )
         })
             .then(res => res.json())
-    }
+    },
+    getNextQuestion: (userUpi, choice, payload) => {
+        return fetch(`${config.apiUrl}/services/get-next-question`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    userUpi: userUpi,
+                    choice: choice,
+                    payload: payload 
+                }
+            )
+        })
+            .then(res => res.json())
+    },
 
 } 

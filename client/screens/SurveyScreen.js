@@ -17,6 +17,16 @@ export default class SurveyScreen extends Component {
         })
     }
 
+    handleAnswerSubmit = (choice, currentQuestion) => {
+        console.log('choice: ', choice)
+        console.log('currentQuestion: ', currentQuestion)
+        api.getNextQuestion(this.state.upi, choice, currentQuestion) // <==== need payload
+            .then(res => {
+                console.log('should be next q: ', res)
+                this.setState({ currentQuestion: res })
+            })
+    }
+
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
@@ -30,7 +40,7 @@ export default class SurveyScreen extends Component {
                         {this.state.currentQuestion.questionDescription}
                     </Text>
                     {this.state.currentQuestion.questionAnswers.map((answer, idx)=>{
-                        return <TouchableHighlight key={idx} style={styles.button}>
+                        return <TouchableHighlight onPress={()=>this.handleAnswerSubmit(answer.answerOrdinal, this.state.currentQuestion)} key={idx} style={styles.button}>
                                 <Text style={styles.buttonText}>
                                         {answer.answerDescription}
                                     </Text>

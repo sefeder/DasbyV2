@@ -19,5 +19,10 @@ router.route('/get-catmh-survey')
         catmh.getSurvey(req.body.surveyType, req.body.userUpi)
         .then(firstQ => {res.send(firstQ)})
     });
+router.route('/get-next-question')
+    .post((req,res)=>{
+        catmh.nextItem(req.body.userUpi, req.body.choice, req.body.payload)
+        .then(nextQ => {res.send(nextQ)})
+    });
 
 module.exports = router;

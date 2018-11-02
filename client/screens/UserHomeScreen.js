@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Dimensions } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import { VirgilCrypto } from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
@@ -7,6 +7,7 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class UserHomeScreen extends Component {
 
@@ -257,6 +258,11 @@ export default class UserHomeScreen extends Component {
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
                         <QuickReply ref={ref => this.QuickReply = ref} upi={this.state.userInfo.upi} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
+                    <View style={styles.menu}>
+                        <Icon.Button size={45} color='#808080' name='home'/>
+                        <Icon size={45} color='#808080' name='phone'/>
+                        <Icon size={45} color='#808080' name='textsms'/>
+                    </View>
                 </KeyboardAvoidingView>
             </SafeAreaView>
         )
@@ -266,12 +272,37 @@ export default class UserHomeScreen extends Component {
 }
 const styles = StyleSheet.create({
     app: {
+        backgroundColor: 'white',
         display: 'flex',
         overflow: 'scroll',
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10
     },
+    menu: {
+        display: 'flex',
+        borderTopColor: 'black',
+        borderTopWidth: .2,
+        backgroundColor: '#f2f2f2',
+        height: Dimensions.get('window').height*.055,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        marginTop: 10
+    },
+    menuButton: {
+        backgroundColor: '#99bbff',
+        borderRadius: 40,
+        width: 60,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    menuButtonText: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 12.5
+    }
 })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Dimensions } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
@@ -171,6 +171,18 @@ render () {
                 </Text>
                 <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                 <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} />
+                <View style={styles.menu}>
+                    <TouchableHighlight style={styles.menuButton}>
+                        <Text style={styles.menuButtonText}>
+                            Home
+                            </Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={styles.menuButton}>
+                        <Text style={styles.menuButtonText}>
+                            Patients
+                        </Text>
+                    </TouchableHighlight>
+                </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
@@ -186,6 +198,30 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10
+    },
+     menu: {
+        display: 'flex',
+        borderTopColor: 'black',
+        borderTopWidth: .2,
+        backgroundColor: '#f2f2f2',
+        height: Dimensions.get('window').height * .055,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10
+    },
+    menuButton: {
+        backgroundColor: '#99bbff',
+        borderRadius: 40,
+        width: 60,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    menuButtonText: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 12.5
     }
 })

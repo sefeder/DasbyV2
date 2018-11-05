@@ -78,11 +78,14 @@ module.exports = {
                        
                         // completedInterview(userUpi, function () {
             
-                        //     // Save Results
-                        //     saveResults(userUpi, currentQuestion, function (message) {
-                        //         sendMessage(message);
-                        //     });
-            
+                            // Save Results
+                            saveResults(userUpi, currentQuestion)
+                            .then( results => {
+                                resolve({
+                                    surveyIsDone: true,
+                                    results: results
+                                })
+                            })
                        // });
                     } else {
                         const newItem = { ...itemJSON, cookies: cookies }
@@ -438,101 +441,115 @@ createInterview = (userUpi, surveyType) => {
     })
 }
 
-// function saveResults(userUpi, payload, sendMessage) {
+//FOR BELOW FUNCTION: DON'T NEED PAYLOAD, CURRENT QUESTION HAS COOKIES ON IT
 
-//     // Cookies from payload
-//     var cookies = {
-//         AWSELB: payload.AWSELB,
-//         JSESSIONID: payload.JSESSIONID
-//     };
+function saveResults(userUpi, currentQuestion) {
+    return new Promise((resolve, reject) => {
+        // Cookies from currentQuestion
+        const cookies = {
+            AWSELB: currentQuestion.cookies.AWSELB,
+            JSESSIONID: currentQuestion.cookies.JSESSIONID
+        };
 
-//     //Step 1: Get results from Cat-MH
-//     var url = "https://www.cat-mh.com/interview/rest/interview/results";
+        //Step 1: Get results from Cat-MH
+        const url = "https://www.cat-mh.com/interview/rest/interview/results";
 
-//     var j = request.jar();
-//     var jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
-//     var awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
-//     j.setCookie(jsessionCookie, url);
-//     j.setCookie(awselbCokkie, url);
+        const j = request.jar();
+        const jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
+        const awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
+        j.setCookie(jsessionCookie, url);
+        j.setCookie(awselbCokkie, url);
 
-//     request.get({
-//         headers: {
-//             'content-type': 'application/json;charset=utf-8',
-//             "accept": "application/json"
-//         },
-//         url: url,
-//         jar: j
-//     }, function (error, response, body) {
+        request.get({
+            headers: {
+                'content-type': 'application/json;charset=utf-8',
+                "accept": "application/json"
+            },
+            url: url,
+            jar: j
+        }, function (error, response, body) {
 
-//         // console.log("ITEM RESPONSE HEADER: ");
-//         // console.log(response.headers);
+            // console.log("ITEM RESPONSE HEADER: ");
+            // console.log(response.headers);
 
-//         if (error) {
-//             sendMessage({
-//                 text: error
-//             });
+            if (error) {
+                console.log(error);
+            }
+            else {
+                if (body) {
+                    //Step 2: Save results as newResult object
+                    console.log("response payload: ");
+                    console.log(body);
 
-//         }
-//         else {
-//             if (body) {
-//                 // Step 2: Save Results to mLab
-//                 var responseJSON = JSON.parse(body);
-//                 var interviewId = responseJSON.interviewId;
-//                 var testLabel = responseJSON.tests[0].label;
-//                 var diagnosis = responseJSON.tests[0].diagnosis;
-//                 var confidence = responseJSON.tests[0].confidence;
-//                 var severity = responseJSON.tests[0].severity;
-//                 var category = responseJSON.tests[0].category;
-//                 var precision = responseJSON.tests[0].precision;
-//                 var probability = responseJSON.tests[0].prob;
-//                 var percentile = responseJSON.tests[0].percentile;
+                    const responseJSON = JSON.parse(body);
+                    const interviewId = responseJSON.interviewId;
+                    const testLabel = responseJSON.tests[0].label;
+                    const diagnosis = responseJSON.tests[0].diagnosis;
+                    const confidence = responseJSON.tests[0].confidence;
+                    const severity = responseJSON.tests[0].severity;
+                    const category = responseJSON.tests[0].category;
+                    const precision = responseJSON.tests[0].precision;
+                    const probability = responseJSON.tests[0].prob;
+                    const percentile = responseJSON.tests[0].percentile;
 
-//                 // sendMessage({
-//                 //     text: "Test: " + testLabel + " (id " + interviewId + ")\nDiagnosis: " + diagnosis + "\nConfidence: " + confidence + "%"
-//                 //   });
+                    const newResult = {
+                        userId: userUpi,
+                        interviewId: interviewId,
+                        testType: testLabel,
+                        diagnosis: diagnosis,
+                        confidence: confidence,
+                        severity: severity,
+                        category: category,
+                        precision: precision,
+                        probability: probability,
+                        percentile: percentile
+                    };
 
-//                 console.log("response payload: ");
-//                 console.log(body);
+                    console.log(newResult)
+                    resolve(newResult)
 
-//                 var newResult = new Result({
-//                     userId: userUpi,
-//                     interviewId: interviewId,
-//                     testType: testLabel,
-//                     diagnosis: diagnosis,
-//                     confidence: confidence,
-//                     severity: severity,
-//                     category: category,
-//                     precision: precision,
-//                     probability: probability,
-//                     percentile: percentile
-//                 });
+                    // sendMessage({
+                    //     text: "Test: " + testLabel + " (id " + interviewId + ")\nDiagnosis: " + diagnosis + "\nConfidence: " + confidence + "%"
+                    //   });
 
-//                 newResult.save(function (err) {
-//                     if (err) {
-//                         console.log('Error on save! -- Results');
-//                     } else {
-//                         console.log('newResult model save successful');
+                // Step 3: Save Results to mLab
+                    // var newResult = new Result({
+                    //     userId: userUpi,
+                    //     interviewId: interviewId,
+                    //     testType: testLabel,
+                    //     diagnosis: diagnosis,
+                    //     confidence: confidence,
+                    //     severity: severity,
+                    //     category: category,
+                    //     precision: precision,
+                    //     probability: probability,
+                    //     percentile: percentile
+                    // });
 
-//                         // Step 3: Broadcast back to Chatfuel
-//                         // TODO: This logic should probably go elsewhere
-//                         suicideInterventionModule.suicideTrigger(userUpi, function (hasSuicideTrigger) {
+                    // newResult.save(function (err) {
+                    //     if (err) {
+                    //         console.log('Error on save! -- Results');
+                    //     } else {
+                    //         console.log('newResult model save successful');
 
-//                             console.log('SUICIDE INTERVENTION MODULE: Trigger? : ' + hasSuicideTrigger);
-//                             if (!hasSuicideTrigger) {
-//                                 DasbyActions.read("Survey Completed", 0, 0, userUpi);
-//                             }
-//                         })
+                    //         // Step 4: Broadcast back to Chatfuel
+                    //         // TODO: This logic should probably go elsewhere
+                    //         suicideInterventionModule.suicideTrigger(userUpi, function (hasSuicideTrigger) {
 
-//                         // sendBroadcastSurveyCompleted(userUpi);
-//                     }
-//                 });
+                    //             console.log('SUICIDE INTERVENTION MODULE: Trigger? : ' + hasSuicideTrigger);
+                    //             if (!hasSuicideTrigger) {
+                    //                 DasbyActions.read("Survey Completed", 0, 0, userUpi);
+                    //             }
+                    //         })
 
-
-//             }
-//         }
-
-//     });
-// }
+                    //         // sendBroadcastSurveyCompleted(userUpi);
+                    //     }
+                    // });
+                }
+            }
+        });
+    })
+}
 
 function sendBroadcastSurveyCompleted(userUpi) {
     //vars

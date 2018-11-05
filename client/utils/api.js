@@ -80,7 +80,7 @@ export default {
         })
             .then(res => res.json())
     },
-    getNextQuestion: (userUpi, choice, payload) => {
+    getNextQuestion: (userUpi, choice, currentQuestion) => {
         return fetch(`${config.apiUrl}/services/get-next-question`, {
             method: 'POST',
             headers: {
@@ -91,7 +91,7 @@ export default {
                 {
                     userUpi: userUpi,
                     choice: choice,
-                    payload: payload 
+                    currentQuestion: currentQuestion 
                 }
             )
         })

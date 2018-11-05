@@ -259,7 +259,7 @@ export default class UserHomeScreen extends Component {
                         <QuickReply ref={ref => this.QuickReply = ref} upi={this.state.userInfo.upi} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                     <View style={styles.menu}>
-                        <Icon.Button size={45} color='#808080' name='home'/>
+                        <Icon size={45} color='#808080' name='home'/>
                         <Icon size={45} color='#808080' name='phone'/>
                         <Icon size={45} color='#808080' name='textsms'/>
                     </View>

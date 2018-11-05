@@ -21,7 +21,7 @@ router.route('/get-catmh-survey')
     });
 router.route('/get-next-question')
     .post((req,res)=>{
-        catmh.nextItem(req.body.userUpi, req.body.choice, req.body.payload)
+        catmh.nextItem(req.body.userUpi, req.body.choice, req.body.currentQuestion)
         .then(nextQ => {res.send(nextQ)})
     });
 

@@ -23,8 +23,12 @@ export default class SurveyScreen extends Component {
         console.log('currentQuestion: ', currentQuestion)
         api.getNextQuestion(this.state.upi, choice, currentQuestion) // <==== need payload
             .then(res => {
-                console.log('should be next q: ', res)
+                if(res.surveyIsDone){
+                    console.log('res in SScreen line 27: ', res)
+                    this.props.navigation.navigate('ResultsScreen', { surveyResults: res })
+                } else {
                 this.setState({ currentQuestion: res, currentChoice: 0 })
+                }
             })
     }
 

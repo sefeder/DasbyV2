@@ -6,11 +6,13 @@ export default class SurveyScreen extends Component {
 
     state = {
         upi: this.props.navigation.state.params.upi,
+        channelSid: this.props.navigation.state.params.channel.sid,
         currentQuestion: null,
         currentChoice: 0 
     }
 
     componentDidMount() {
+       
         api.getCatmhSurvey("dep", this.state.upi)
         .then(res => {
             console.log('should be first q: ', res)
@@ -25,7 +27,9 @@ export default class SurveyScreen extends Component {
             .then(res => {
                 if(res.surveyIsDone){
                     console.log('res in SScreen line 27: ', res)
-                    this.props.navigation.navigate('ResultsScreen', { surveyResults: res })
+                    api.dasbyRead(this.state.channelSid, 'Survey Completed', 0, 0)
+                    // this.props.navigation.navigate('ResultsScreen', { surveyResults: res })
+                    this.props.navigation.pop()
                 } else {
                 this.setState({ currentQuestion: res, currentChoice: 0 })
                 }

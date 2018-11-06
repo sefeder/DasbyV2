@@ -12,7 +12,7 @@ class QuickReply extends Component {
         responseObjectString = JSON.stringify(responseObject)
         this.props.onMessageSend(responseObjectString)
         if(responseObject.chapter === "Survey"){
-            this.props.navigate('SurveyScreen', {upi: this.props.upi})  
+            this.props.handleNewSurvey();  
         }
     }
 

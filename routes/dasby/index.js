@@ -6,7 +6,11 @@ router.route('/')
         console.log("dasby post route hit!!")
         dasbyActions.handleNewMessage(req.body.ChannelSid, req.body.Body, req.body.From)
         res.end()
-
+    })
+router.route('/read')
+    .post(function(req,res){
+        dasbyActions.dasbyRead(req.body.channelSid, req.body.chapter, req.body.section, req.body.block)
+        res.end()
     })
     // .get(function(req,res){
     //     console.log("dasby get route hit!!")

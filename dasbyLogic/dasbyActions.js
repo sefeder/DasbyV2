@@ -9,6 +9,21 @@ const sendResponse = (channel, message) => {
     channel.sendMessage(virgil.encryptMessage(channel, message))
 }
 
+dasbyRead = (channelSid, chapter, section, block) => {
+    Users.findOne({ first_name: 'Dasby' })
+    .then(dasby => {
+        twilio.getChannelAsDasby(dasby.upi, channelSid)
+        .then(currentChannel => {
+            dialogue.find(chapter, section, block || 0)
+            .then(allSectionData => {
+                let iteration = 0;
+                let currentBlockData = allSectionData[0];
+                messageRouter(currentChannel, allSectionData, currentBlockData, iteration);
+            }).catch(err => console.log("dialogue.find catch 22: ", err))
+        })
+    })
+}
+
 canParseStr = str => {
     try {
         JSON.parse(str);
@@ -32,11 +47,13 @@ handleNewMessage = (channelSid, body, author) => {
                 if (canParseStr(decryptedMessageString)) {
                     const decryptedMessage = JSON.parse(decryptedMessageString)
                     //NEED TO ASK JONNY: why do some rows have a payload without a block? thats why we added the bottom
-                    dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block || 0).then(allSectionData => {
-                        let iteration = 0;
-                        let currentBlockData = allSectionData[0];
-                        messageRouter(currentChannel, allSectionData, currentBlockData, iteration);
-                    }).catch(err => console.log("dialogue.find catch: ",err))
+                    if (decryptedMessage.chapter !== 'Survey') {
+                        dialogue.find(decryptedMessage.chapter, decryptedMessage.section, decryptedMessage.block || 0).then(allSectionData => {
+                            let iteration = 0;
+                            let currentBlockData = allSectionData[0];
+                            messageRouter(currentChannel, allSectionData, currentBlockData, iteration);
+                        }).catch(err => console.log("dialogue.find catch: ",err))
+                    }
                 } else {
                     // sendResponse(currentChannel, 'Sorry, I\'m not taking free response answers at this time');
                 }
@@ -46,16 +63,16 @@ handleNewMessage = (channelSid, body, author) => {
     })
 }
 
-function messageRouter(channel, allSectionData, currentBlockData, iteration) {
+messageRouter = (channel, allSectionData, currentBlockData, iteration) => {
 
     console.log("Running through chapterData")
-    console.log(currentBlockData);
-    if (!currentBlockData) { return; }
-    const payloadType = currentBlockData.payloadType;
-    const payloadData = JSON.parse(currentBlockData.payloadData);
-    const message = payloadData.message;
 
+    if (!currentBlockData) {
+        return;
+    }
+    const payloadType = currentBlockData.payloadType;
     let delay = 1000;
+
     if (currentBlockData.typeDelay) {
         delay = Math.round(Number(currentBlockData.typeDelay * 2000));
     }
@@ -63,10 +80,10 @@ function messageRouter(channel, allSectionData, currentBlockData, iteration) {
     switch (payloadType) {
         case 0: // Plain text
             console.log("In case 0, PLAIN TEXT")
-            console.log(payloadData)
-            // Show typing indicator.
+            
             iteration++;
-
+            
+            // Show typing indicator.
             channel.typing()
                 // In order to have a small delay between messages, we need to set a timeout.
             setTimeout(() => {
@@ -187,5 +204,6 @@ function messageRouter(channel, allSectionData, currentBlockData, iteration) {
 }
 
 module.exports = {
-    handleNewMessage: handleNewMessage
+    handleNewMessage: handleNewMessage,
+    dasbyRead: dasbyRead
 }

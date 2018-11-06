@@ -132,10 +132,6 @@ export default class UserHomeScreen extends Component {
         return decryptedMessage
     }
 
-    navigate = (screenName, objectToPass) => {
-        this.props.navigation.navigate(screenName, objectToPass)
-    }
-
     canParseStr = str => {
         try {
             JSON.parse(str);
@@ -246,6 +242,10 @@ export default class UserHomeScreen extends Component {
         }
     }
 
+    handleNewSurvey = () => {
+        this.props.navigation.navigate('SurveyScreen', { upi: this.state.userInfo.upi, channel: this.state.channel }) 
+    }
+
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
@@ -256,7 +256,7 @@ export default class UserHomeScreen extends Component {
                     <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
-                        <QuickReply ref={ref => this.QuickReply = ref} upi={this.state.userInfo.upi} navigate={this.navigate} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
+                        <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                     <View style={styles.menu}>
                         <Icon size={45} color='#808080' name='home'/>

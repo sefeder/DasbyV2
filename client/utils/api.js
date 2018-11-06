@@ -1,4 +1,5 @@
 import config from "../config.json";
+import { inspect } from 'util';
 
 export default {
     createUser: newUser => {
@@ -97,5 +98,21 @@ export default {
         })
             .then(res => res.json())
     },
-
+    dasbyRead: (channelSid, chapter, section, block) => {
+        return fetch(`${config.apiUrl}/dasby/read`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    channelSid: channelSid,
+                    chapter: chapter,
+                    section: section,
+                    block: block 
+                }
+            )
+        })
+    },
 } 

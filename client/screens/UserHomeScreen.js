@@ -261,7 +261,9 @@ export default class UserHomeScreen extends Component {
                     <View style={styles.menu}>
                         <Icon size={45} color='#808080' name='home'/>
                         <Icon size={45} color='#808080' name='phone'/>
-                        <Icon size={45} color='#808080' name='textsms'/>
+                        <TouchableHighlight onPress={() => {this.props.navigation.navigate('ResultsScreen', {upi: this.state.userInfo.upi})}}>
+                            <Icon size={45} color='#808080' name='textsms'/>
+                        </TouchableHighlight>
                     </View>
                 </KeyboardAvoidingView>
             </SafeAreaView>

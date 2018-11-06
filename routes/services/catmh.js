@@ -3,6 +3,7 @@
 ************************************************/
 const request = require("request");
 const bodyParser = require("body-parser");
+const Results = require("../../models/results")
 // var Interview = require("../models/interview");
 // var Result = require("../models/result");
 // var DasbyActions = require('../dasbyActions')
@@ -74,13 +75,15 @@ module.exports = {
                     if (itemJSON.questionID === -1 || itemJSON.questionID === "-1") {
                         
                          console.log("Thank you, the interview has been completed.")
-                         // NEED TO BUILD THIS CONDITION OUT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        
                        
                         // completedInterview(userUpi, function () {
             
                             // Save Results
                             saveResults(userUpi, currentQuestion)
                             .then( results => {
+                                // Save results in database
+                                Results.create(results)
                                 resolve({
                                     surveyIsDone: true,
                                     results: results

@@ -115,4 +115,20 @@ export default {
             )
         })
     },
+    getResults: (upi, testType) => {
+        return fetch(`${config.apiUrl}/database/results/get-all-results`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    upi: upi,
+                    testType: testType,
+                }
+            )
+        })
+            .then(res => res.json())
+    },
 } 

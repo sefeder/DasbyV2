@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView } from 'react-native';
+import api from '../utils/api';
 
 export default class ResultsScreen extends Component {
 
     state = {
-        surveyResults: this.props.navigation.state.params.surveyResults.results,
+        upi: this.props.navigation.state.params.upi,
+        results: null
     }
 
     componentDidMount() {
-        console.log('this.state.surveyResults: ', this.state.surveyResults)
-        console.log('surveyResults: ', this.props.navigation.state.params.surveyResults.results)
+
+        api.getResults(this.state.upi, "Depression")
+        .then(results => {
+            console.log('results from RS getResults: ', results)
+            this.setState({results})
+        })
     }
 
     render() {
@@ -18,33 +24,50 @@ export default class ResultsScreen extends Component {
                 <Text style={styles.title}>
                     Results Screen
                 </Text>
-                <Text style={styles.text}>
-                    Interview ID: {this.state.surveyResults.interviewId}
-                </Text>
-                <Text style={styles.text}>
-                    Test Type: {this.state.surveyResults.testType}
-                </Text>
-                <Text style={styles.text}>
-                    Diagnosis: {this.state.surveyResults.diagnosis && this.state.surveyResults.diagnosis}
-                </Text>
-                <Text style={styles.text}>
-                    Confidence: {this.state.surveyResults.confidence && this.state.surveyResults.confidence}
-                </Text>
-                <Text style={styles.text}>
-                    Severity: {this.state.surveyResults.severity}
-                </Text>
-                <Text style={styles.text}>
-                    Category: {this.state.surveyResults.category}
-                </Text>
-                <Text style={styles.text}>
-                    Precision: {this.state.surveyResults.precision}
-                </Text>
-                <Text style={styles.text}>
-                    Probability: {this.state.surveyResults.probability}
-                </Text>
-                <Text style={styles.text}>
-                    Percentile: {this.state.surveyResults.percentile}
-                </Text>
+                <ScrollView>
+                    { this.state.results && this.state.results.map((result, idx) => {
+                    return(
+                    <View key={idx}>
+                            <Text style={{
+                                fontSize: 20,
+                                fontWeight: 'bold',}}>
+                        {idx+1})
+                    </Text>
+                        <Text style={styles.text}>
+                            Date: {result.createdAt}
+                        </Text>
+                        <Text style={styles.text}>
+                            Interview ID: {result.interviewId}
+                        </Text>
+                        <Text style={styles.text}>
+                            Test Type: {result.testType}
+                        </Text>
+                        <Text style={styles.text}>
+                            Diagnosis: {result.diagnosis && result.diagnosis}
+                        </Text>
+                        <Text style={styles.text}>
+                            Confidence: {result.confidence && result.confidence}
+                        </Text>
+                        <Text style={styles.text}>
+                            Severity: {result.severity}
+                        </Text>
+                        <Text style={styles.text}>
+                            Category: {result.category}
+                        </Text>
+                        <Text style={styles.text}>
+                            Precision: {result.precision}
+                        </Text>
+                        <Text style={styles.text}>
+                            Probability: {result.probability}
+                        </Text>
+                        <Text style={styles.text}>
+                            Percentile: {result.percentile}
+                        </Text>
+                    </View>)
+
+                    })
+                    }
+                </ScrollView>
                 
             </KeyboardAvoidingView>
         )

@@ -7,7 +7,8 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class UserHomeScreen extends Component {
 
@@ -259,10 +260,10 @@ export default class UserHomeScreen extends Component {
                         <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                     <View style={styles.menu}>
-                        <Icon size={45} color='#808080' name='home'/>
-                        <Icon size={45} color='#808080' name='phone'/>
-                        <TouchableHighlight onPress={() => {this.props.navigation.navigate('ResultsScreen', {upi: this.state.userInfo.upi})}}>
-                            <Icon size={45} color='#808080' name='textsms'/>
+                        <Ionicons size={45} color='#3377FF' name='md-chatboxes' />
+                        <Icon size={45} color='#808080' name='phone' />
+                        <TouchableHighlight onPress={() => { this.props.navigation.navigate('ResultsScreen', { upi: this.state.userInfo.upi }) }}>
+                            <Ionicons size={45} color='#808080' name='md-pulse' />
                         </TouchableHighlight>
                     </View>
                 </KeyboardAvoidingView>

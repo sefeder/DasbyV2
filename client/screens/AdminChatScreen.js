@@ -6,6 +6,10 @@ import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
+import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+
 
 export default class AdminChatScreen extends Component {
 
@@ -172,17 +176,15 @@ render () {
                 <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                 <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} />
                 <View style={styles.menu}>
-                    <TouchableHighlight style={styles.menuButton}>
-                        <Text style={styles.menuButtonText}>
-                            Home
-                            </Text>
+                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminChatScreen') }}>
+                        <Ionicons size={45} color='#808080' name='md-chatboxes' />
                     </TouchableHighlight>
-                    <TouchableHighlight style={styles.menuButton}>
-                        <Text style={styles.menuButtonText}>
-                            Patients
-                        </Text>
+                    <Icon size={45} color='#808080' name='phone' />
+                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminSelectionScreen') }}>
+                        <Ionicons size={45} color='#808080' name='md-people' />
                     </TouchableHighlight>
                 </View>
+
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-     menu: {
+    menu: {
         display: 'flex',
         borderTopColor: 'black',
         borderTopWidth: .2,
@@ -207,21 +209,8 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         alignItems: 'center',
         marginTop: 10
     },
-    menuButton: {
-        backgroundColor: '#99bbff',
-        borderRadius: 40,
-        width: 60,
-        height: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    menuButtonText: {
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 12.5
-    }
 })

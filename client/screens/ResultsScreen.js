@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView, Dimensions} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class ResultsScreen extends Component {
 
@@ -24,14 +26,14 @@ export default class ResultsScreen extends Component {
                 <Text style={styles.title}>
                     Results Screen
                 </Text>
-                <ScrollView>
+                <ScrollView style={styles.scrollView}>
                     { this.state.results && this.state.results.map((result, idx) => {
                     return(
                     <View key={idx}>
                             <Text style={{
                                 fontSize: 20,
                                 fontWeight: 'bold',}}>
-                        {idx+1})
+                        {this.state.results.length-idx})
                     </Text>
                         <Text style={styles.text}>
                             Date: {result.createdAt}
@@ -68,6 +70,13 @@ export default class ResultsScreen extends Component {
                     })
                     }
                 </ScrollView>
+                <View style={styles.menu}>
+                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
+                        <Ionicons size={45} color='#808080' name='md-chatboxes' />
+                    </TouchableHighlight>
+                    <Icon size={45} color='#808080' name='phone' />
+                    <Ionicons size={45} color='#3377FF' name='md-pulse' />
+                </View>
                 
             </KeyboardAvoidingView>
         )
@@ -84,6 +93,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
+    },
+    scrollView: {
         marginLeft: 20
     },
     text: {
@@ -95,5 +106,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         alignSelf: 'center'
-    }
+    },
+    menu: {
+        display: 'flex',
+        borderTopColor: 'black',
+        borderTopWidth: .2,
+        backgroundColor: '#f2f2f2',
+        height: Dimensions.get('window').height * .055,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        marginTop: 10
+    },
 });

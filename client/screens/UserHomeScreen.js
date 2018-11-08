@@ -276,11 +276,14 @@ export default class UserHomeScreen extends Component {
                         <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                     <View style={styles.menu}>
-                        <Ionicons size={45} color='#3377FF' name='md-chatboxes' />
-                        <Icon size={45} color='#808080' name='phone' />
+                        <Ionicons size={40} color='#3377FF' name='md-chatboxes' />
                         <TouchableHighlight onPress={() => { this.props.navigation.navigate('ResultsScreen', { upi: this.state.userInfo.upi }) }}>
-                            <Ionicons size={45} color='#808080' name='md-pulse' />
+                            <Ionicons size={40} color='#808080' name='md-pulse' />
                         </TouchableHighlight>
+                        <TouchableHighlight onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
+                            <Ionicons size={40} color='#808080' name='md-information-circle' />
+                        </TouchableHighlight>
+                        <Icon size={40} color='#808080' name='phone' />
                     </View>
                 </KeyboardAvoidingView>
             </SafeAreaView>
@@ -304,7 +307,7 @@ const styles = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: .2,
         backgroundColor: '#f2f2f2',
-        height: Dimensions.get('window').height*.055,
+        height: Dimensions.get('window').height * .055,
         width: Dimensions.get('window').width,
         flexDirection: 'row',
         justifyContent: 'space-evenly',

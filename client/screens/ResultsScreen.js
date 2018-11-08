@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView, Dimensions} from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView, Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,17 +7,18 @@ import { Ionicons } from '@expo/vector-icons';
 export default class ResultsScreen extends Component {
 
     state = {
-        upi: this.props.navigation.state.params.upi,
         results: null
     }
 
     componentDidMount() {
-
-        api.getResults(this.state.upi, "Depression")
-        .then(results => {
-            console.log('results from RS getResults: ', results)
-            this.setState({results})
+        AsyncStorage.getItem('userInfo', (err,result) => {
+            api.getResults(JSON.parse(result).user.upi, "Depression")
+                .then(results => {
+                    console.log('results from RS getResults: ', results)
+                    this.setState({ results })
+                })
         })
+        
     }
 
     render() {
@@ -72,10 +73,13 @@ export default class ResultsScreen extends Component {
                 </ScrollView>
                 <View style={styles.menu}>
                     <TouchableHighlight onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
-                        <Ionicons size={45} color='#808080' name='md-chatboxes' />
+                        <Ionicons size={40} color='#808080' name='md-chatboxes' />
                     </TouchableHighlight>
-                    <Icon size={45} color='#808080' name='phone' />
-                    <Ionicons size={45} color='#3377FF' name='md-pulse' />
+                        <Ionicons size={40} color='#3377FF' name='md-pulse' />
+                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
+                        <Ionicons size={40} color='#808080' name='md-information-circle' />
+                    </TouchableHighlight>
+                    <Icon size={40} color='#808080' name='phone' />
                 </View>
                 
             </KeyboardAvoidingView>

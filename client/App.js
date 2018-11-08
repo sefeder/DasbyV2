@@ -11,6 +11,7 @@ import AdminChatScreen from './screens/AdminChatScreen.js';
 import AdminSignUpScreen from './screens/AdminSignUpScreen.js';
 import SurveyScreen from './screens/SurveyScreen.js';
 import ResultsScreen from './screens/ResultsScreen.js';
+import InfoScreen from './screens/InfoScreen.js';
 
 const RootStack = createStackNavigator(
   {
@@ -117,6 +118,14 @@ const RootStack = createStackNavigator(
           title: 'Results',
         })
       },
+    InfoScreen:
+      {
+        screen: InfoScreen,
+        navigationOptions: ({ navigation }) => ({
+          title: 'Info',
+        })
+      },
+
     
     initialRouteName: "LandingScreen"
   }

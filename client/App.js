@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, AsyncStorage } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import LandingScreen from './screens/LandingScreen.js';
 import SignUpScreen from './screens/SignUpScreen.js';
@@ -38,9 +38,20 @@ const RootStack = createStackNavigator(
     UserHomeScreen:
       {
         screen: UserHomeScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'User Home',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'User Home',
+            headerRight: (
+              <Button
+                onPress={()=>{
+                  AsyncStorage.clear()
+                  navigation.navigate('LandingScreen')
+                }}
+                title="Log Out"
+              />
+            ),
+          };
+        }
       },
     AdminLogInScreen:
       {
@@ -52,16 +63,38 @@ const RootStack = createStackNavigator(
     AdminSelectionScreen:
       {
         screen: AdminSelectionScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Channel Selector',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Channel Selector',
+            headerRight: (
+              <Button
+                onPress={() => {
+                  AsyncStorage.clear()
+                  navigation.navigate('LandingScreen')
+                }}
+                title="Log Out"
+              />
+            ),
+          };
+        }
       },
     AdminChatScreen:
       {
         screen: AdminChatScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Chat Home',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Admin Chat Home',
+            headerRight: (
+              <Button
+                onPress={() => {
+                  AsyncStorage.clear()
+                  navigation.navigate('LandingScreen')
+                }}
+                title="Log Out"
+              />
+            ),
+          };
+        }
       },
     AdminSignUpScreen:
       {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage} from 'react-native';
 import api from '../utils/api';
 
 export default class AdminLogInScreen extends Component {
@@ -35,7 +35,10 @@ export default class AdminLogInScreen extends Component {
                 } 
 
                 console.log("succesfully loged in as admin!")
-                this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: res })
+                AsyncStorage.setItem('userInfo', JSON.stringify(res), () => {
+                    this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: res })
+                })
+                
             })
             .catch(err => console.log(err))
     }

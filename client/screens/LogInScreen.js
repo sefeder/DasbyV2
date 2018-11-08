@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight,} from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage} from 'react-native';
 import api from '../utils/api';
 
 export default class LogInScreen extends Component {
@@ -28,7 +28,9 @@ export default class LogInScreen extends Component {
                     this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
-                this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
+                AsyncStorage.setItem('userInfo', JSON.stringify(res), () => {
+                    this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
+                })
             })
             .catch(err => console.log(err))
     }

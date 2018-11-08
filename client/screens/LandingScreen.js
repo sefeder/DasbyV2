@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, AsyncStorage } from 'react-native';
 
 export default class LandingScreen extends Component {
 
     state = {
 
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('userInfo', (err, result)=>{
+            if (err) console.log(err)
+            if (result !== null){
+                console.log('JSON.parse(result): ', JSON.parse(result))
+                if (JSON.parse(result).user.role === 'user'){
+                    this.props.navigation.navigate('UserHomeScreen', {userInfo: JSON.parse(result), newUser: false})
+                } else {
+                    this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: JSON.parse(result) })
+                }
+            }
+        })
     }
 
     render() {

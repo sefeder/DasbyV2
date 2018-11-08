@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Dimensions } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Dimensions, AsyncStorage } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import { VirgilCrypto } from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
@@ -29,6 +29,11 @@ export default class UserHomeScreen extends Component {
 
 
     componentDidMount() {
+        AsyncStorage.getItem('responses', (err, responses) => {
+            if (responses !== null) {
+                this.setState({ responseArray: JSON.parse(responses).responseArray, isQrVisible: JSON.parse(responses).isQrVisible}) 
+            } 
+        })
         const startTime = Date.now();
         console.log("----------------------------------------------------------")
         console.log("hitting compoenentDidMount at: ", (Date.now()-startTime)/1000)
@@ -75,32 +80,41 @@ export default class UserHomeScreen extends Component {
                             console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
                             this.setState({ channel })
                             this.configureChannelEvents(channel)
-                            channel.getMessages().then(result => {
-                                console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
-                                console.log("----------------------------------------------------------------------------------------")
-                                this.setState({
-                                    messages: result.items.map((message, i, items) => {
-                                        console.log("Messages Map Function - message #",i, " at: " ,(Date.now() - startTime) / 1000)
-                                        if (message.author === this.state.DasbyUpi) {
-                                            return {
-                                                author: message.author,
-                                                body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
-                                                me: message.author === this.state.userInfo.upi,
-                                                sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
-                                            }
-                                        } else {
-                                            return {
-                                                author: message.author,
-                                                body: this.parseUserPayloadData(this.decryptMessage(message.body)),
-                                                me: message.author === this.state.userInfo.upi,
-                                                sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
-                                            }
-                                        }
+                            AsyncStorage.getItem('messages', (err, messagesFromAsync)=>{
+                                if (err) {
+                                    console.log('error getting messages from async: ',err)
+                                } else if (messagesFromAsync === null) {
+                                    channel.getMessages().then(result => {
+                                        console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
+                                        console.log("----------------------------------------------------------------------------------------")
+                                        this.setState({
+                                            messages: result.items.map((message, i, items) => {
+                                                console.log("Messages Map Function - message #",i, " at: " ,(Date.now() - startTime) / 1000)
+                                                if (message.author === this.state.DasbyUpi) {
+                                                    return {
+                                                        author: message.author,
+                                                        body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
+                                                        me: message.author === this.state.userInfo.upi,
+                                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                                    }
+                                                } else {
+                                                    return {
+                                                        author: message.author,
+                                                        body: this.parseUserPayloadData(this.decryptMessage(message.body)),
+                                                        me: message.author === this.state.userInfo.upi,
+                                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                                    }
+                                                }
+                                            })
+                                            
+                                        }, ()=> {
+                                            AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
+                                            console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
+                                        })
                                     })
-                                    
-                                }, ()=> {
-                                    console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
-                                })
+                                } else {
+                                this.setState({messages: JSON.parse(messagesFromAsync)})
+                                }
                             })
                             channel.getMembers().then(result => {
                                 console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
@@ -149,11 +163,11 @@ export default class UserHomeScreen extends Component {
                 this.setState({
                     responseArray: payloadData.payload,
                     isQrVisible: true
-                })
+                }, () => AsyncStorage.setItem('responses', JSON.stringify({responseArray: this.state.responseArray, isQrVisible: this.state.isQrVisible})))
             } else {
                 this.setState({
                     responseArray: []
-                })
+                }, () => AsyncStorage.setItem('responses', JSON.stringify({ responseArray: this.state.responseArray})))
             }
             if (payloadData.imageURL || payloadData.videoURL) {
                 const message = payloadData
@@ -190,6 +204,8 @@ export default class UserHomeScreen extends Component {
         const messageData = { ...message, me: message.author === this.state.userInfo.upi, sameAsPrevAuthor: this.state.messages[this.state.messages.length - 1] === undefined ? false : this.state.messages[this.state.messages.length - 1].author === message.author }
         this.setState({
             messages: [...this.state.messages, messageData],
+        }, () => {
+            AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
         })
     }
 

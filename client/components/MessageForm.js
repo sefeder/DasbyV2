@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 class MessageForm extends Component {
    
@@ -52,15 +53,14 @@ class MessageForm extends Component {
                     {this.state.textInput !== null && this.state.textInput !== '' ?
                     <TouchableOpacity
                         onPress={() => this.handleSubmit(this.state.textInput)}
-                        style={styles.submitButton}
                         >
-                        <Text style={{ color: 'white' }}>Send</Text>
+                            <Ionicons style={{ alignSelf: 'flex-end'}} size={30} color='#3377FF' name='md-send' /> :
+                       
                     </TouchableOpacity> :
                     <TouchableOpacity
                         disabled
-                        style={styles.disabledSubmitButton}
                     >
-                        <Text style={{ color: 'white' }}>Send</Text>
+                            <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#808080' name='md-send' />
                     </TouchableOpacity>
                 }
                 </View>

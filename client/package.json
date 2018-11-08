@@ -25,6 +25,7 @@
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-native-animated-ellipsis": "^1.1.0",
+    "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-vector-icons": "^6.0.2",
     "react-navigation": "^2.12.1",
     "tcomb-form-native": "^0.6.16",

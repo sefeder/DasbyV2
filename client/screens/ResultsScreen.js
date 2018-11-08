@@ -72,11 +72,11 @@ export default class ResultsScreen extends Component {
                     }
                 </ScrollView>
                 <View style={styles.menu}>
-                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
+                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
                         <Ionicons size={40} color='#808080' name='md-chatboxes' />
                     </TouchableHighlight>
                         <Ionicons size={40} color='#3377FF' name='md-pulse' />
-                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
+                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
                         <Ionicons size={40} color='#808080' name='md-information-circle' />
                     </TouchableHighlight>
                     <Icon size={40} color='#808080' name='phone' />

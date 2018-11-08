@@ -9,6 +9,7 @@ import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class UserHomeScreen extends Component {
 
@@ -24,11 +25,17 @@ export default class UserHomeScreen extends Component {
         responseArray: [],
         isTyping: false,
         memberTyping: null,
-        isQrVisible: true
+        isQrVisible: true,
+        spinnerVisible: true
     }
 
 
     componentDidMount() {
+        setTimeout(() => {
+            this.setState({
+                spinnerVisible: !this.state.spinnerVisible
+            });
+        }, 5000);
         AsyncStorage.getItem('responses', (err, responses) => {
             if (responses !== null) {
                 this.setState({ responseArray: JSON.parse(responses).responseArray, isQrVisible: JSON.parse(responses).isQrVisible}) 
@@ -266,6 +273,15 @@ export default class UserHomeScreen extends Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
+                <Spinner
+                    visible={this.state.spinnerVisible}
+                    textContent={'Loading Messages...'}
+                    textStyle={{ color: 'rgba(91, 141, 249, 1)'}}
+                    cancelable={false}
+                    color={'#3377FF'}
+                    animation={'fade'}
+                    overlayColor={'rgba(255, 255, 255, 1)'}
+                />
                 <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
                     <Text>
                         Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
@@ -277,10 +293,10 @@ export default class UserHomeScreen extends Component {
                     }
                     <View style={styles.menu}>
                         <Ionicons size={40} color='#3377FF' name='md-chatboxes' />
-                        <TouchableHighlight onPress={() => { this.props.navigation.navigate('ResultsScreen', { upi: this.state.userInfo.upi }) }}>
+                        <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('ResultsScreen', { upi: this.state.userInfo.upi }) }}>
                             <Ionicons size={40} color='#808080' name='md-pulse' />
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
+                        <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
                             <Ionicons size={40} color='#808080' name='md-information-circle' />
                         </TouchableHighlight>
                         <Icon size={40} color='#808080' name='phone' />
@@ -326,5 +342,8 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
         fontSize: 12.5
+    },
+    spinnerTextStyle: {
+        color: 'rgba(91, 141, 249, 1)',
     }
 })

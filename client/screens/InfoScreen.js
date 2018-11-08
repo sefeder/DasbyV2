@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,20 +16,26 @@ export default class InfoScreen extends Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
-                <Text>
-                    Investigator:  David Beiser, MD
-                </Text>
-                <Text>
-                    email: dbeiser@uchicago.edu
-                </Text>
-                <Text>
-                    mobile: 773-217-8020
-                </Text>
-                <Text>
-                    Message from Dr. Beiser
-                </Text>
-                <Image source={{ uri: 'https://www.uchicagomedicine.org/-/media/images/ucmc/physician-photos/a-c/beiser-david-bio-261x347.jpg?h=347&as=1&hash=B7419F49097900DEC5D4A2E4E9DEB008ECEA4D63' }}
-                    style={{ width: 400, height: 500 }} />
+                <ScrollView>
+                    <Text style={styles.text}>
+                        Investigator: David Beiser, MD
+                    </Text>
+                    <Text style={styles.text}>
+                        email: dbeiser@uchicago.edu
+                    </Text>
+                    <Text style={styles.text}>
+                        mobile: 773-217-8020
+                    </Text>
+                    <Text style={styles.text}>
+                        A message from Dr. Beiser:
+                    </Text>
+                    <View style={{flex: 1}}>
+                        <WebView
+                            source={{ uri: 'https://youtu.be/xhH63kkutzs' }}
+                            style={styles.webView}
+                        />
+                    </View>
+                </ScrollView>
                 <View style={styles.menu}>
                     <TouchableHighlight onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
                         <Ionicons size={40} color='#808080' name='md-chatboxes' />
@@ -68,4 +74,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10
     },
+    text: {
+        fontSize: 18,
+        marginBottom: 10
+    },
+    webView: {
+        flex: 1,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height*.42
+    }
 });

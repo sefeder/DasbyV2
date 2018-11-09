@@ -13,16 +13,33 @@ class MessageList extends Component {
         messages: [],
     }
 
+    componentDidMount() {
+        // this.scrollView.scrollToEnd({ animated: false })
+    }
+
+    componentDidUpdate() {
+        this.scrollView.scrollToEnd({ animated: true })
+    }
+
     render() {
         return (
             <ScrollView style={styles.messageList} ref={ref => this.scrollView = ref}
                 onContentSizeChange={(contentWidth, contentHeight) => {
                     this.scrollView.scrollToEnd({ animated: true });
                 }}>
-                {this.props.messages.map((message, i) => (
-                    <Message sameAsPrevAuthor={message.sameAsPrevAuthor} upi={this.props.upi} key={i} {...message} memberArray={this.props.memberArray} />
+                {this.props.messages && this.props.messages.map((message, i, array) => (
+                    <Message 
+                        loadingDone={this.props.loadingDone} 
+                        sameAsPrevAuthor={message.sameAsPrevAuthor} 
+                        upi={this.props.upi} 
+                        currentMessageIndex={i}
+                        lastMessageIndex={this.props.messages.length-1} 
+                        key={i} 
+                        {...message} 
+                        memberArray={this.props.memberArray} 
+                    />
                 ))}
-                <TypingIndicator prevMessage={this.props.messages[this.props.messages.length-1]} memberTyping={this.props.memberTyping} isTyping={this.props.isTyping} upi={this.props.upi} memberArray={this.props.memberArray} />
+                <TypingIndicator prevMessage={this.props.messages && this.props.messages[this.props.messages.length-1]} memberTyping={this.props.memberTyping} isTyping={this.props.isTyping} upi={this.props.upi} memberArray={this.props.memberArray} />
             </ScrollView>
         )
     }

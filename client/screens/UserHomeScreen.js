@@ -31,19 +31,20 @@ export default class UserHomeScreen extends Component {
 
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                spinnerVisible: !this.state.spinnerVisible
-            });
-        }, 5000);
+        // setTimeout(() => {
+        //     this.setState({
+        //         spinnerVisible: !this.state.spinnerVisible
+        //     });
+        // }, 3000);
+        const startTime = Date.now();
+        console.log("----------------------------------------------------------")
+        console.log("hitting compoenentDidMount at: ", (Date.now()-startTime)/1000)
+        
         AsyncStorage.getItem('responses', (err, responses) => {
             if (responses !== null) {
                 this.setState({ responseArray: JSON.parse(responses).responseArray, isQrVisible: JSON.parse(responses).isQrVisible}) 
             } 
         })
-        const startTime = Date.now();
-        console.log("----------------------------------------------------------")
-        console.log("hitting compoenentDidMount at: ", (Date.now()-startTime)/1000)
         virgil.getPrivateKey(this.state.userInfo.upi)
             .then(userPrivateKey => {
                 console.log("Virgil Private Key Retrieved: ", (Date.now() - startTime) / 1000)
@@ -82,15 +83,27 @@ export default class UserHomeScreen extends Component {
 
                 }
                 else {
+                    // get messages from asn
+                    // if not null --> use/ set messages to state
+                    AsyncStorage.multiGet(['messages', 'memberArray'], (err, dataAsync) => {
+                        console.log('dataAsync: ', dataAsync)
+                        console.log('messages: ', JSON.parse(dataAsync[0][1]))
+                        console.log('memberArray: ', JSON.parse(dataAsync[1][1]))
+                        if (err) {
+                            console.log('error getting messages from async: ', err)
+                        } else if (dataAsync !== null) {
+                            this.setState({ 
+                                messages: JSON.parse(dataAsync[0][1]), 
+                                memberArray: JSON.parse(dataAsync[1][1]), 
+                                spinnerVisible: !this.state.spinnerVisible
+                            })
+                        }
+                    })
                     return twilio.findChannel(chatClient, this.state.userInfo.upi)
                         .then(channel => {
                             console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
                             this.setState({ channel })
                             this.configureChannelEvents(channel)
-                            AsyncStorage.getItem('messages', (err, messagesFromAsync)=>{
-                                if (err) {
-                                    console.log('error getting messages from async: ',err)
-                                } else if (messagesFromAsync === null) {
                                     channel.getMessages().then(result => {
                                         console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
                                         console.log("----------------------------------------------------------------------------------------")
@@ -119,10 +132,9 @@ export default class UserHomeScreen extends Component {
                                             console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
                                         })
                                     })
-                                } else {
-                                this.setState({messages: JSON.parse(messagesFromAsync)})
-                                }
-                            })
+                                    //-----------------
+
+                            //-----------------
                             channel.getMembers().then(result => {
                                 console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
                                 result.forEach((member,i) => {
@@ -133,9 +145,10 @@ export default class UserHomeScreen extends Component {
                                                 firstName: dbUser.user.first_name,
                                                 lastName: dbUser.user.last_name
                                             }]
-                                        }, ()=> {
-                                            console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
-                                            })
+                                        }, () => {
+                                                AsyncStorage.setItem('memberArray', JSON.stringify(this.state.memberArray))
+                                                console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
+                                        })
                                     })
                                 })
                             })
@@ -216,6 +229,8 @@ export default class UserHomeScreen extends Component {
         })
     }
 
+    loadingDone = () => this.setState({ spinnerVisible: !this.state.spinnerVisible })
+
     updateTypingIndicator = (memberTyping, isTyping) => {
         if (isTyping) {
             console.log('member typing: ', memberTyping.identity)
@@ -286,7 +301,11 @@ export default class UserHomeScreen extends Component {
                     <Text>
                         Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
                     </Text>
-                    <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
+                    {this.state.messages&&this.state.memberArray&&
+                    <MessageList loadingDone={()=>this.loadingDone} memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} 
+                    />
+                    }
+
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
                         <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>

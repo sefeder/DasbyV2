@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
+import { VictoryBar } from 'victory-native';
 
 export default class ResultsScreen extends Component {
 
@@ -27,6 +28,7 @@ export default class ResultsScreen extends Component {
                 <Text style={styles.title}>
                     Results Screen
                 </Text>
+                <VictoryBar/>
                 <ScrollView style={styles.scrollView}>
                     { this.state.results && this.state.results.map((result, idx) => {
                     return(

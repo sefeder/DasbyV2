@@ -43,13 +43,13 @@ export default class InfoScreen extends Component {
                 <ScrollView>
                     <View style={styles.textView}>
                         <Text style={styles.text}>
-                            <Ionicons size={30} color='black' name='md-person' /> : David Beiser, MD
+                            <Ionicons size={30} color='black' name='md-person' />  David Beiser, MD
                         </Text>
                         <Text style={styles.text}>
-                            <Ionicons size={30} color='black' name='md-mail' /> : dbeiser@uchicago.edu
+                            <Ionicons size={30} color='black' name='md-mail' />  dbeiser@uchicago.edu
                         </Text>
                         <Text selectable style={styles.text}>
-                            <Icon size={30} color='black' name='phone' />: 773-217-8020
+                            <Icon size={30} color='black' name='phone' /> 773-217-8020
                         </Text>
                     </View>
                     <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, marginLeft: 5 }}>A message from Dr. Beiser:

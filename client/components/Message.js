@@ -69,6 +69,9 @@ class Message extends Component {
                     </View>
             }
         }
+        if(this.props.currentMessageIndex === this.props.lastMessageIndex){
+            this.props.loadingDone()
+        }
     }
 
     render() {

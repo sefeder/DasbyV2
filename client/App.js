@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Button, AsyncStorage, Animated, Easing } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import LandingScreen from './screens/LandingScreen.js';
 import SignUpScreen from './screens/SignUpScreen.js';
@@ -126,10 +126,17 @@ const RootStack = createStackNavigator(
         })
       },
 
-    
     initialRouteName: "LandingScreen"
-  }
-
+  },
+  {transitionConfig : () => ({
+    transitionSpec: {
+      duration: 0,
+      timing: Animated.timing,
+      easing: Easing.step0,
+    },
+  }),
+}
+  
 )
 
 export default class App extends React.Component {

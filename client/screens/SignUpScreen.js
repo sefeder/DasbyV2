@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Picker, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Chance } from 'chance';
 import virgil from '../utils/virgilUtil';
 import api from '../utils/api';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class SignUpScreen extends Component {
 
@@ -12,6 +13,8 @@ export default class SignUpScreen extends Component {
         firstInput: null,
         lastInput: null,
         hiddenPass: true,
+        adminCodeInput: null,
+        roleInput: 'user',
 
         // NOT SURE IF WE WANNA DO IT THIS WAY
         userInfo: null
@@ -23,6 +26,21 @@ export default class SignUpScreen extends Component {
     submitSignUp = () => {
 
         //need signup validation here
+        if (this.state.roleInput === null) {
+            console.log('Please enter a role')
+            return;
+        }
+        if (this.state.roleInput === 'admin' && this.state.adminCodeInput !== 'Admin') {
+            console.log('invalid admin code')
+            this.setState({
+                emailInput: null,
+                passwordInput: null,
+                firstInput: null,
+                lastInput: null,
+                adminCodeInput: null
+            })
+            return
+        }
 
         let chance = new Chance()
         api.createUser({
@@ -35,13 +53,22 @@ export default class SignUpScreen extends Component {
                 length: 10,
                 pool: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
             }),
-            role: 'user'
+            role: this.state.roleInput
         })
             .then(res => {
                 virgil.initializeVirgil(res.user.upi)
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
-                        this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser, newUser: true})
+                        if (this.state.roleInput === 'user') {
+                            AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser), () => {
+                                this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser, newUser: true})
+                            })
+                        }
+                        else if (this.state.roleInput === 'admin') {
+                            AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser), () => {
+                                this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: updatedUser })
+                            })
+                        }
                     })
                     .catch(err => console.log('error line 51 SUS: ', err))
             })
@@ -54,6 +81,33 @@ export default class SignUpScreen extends Component {
                 <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}> 
                     <ScrollView>
                         <View style={styles.inputForm}>
+                            <View>
+                                <Text style={styles.inputLabel}>
+                                    Role:
+                                </Text>
+                                <Picker
+                                    selectedValue={this.state.roleInput}
+                                    style={{
+                                        height: 150, width: 300, marginBottom: 50 }}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ roleInput: itemValue })}>
+                                    <Picker.Item label="User" value="user" />
+                                    <Picker.Item label="Admin" value="admin" />
+                                </Picker>
+                            </View>
+                            {this.state.roleInput === 'admin' && 
+                            <View>
+                                <Text style={styles.inputLabel}>
+                                    Admin Code:
+                            </Text>
+                                <TextInput
+                                    autoFocus
+                                    style={styles.textInput}
+                                    onChangeText={(adminCodeInput) => this.setState({ adminCodeInput })}
+                                    value={this.state.adminCodeInput}
+                                    placeholder='Enter the code you were given here'
+                                />
+                            </View>
+                            }
                             <View>
                                 <Text style={styles.inputLabel}>
                                     First Name:
@@ -93,21 +147,29 @@ export default class SignUpScreen extends Component {
                             <View style={styles.marginBottom}>
                                 <Text style={styles.inputLabel}>
                                     Password:
-                                </Text>
-                                <TextInput
-                                    style={styles.passwordTextInput}
-                                    onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                                    value={this.state.passwordInput}
-                                    placeholder='At least 6 characters'
-                                    autoCapitalize='none'
-                                    textContentType='password'
-                                    secureTextEntry={this.state.hiddenPass}
-                                />
-                                <Button
-                                    title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                                    onPress={this.viewPass}
-                                >
-                                </Button>
+                            </Text>
+                                <View style={styles.passwordTextInput}>
+                                    < View style={{ flex: 1 }}>
+                                        <TextInput
+                                            style={{fontSize: this.state.hiddenPass ? 14 : 13.5}}
+                                            onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                                            value={this.state.passwordInput}
+                                            placeholder='Password'
+                                            autoCapitalize='none'
+                                            textContentType='password'
+                                            secureTextEntry={this.state.hiddenPass}
+                                        />
+                                    </View >
+                                    <View style={{ justifyContent: 'flex-end' }}>
+                                        {this.state.passwordInput !== null && this.state.passwordInput !== '' &&
+                                            <TouchableOpacity
+                                                onPress={this.viewPass}
+                                            >
+                                                <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#3377FF' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                            </TouchableOpacity>
+                                        }
+                                    </View>
+                                </View >
                             </View>
                             <TouchableHighlight style={styles.button} onPress={this.submitSignUp}>
                                 <Text style={styles.buttonText}> Sign Up </Text>
@@ -154,14 +216,17 @@ const styles = StyleSheet.create({
         paddingRight: 15
     },
     passwordTextInput: {
+        flexDirection: 'row',
         borderColor: 'blue',
         borderWidth: 2,
         borderRadius: 25,
-        marginBottom: 3,
+        marginBottom: 40,
         height: 50,
         width: 300,
         paddingLeft: 15,
-        paddingRight: 15
+        paddingRight: 15,
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
     marginBottom: {
         marginBottom: 40

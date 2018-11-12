@@ -8,7 +8,7 @@ import virgil from '../utils/virgilUtil';
 class Message extends Component {
     static propTypes = {
         author: PropTypes.string,
-        // body: PropTypes.string.isRequired,
+        body: PropTypes.string.isRequired,
         me: PropTypes.bool,
         sameAsPrevAuthor: PropTypes.bool
     }

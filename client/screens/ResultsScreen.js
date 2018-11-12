@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
 import { VictoryBar } from 'victory-native';
+import MenuBar from '../components/MenuBar';
 
 export default class ResultsScreen extends Component {
 
@@ -12,11 +13,18 @@ export default class ResultsScreen extends Component {
     }
 
     componentDidMount() {
+        AsyncStorage.getItem('surveyResults', (err, result) => {
+            if (err) console.log(err)
+            if(result !== null) {
+                this.setState({ results: JSON.parse(result)}) 
+            }
+        })
         AsyncStorage.getItem('userInfo', (err,result) => {
             api.getResults(JSON.parse(result).user.upi, "Depression")
                 .then(results => {
                     console.log('results from RS getResults: ', results)
-                    this.setState({ results })
+                    this.setState({ results },
+                        () => AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results)))
                 })
         })
         
@@ -28,8 +36,8 @@ export default class ResultsScreen extends Component {
                 <Text style={styles.title}>
                     Results Screen
                 </Text>
-                <VictoryBar/>
                 <ScrollView style={styles.scrollView}>
+                <VictoryBar/>
                     { this.state.results && this.state.results.map((result, idx) => {
                     return(
                     <View key={idx}>
@@ -73,16 +81,7 @@ export default class ResultsScreen extends Component {
                     })
                     }
                 </ScrollView>
-                <View style={styles.menu}>
-                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
-                        <Ionicons size={40} color='#808080' name='md-chatboxes' />
-                    </TouchableHighlight>
-                        <Ionicons size={40} color='#3377FF' name='md-pulse' />
-                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
-                        <Ionicons size={40} color='#808080' name='md-information-circle' />
-                    </TouchableHighlight>
-                    <Icon size={40} color='#808080' name='phone' />
-                </View>
+                <MenuBar navigation={this.props.navigation} screen={'data'} />
                 
             </KeyboardAvoidingView>
         )

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert } from 'react-native';
+import MenuBar from '../components/MenuBar'
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
 
 export default class InfoScreen extends Component {
@@ -49,7 +50,7 @@ export default class InfoScreen extends Component {
                             <Ionicons size={30} color='black' name='md-mail' />  dbeiser@uchicago.edu
                         </Text>
                         <Text selectable style={styles.text}>
-                            <Icon size={30} color='black' name='phone' /> 773-217-8020
+                            <Ionicons size={30} color='black' name='md-call' /> 773-217-8020
                         </Text>
                     </View>
                     <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, marginLeft: 5 }}>A message from Dr. Beiser:
@@ -60,34 +61,15 @@ export default class InfoScreen extends Component {
                             style={styles.webView}
                         />
                     </View>
-                </ScrollView>
-                <View style={styles.menu}>
-                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('UserHomeScreen') }}>
-                        <Ionicons size={40} color='#808080' name='md-chatboxes' />
-                    </TouchableHighlight>
-                    <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('ResultsScreen') }}>
-                        <Ionicons size={40} color='#808080' name='md-pulse' />
-                    </TouchableHighlight>
-                    <Ionicons size={40} color='#3377FF' name='md-information-circle' />
-                    <TouchableHighlight
-                        underlayColor={'rgba(255, 255, 255, 0)'}
+                    <Button
                         onPress={() => {
-                            this.setState({ modalVisible: !this.state.modalVisible }, ()=>{
-                                Alert.alert(
-                                    'EMERGENCY',
-                                    'In case of emergency: ',
-                                    [
-                                        { text: 'Call MOMS HELPLINE', onPress: () => console.log('Ask me later pressed') },
-                                        { text: 'Cancel', onPress: () => this.setState({ modalVisible: !this.state.modalVisible }), style: 'cancel' },
-                                        { text: 'Text a suicide counselor', onPress: () => console.log('OK Pressed') },
-                                    ],
-                                    { cancelable: false }
-                                );
-                            })
-                        }}>
-                        <Icon size={40} color={this.state.modalVisible ? '#3377FF':'#808080'} name='phone' />
-                    </TouchableHighlight>
-                </View>
+                            AsyncStorage.clear()
+                            this.props.navigation.navigate('LandingScreen')
+                        }}
+                        title="Log Out"
+                    />
+                </ScrollView>
+                <MenuBar navigation={this.props.navigation} screen={'info'}/>
             </KeyboardAvoidingView>
         )
     }
@@ -109,7 +91,7 @@ const styles = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: .2,
         backgroundColor: '#f2f2f2',
-        height: Dimensions.get('window').height * .055,
+        height: Dimensions.get('window').height * .062,
         width: Dimensions.get('window').width,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -130,4 +112,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 15  
     },
+    menuButton: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    }
 });

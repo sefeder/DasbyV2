@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage} from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, TouchableOpacity, AsyncStorage} from 'react-native';
 import api from '../utils/api';
+import { Ionicons } from '@expo/vector-icons';
 
 export default class LogInScreen extends Component {
 
@@ -28,9 +29,17 @@ export default class LogInScreen extends Component {
                     this.setState({ emailInput: '', passwordInput: '' })
                     return;
                 }
-                AsyncStorage.setItem('userInfo', JSON.stringify(res), () => {
-                    this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
-                })
+                if (res.user.role === "user"){
+                    AsyncStorage.setItem('userInfo', JSON.stringify(res), () => {
+                        this.props.navigation.navigate('UserHomeScreen', {userInfo: res, newUser: false})
+                    })
+                }
+                if (res.user.role === "admin"){
+                    console.log("succesfully loged in as admin!")
+                    AsyncStorage.setItem('userInfo', JSON.stringify(res), () => {
+                        this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: res })
+                    })
+                }
             })
             .catch(err => console.log(err))
     }
@@ -58,20 +67,40 @@ export default class LogInScreen extends Component {
                             <Text style={styles.inputLabel}>
                                 Password:
                             </Text>
-                            <TextInput
-                                style={styles.passwordTextInput}
-                                onChangeText={(passwordInput) => this.setState({ passwordInput })}
-                                value={this.state.passwordInput}
-                                placeholder='Password'
-                                autoCapitalize='none'
-                                textContentType='password'
-                                secureTextEntry={this.state.hiddenPass}
-                            />
-                            <Button
-                            title={this.state.hiddenPass ? 'View Password' : 'Hide Password'}
-                            onPress={this.viewPass}
-                            >
-                            </Button>
+                            <View style={{
+                                flexDirection: 'row',
+                                borderColor: 'blue',
+                                borderWidth: 2,
+                                borderRadius: 25,
+                                marginBottom: 40,
+                                height: 50,
+                                width: 300,
+                                paddingLeft: 15,
+                                paddingRight: 15,
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}>
+                                < View style={{ flex: 1 }}>
+                                    <TextInput
+                                        style={{ fontSize: this.state.hiddenPass ? 14 : 13.5 }}
+                                        onChangeText={(passwordInput) => this.setState({ passwordInput })}
+                                        value={this.state.passwordInput}
+                                        placeholder='Password'
+                                        autoCapitalize='none'
+                                        textContentType='password'
+                                        secureTextEntry={this.state.hiddenPass}
+                                    />
+                                </View >
+                                <View style={{ justifyContent: 'flex-end' }}>
+                                    {this.state.passwordInput !== null && this.state.passwordInput !== '' &&
+                                        <TouchableOpacity
+                                            onPress={this.viewPass}
+                                        >
+                                            <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#3377FF' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                        </TouchableOpacity>
+                                    }
+                                </View>
+                            </View >
                         </View>
                         <TouchableHighlight style={styles.button} onPress={this.submitLogIn}>
                             <Text style={styles.buttonText}> Log In </Text>
@@ -115,19 +144,6 @@ const styles = StyleSheet.create({
         width: 300,
         paddingLeft: 15,
         paddingRight: 15
-    },
-    passwordTextInput: {
-        borderColor: 'blue',
-        borderWidth: 2,
-        borderRadius: 25,
-        marginBottom: 3,
-        height: 50,
-        width: 300,
-        paddingLeft: 15,
-        paddingRight: 15
-    },
-    marginBottom: {
-        marginBottom: 40
     },
     inputForm: {
         display: 'flex',

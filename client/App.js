@@ -5,13 +5,12 @@ import LandingScreen from './screens/LandingScreen.js';
 import SignUpScreen from './screens/SignUpScreen.js';
 import LogInScreen from './screens/LogInScreen.js';
 import UserHomeScreen from './screens/UserHomeScreen.js';
-import AdminLogInScreen from './screens/AdminLogInScreen.js';
 import AdminSelectionScreen from './screens/AdminSelectionScreen.js';
 import AdminChatScreen from './screens/AdminChatScreen.js';
-import AdminSignUpScreen from './screens/AdminSignUpScreen.js';
 import SurveyScreen from './screens/SurveyScreen.js';
 import ResultsScreen from './screens/ResultsScreen.js';
 import InfoScreen from './screens/InfoScreen.js';
+import EmergenyButton from './components/EmergencyButton';
 
 const RootStack = createStackNavigator(
   {
@@ -43,23 +42,10 @@ const RootStack = createStackNavigator(
           return {
             headerTitle: 'User Home',
             headerRight: (
-              <Button
-                onPress={()=>{
-                  AsyncStorage.clear()
-                  navigation.navigate('LandingScreen')
-                }}
-                title="Log Out"
-              />
+             <EmergenyButton />
             ),
           };
         }
-      },
-    AdminLogInScreen:
-      {
-        screen: AdminLogInScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Log In',
-        })
       },
     AdminSelectionScreen:
       {
@@ -97,33 +83,41 @@ const RootStack = createStackNavigator(
           };
         }
       },
-    AdminSignUpScreen:
-      {
-        screen: AdminSignUpScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Sign Up',
-        })
-      },
     SurveyScreen:
       {
         screen: SurveyScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Survey',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Survey',
+            headerRight: (
+              <EmergenyButton />
+            ),
+          };
+        }
       },
     ResultsScreen:
       {
         screen: ResultsScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Results',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Results',
+            headerRight: (
+              <EmergenyButton />
+            ),
+          };
+        }
       },
     InfoScreen:
       {
         screen: InfoScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Info',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Information',
+            headerRight: (
+              <EmergenyButton />
+            ),
+          };
+        }
       },
 
     initialRouteName: "LandingScreen"

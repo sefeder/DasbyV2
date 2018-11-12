@@ -7,9 +7,9 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MenuBar from '../components/MenuBar';
 
 export default class UserHomeScreen extends Component {
 
@@ -21,6 +21,7 @@ export default class UserHomeScreen extends Component {
         userPrivateKey: null,
         messages: [],
         memberArray: [],
+        tempMemberArray: [],
         DasbyUpi: null,
         responseArray: [],
         isTyping: false,
@@ -31,11 +32,6 @@ export default class UserHomeScreen extends Component {
 
 
     componentDidMount() {
-        // setTimeout(() => {
-        //     this.setState({
-        //         spinnerVisible: !this.state.spinnerVisible
-        //     });
-        // }, 3000);
         const startTime = Date.now();
         console.log("----------------------------------------------------------")
         console.log("hitting compoenentDidMount at: ", (Date.now()-startTime)/1000)
@@ -68,6 +64,7 @@ export default class UserHomeScreen extends Component {
             .then(chatClient => {
                 console.log("Twilio Chat Client Recieved: ", (Date.now() - startTime) / 1000)
                 if (this.state.newUser) {
+                    this.setState({spinnerVisible: !this.state.spinnerVisible})
                     api.getAdmin()
                         .then(result => {
                             const adminUpiArray = result.admin.map(admin => admin.upi)
@@ -78,6 +75,7 @@ export default class UserHomeScreen extends Component {
                                     this.setState({ channel })
                                     adminUpiArray.forEach(adminUpi => channel.add(adminUpi))
                                     this.configureChannelEvents(channel)
+                                    api.dasbyRead(channel.sid, "0", 0, 0)
                                 })
                         })
 
@@ -140,13 +138,13 @@ export default class UserHomeScreen extends Component {
                                 result.forEach((member,i) => {
                                     api.getUser(member.identity).then(dbUser => {
                                         this.setState({
-                                            memberArray: [...this.state.memberArray, {
+                                            tempMemberArray: [...this.state.tempMemberArray, {
                                                 upi: dbUser.user.upi,
                                                 firstName: dbUser.user.first_name,
                                                 lastName: dbUser.user.last_name
                                             }]
                                         }, () => {
-                                                AsyncStorage.setItem('memberArray', JSON.stringify(this.state.memberArray))
+                                                AsyncStorage.setItem('memberArray', JSON.stringify(this.state.tempMemberArray))
                                                 console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
                                         })
                                     })
@@ -310,16 +308,7 @@ export default class UserHomeScreen extends Component {
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
                         <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
-                    <View style={styles.menu}>
-                        <Ionicons size={40} color='#3377FF' name='md-chatboxes' />
-                        <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('ResultsScreen', { upi: this.state.userInfo.upi }) }}>
-                            <Ionicons size={40} color='#808080' name='md-pulse' />
-                        </TouchableHighlight>
-                        <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => { this.props.navigation.navigate('InfoScreen') }}>
-                            <Ionicons size={40} color='#808080' name='md-information-circle' />
-                        </TouchableHighlight>
-                        <Icon size={40} color='#808080' name='phone' />
-                    </View>
+                    <MenuBar navigation={this.props.navigation} screen={'chat'} />
                 </KeyboardAvoidingView>
             </SafeAreaView>
         )

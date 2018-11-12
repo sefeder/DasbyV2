@@ -25,20 +25,12 @@ export default class LandingScreen extends Component {
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <TouchableHighlight style={styles.button}
+                    onPress={() => this.props.navigation.navigate('LogInScreen')}>
+                    <Text style={styles.buttonText}> Log In </Text>
+                </TouchableHighlight>
+                <TouchableHighlight style={styles.button}
                     onPress={() => this.props.navigation.navigate('SignUpScreen')}>
                     <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.button}
-                    onPress={() => this.props.navigation.navigate('LogInScreen')}>
-                    <Text style={styles.buttonText}> User Log In </Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.button}
-                    onPress={() => this.props.navigation.navigate('AdminSignUpScreen')}>
-                    <Text style={styles.buttonText}> Admin Sign Up </Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.button}
-                    onPress={() => this.props.navigation.navigate('AdminLogInScreen')}>
-                    <Text style={styles.buttonText}> Admin Log In </Text>
                 </TouchableHighlight>
             </KeyboardAvoidingView>
         )

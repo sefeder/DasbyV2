@@ -3,8 +3,10 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryBar } from 'victory-native';
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter } from 'victory-native';
 import MenuBar from '../components/MenuBar';
+import Moment from 'moment';
+import 'moment-timezone';
 
 export default class ResultsScreen extends Component {
 
@@ -33,11 +35,8 @@ export default class ResultsScreen extends Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
-                <Text style={styles.title}>
-                    Results Screen
-                </Text>
                 <ScrollView style={styles.scrollView}>
-                <VictoryBar/>
+                    <VictoryBar/>
                     { this.state.results && this.state.results.map((result, idx) => {
                     return(
                     <View key={idx}>
@@ -47,19 +46,7 @@ export default class ResultsScreen extends Component {
                         {this.state.results.length-idx})
                     </Text>
                         <Text style={styles.text}>
-                            Date: {result.createdAt}
-                        </Text>
-                        <Text style={styles.text}>
-                            Interview ID: {result.interviewId}
-                        </Text>
-                        <Text style={styles.text}>
-                            Test Type: {result.testType}
-                        </Text>
-                        <Text style={styles.text}>
-                            Diagnosis: {result.diagnosis && result.diagnosis}
-                        </Text>
-                        <Text style={styles.text}>
-                            Confidence: {result.confidence && result.confidence}
+                                Date: {Moment(result.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                         </Text>
                         <Text style={styles.text}>
                             Severity: {result.severity}
@@ -67,15 +54,7 @@ export default class ResultsScreen extends Component {
                         <Text style={styles.text}>
                             Category: {result.category}
                         </Text>
-                        <Text style={styles.text}>
-                            Precision: {result.precision}
-                        </Text>
-                        <Text style={styles.text}>
-                            Probability: {result.probability}
-                        </Text>
-                        <Text style={styles.text}>
-                            Percentile: {result.percentile}
-                        </Text>
+                        
                     </View>)
 
                     })

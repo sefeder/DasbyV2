@@ -8,7 +8,7 @@ import virgil from '../utils/virgilUtil';
 class Message extends Component {
     static propTypes = {
         author: PropTypes.string,
-        body: PropTypes.string.isRequired,
+        // body: PropTypes.string.isRequired,
         me: PropTypes.bool,
         sameAsPrevAuthor: PropTypes.bool
     }
@@ -68,9 +68,6 @@ class Message extends Component {
                         </View>
                     </View>
             }
-        }
-        if(this.props.currentMessageIndex === this.props.lastMessageIndex){
-            this.props.loadingDone()
         }
     }
 

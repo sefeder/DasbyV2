@@ -7,7 +7,6 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import { Ionicons } from '@expo/vector-icons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 
@@ -179,7 +178,6 @@ render () {
                     <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminChatScreen') }}>
                         <Ionicons size={45} color='#808080' name='md-chatboxes' />
                     </TouchableHighlight>
-                    <Icon size={45} color='#808080' name='phone' />
                     <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminSelectionScreen') }}>
                         <Ionicons size={45} color='#808080' name='md-people' />
                     </TouchableHighlight>

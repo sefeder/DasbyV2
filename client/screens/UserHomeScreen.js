@@ -21,7 +21,6 @@ export default class UserHomeScreen extends Component {
         userPrivateKey: null,
         messages: [],
         memberArray: [],
-        tempMemberArray: [],
         DasbyUpi: null,
         responseArray: [],
         isTyping: false,
@@ -29,7 +28,6 @@ export default class UserHomeScreen extends Component {
         isQrVisible: true,
         spinnerVisible: true
     }
-
 
     componentDidMount() {
         const startTime = Date.now();
@@ -60,100 +58,126 @@ export default class UserHomeScreen extends Component {
 
         const virgilCrypto = new VirgilCrypto()
         twilio.getTwilioToken(this.state.userInfo.upi)
-            .then(twilio.createChatClient)
-            .then(chatClient => {
-                console.log("Twilio Chat Client Recieved: ", (Date.now() - startTime) / 1000)
-                if (this.state.newUser) {
-                    this.setState({spinnerVisible: !this.state.spinnerVisible})
-                    api.getAdmin()
-                        .then(result => {
-                            const adminUpiArray = result.admin.map(admin => admin.upi)
-                            return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
-                                .then(twilio.joinChannel)
-                                .then(channel => {
-                                    console.log("New Twilio Channel Created and Joined Retrieved: ", (Date.now() - startTime) / 1000)
-                                    this.setState({ channel })
-                                    adminUpiArray.forEach(adminUpi => channel.add(adminUpi))
-                                    this.configureChannelEvents(channel)
-                                    api.dasbyRead(channel.sid, "0", 0, 0)
-                                })
-                        })
+        .then(twilio.createChatClient)
+        .then(chatClient => {
+            console.log("Twilio Chat Client Recieved: ", (Date.now() - startTime) / 1000)
+            if (this.state.newUser) {
+                api.getAdmin()
+                    .then(result => {
+                        
+                        const adminUpiArray = result.admin.map(admin => admin.upi)
+                        return twilio.createChannel(chatClient, this.state.userInfo.upi, adminUpiArray)
+                            .then(twilio.joinChannel)
+                            .then(channel => {
+                                console.log("New Twilio Channel Created and Joined Retrieved: ", (Date.now() - startTime) / 1000)
+                                this.setState({ channel })
+                                console.log("channel: ", channel)
+                                for (let i = 0; i < adminUpiArray.length; i++){
+                                    console.log("for loop, i=", i)
+                                    channel.add(adminUpiArray[i])
+                                    .then(() => {
+                                            if (i === adminUpiArray.length-1){
+                                                this.getChannelMembers(channel)
+                                                this.setState({ spinnerVisible: false })
+                                                api.dasbyRead(channel.sid, "0", 0, 0)
+                                            }
+                                        }
+                                    )
+                                }
+                                this.configureChannelEvents(channel)
+                            })
+                    })
 
-                }
-                else {
-                    // get messages from asn
-                    // if not null --> use/ set messages to state
-                    AsyncStorage.multiGet(['messages', 'memberArray'], (err, dataAsync) => {
-                        console.log('dataAsync: ', dataAsync)
-                        console.log('messages: ', JSON.parse(dataAsync[0][1]))
-                        console.log('memberArray: ', JSON.parse(dataAsync[1][1]))
-                        if (err) {
-                            console.log('error getting messages from async: ', err)
-                        } else if (dataAsync !== null) {
-                            this.setState({ 
-                                messages: JSON.parse(dataAsync[0][1]), 
-                                memberArray: JSON.parse(dataAsync[1][1]), 
-                                spinnerVisible: !this.state.spinnerVisible
+            }
+            else {
+                // get messages from asn
+                // if not null --> use/ set messages to state
+                AsyncStorage.multiGet(['messages', 'memberArray'], (err, dataAsync) => {
+                    const storedMessages = JSON.parse(dataAsync[0][1]);
+                    const storedMemberArray = JSON.parse(dataAsync[1][1]);
+                    console.log('dataAsync: ', dataAsync)
+                    console.log('messages: ', storedMessages)
+                    console.log('memberArray: ', storedMemberArray)
+                    if (err) {
+                        console.log('error getting messages from async: ', err)
+                    } else if (dataAsync !== null) {
+
+                        this.setState({ 
+                            messages: storedMessages, 
+                            memberArray: storedMemberArray, 
+                        })
+                    }
+                    if(storedMessages&&storedMemberArray){
+                        this.setState({
+                            spinnerVisible: false
+                        })
+                    }
+                    
+                })
+                return twilio.findChannel(chatClient, this.state.userInfo.upi)
+                .then(channel => {
+                    console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
+                    this.setState({ channel })
+                    this.configureChannelEvents(channel)
+                        channel.getMessages().then(result => {
+                            console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
+                            console.log("----------------------------------------------------------------------------------------")
+                            this.setState({
+                                messages: result.items.map((message, i, items) => {
+                                    console.log("Messages Map Function - message #",i, " at: " ,(Date.now() - startTime) / 1000)
+                                    if (message.author === this.state.DasbyUpi) {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                        }
+                                    } else {
+                                        return {
+                                            author: message.author,
+                                            body: this.parseUserPayloadData(this.decryptMessage(message.body)),
+                                            me: message.author === this.state.userInfo.upi,
+                                            sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
+                                        }
+                                    }
+                                })
+                                
+                            }, ()=> {
+                                AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
+                                console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
+                                this.setState({
+                                    spinnerVisible: false
+                                })
+                            })
+                        })
+                    this.getChannelMembers(channel)
+                })
+            }
+        })
+    }
+
+    getChannelMembers = (channel) => {
+        channel.getMembers().then(result => {
+            console.log('result: ', result)
+            let newMemberArray = []
+            for (let i = 0; i < result.length; i++) {
+                api.getUser(result[i].identity)
+                    .then(dbUser => {
+                        newMemberArray.push({
+                            upi: dbUser.user.upi,
+                            firstName: dbUser.user.first_name,
+                            lastName: dbUser.user.last_name
+                        })
+                        if (i === result.length - 1) {
+                            this.setState({
+                                memberArray: newMemberArray,
+                            }, () => {
+                                AsyncStorage.setItem('memberArray', JSON.stringify(this.state.memberArray))
                             })
                         }
                     })
-                    return twilio.findChannel(chatClient, this.state.userInfo.upi)
-                        .then(channel => {
-                            console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
-                            this.setState({ channel })
-                            this.configureChannelEvents(channel)
-                                    channel.getMessages().then(result => {
-                                        console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
-                                        console.log("----------------------------------------------------------------------------------------")
-                                        this.setState({
-                                            messages: result.items.map((message, i, items) => {
-                                                console.log("Messages Map Function - message #",i, " at: " ,(Date.now() - startTime) / 1000)
-                                                if (message.author === this.state.DasbyUpi) {
-                                                    return {
-                                                        author: message.author,
-                                                        body: this.parseDasbyPayloadData(this.decryptMessage(message.body)),
-                                                        me: message.author === this.state.userInfo.upi,
-                                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
-                                                    }
-                                                } else {
-                                                    return {
-                                                        author: message.author,
-                                                        body: this.parseUserPayloadData(this.decryptMessage(message.body)),
-                                                        me: message.author === this.state.userInfo.upi,
-                                                        sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
-                                                    }
-                                                }
-                                            })
-                                            
-                                        }, ()=> {
-                                            AsyncStorage.setItem('messages', JSON.stringify(this.state.messages))
-                                            console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
-                                        })
-                                    })
-                                    //-----------------
-
-                            //-----------------
-                            channel.getMembers().then(result => {
-                                console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
-                                result.forEach((member,i) => {
-                                    api.getUser(member.identity).then(dbUser => {
-                                        this.setState({
-                                            tempMemberArray: [...this.state.tempMemberArray, {
-                                                upi: dbUser.user.upi,
-                                                firstName: dbUser.user.first_name,
-                                                lastName: dbUser.user.last_name
-                                            }]
-                                        }, () => {
-                                                AsyncStorage.setItem('memberArray', JSON.stringify(this.state.tempMemberArray))
-                                                console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                }
-            })
-
+            }
+        })
     }
 
     decryptMessage = (encrytpedMessage) => {
@@ -227,8 +251,6 @@ export default class UserHomeScreen extends Component {
         })
     }
 
-    loadingDone = () => this.setState({ spinnerVisible: !this.state.spinnerVisible })
-
     updateTypingIndicator = (memberTyping, isTyping) => {
         if (isTyping) {
             console.log('member typing: ', memberTyping.identity)
@@ -288,7 +310,7 @@ export default class UserHomeScreen extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 <Spinner
                     visible={this.state.spinnerVisible}
-                    textContent={'Loading Messages...'}
+                    textContent={'Loading Conversation...'}
                     textStyle={{ color: 'rgba(91, 141, 249, 1)'}}
                     cancelable={false}
                     color={'#3377FF'}
@@ -300,7 +322,7 @@ export default class UserHomeScreen extends Component {
                         Welcome Home {this.state.userInfo.first_name} {this.state.userInfo.last_name}
                     </Text>
                     {this.state.messages&&this.state.memberArray&&
-                    <MessageList loadingDone={()=>this.loadingDone} memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} 
+                    <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.userInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} 
                     />
                     }
 

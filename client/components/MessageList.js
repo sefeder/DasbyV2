@@ -5,13 +5,13 @@ import { ScrollView, StyleSheet } from 'react-native';
 import TypingIndicator from './TypingIndicator'
 
 class MessageList extends Component {
-    static propTypes = {
-        messages: PropTypes.arrayOf(PropTypes.object)
-    }
+    // static propTypes = {
+    //     messages: PropTypes.arrayOf(PropTypes.object)
+    // }
 
-    static defaultProps = {
-        messages: [],
-    }
+    // static defaultProps = {
+    //     messages: [],
+    // }
 
     componentDidMount() {
         // this.scrollView.scrollToEnd({ animated: false })
@@ -27,9 +27,8 @@ class MessageList extends Component {
                 onContentSizeChange={(contentWidth, contentHeight) => {
                     this.scrollView.scrollToEnd({ animated: true });
                 }}>
-                {this.props.messages && this.props.messages.map((message, i, array) => (
-                    <Message 
-                        loadingDone={this.props.loadingDone} 
+                {this.props.messages.map((message, i, array) => (
+                    <Message  
                         sameAsPrevAuthor={message.sameAsPrevAuthor} 
                         upi={this.props.upi} 
                         currentMessageIndex={i}

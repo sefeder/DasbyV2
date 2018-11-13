@@ -23,7 +23,7 @@ class TypingIndicator extends Component {
         if (memberTyping !== this.props.upi) {
             for (let i = 0; i < this.props.memberArray.length; i++) {
                 if (this.props.memberArray[i].upi === memberTyping) {
-                    return this.props.prevMessage.author === memberTyping ? <View style={styles.notMeBubble}><AnimatedEllipsis numberOfDots={3}
+                    return this.props.prevMessage && (this.props.prevMessage.author === memberTyping) ? <View style={styles.notMeBubble}><AnimatedEllipsis numberOfDots={3}
                         minOpacity={0.4}
                         animationDelay={200}
                         style={styles.dots}

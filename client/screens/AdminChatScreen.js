@@ -7,6 +7,9 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import { Ionicons } from '@expo/vector-icons';
+import MenuBar from '../components/MenuBar';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 
@@ -21,12 +24,14 @@ export default class AdminChatScreen extends Component {
         memberArray: [],
         isTyping: false,
         memberTyping: null,
+        spinnerVisible: true
     }
 
     componentDidMount() {
         const startTime = Date.now();
         console.log("----------------------------------------------------------")
         console.log("hitting compoenentDidMount at: ", (Date.now() - startTime) / 1000)
+        console.log('this.state.channelDescriptor: ', this.state.channelDescriptor)
         virgil.getPrivateKey(this.state.adminInfo.upi)
             .then(adminPrivateKey => {
                 console.log("Virgil Private Key Retrieved: ", (Date.now() - startTime) / 1000)
@@ -55,6 +60,9 @@ export default class AdminChatScreen extends Component {
                         }
                     })
                 }, () => {
+                    this.setState({
+                        spinnerVisible: false
+                    })
                     console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
                 })
             })
@@ -168,20 +176,22 @@ export default class AdminChatScreen extends Component {
 render () {
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Spinner
+                visible={this.state.spinnerVisible}
+                textContent={'Loading Conversation...'}
+                textStyle={{ color: 'rgba(91, 141, 249, 1)' }}
+                cancelable={false}
+                color={'#3377FF'}
+                animation={'fade'}
+                overlayColor={'rgba(255, 255, 255, 1)'}
+            />
             <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
                 <Text>
                     Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
                 </Text>
                 <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                 <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} />
-                <View style={styles.menu}>
-                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminChatScreen') }}>
-                        <Ionicons size={45} color='#808080' name='md-chatboxes' />
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={() => { this.props.navigation.navigate('AdminSelectionScreen') }}>
-                        <Ionicons size={45} color='#808080' name='md-people' />
-                    </TouchableHighlight>
-                </View>
+                <MenuBar navigation={this.props.navigation} screen={'chat'} />
 
             </KeyboardAvoidingView>
         </SafeAreaView>

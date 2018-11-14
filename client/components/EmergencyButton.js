@@ -34,8 +34,8 @@ export default class EmergencyButton extends Component {
                 }}>
                 <View>
                     <Entypo style={{
-                        height: 30, width: 32, marginLeft: 17.5
-                    }} size={33} color={'red'} name='warning' />
+                        height: 30, width: 28.5, marginLeft: 17.5
+                    }} size={28.5} color={'red'} name='warning' />
                     <Text style={{ color: 'red', fontSize: 10, marginRight: 8 }}> EMERGENCY </Text>
                 </View>
             </TouchableHighlight>

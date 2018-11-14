@@ -41,9 +41,6 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'User Home',
-            headerRight: (
-             <EmergenyButton />
-            ),
           };
         }
       },
@@ -71,15 +68,6 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'Admin Chat Home',
-            headerRight: (
-              <Button
-                onPress={() => {
-                  AsyncStorage.clear()
-                  navigation.navigate('LandingScreen')
-                }}
-                title="Log Out"
-              />
-            ),
           };
         }
       },
@@ -101,9 +89,6 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'Results',
-            headerRight: (
-              <EmergenyButton />
-            ),
           };
         }
       },
@@ -113,9 +98,6 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'Information',
-            headerRight: (
-              <EmergenyButton />
-            ),
           };
         }
       },

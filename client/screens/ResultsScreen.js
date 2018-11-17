@@ -5,8 +5,9 @@ import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
 import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter } from 'victory-native';
 import MenuBar from '../components/MenuBar';
-import Moment from 'moment';
+import moment from 'moment';
 import 'moment-timezone';
+import Result from '../components/Result'
 
 export default class ResultsScreen extends Component {
 
@@ -46,35 +47,21 @@ export default class ResultsScreen extends Component {
         })  
     }
 
+    
+
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
-                <ScrollView style={styles.scrollView}>
+                <ScrollView>
                     { this.state.results && this.state.results.map((result, idx) => {
-                    return(
-                    <View key={idx}>
-                            <Text style={{
-                                fontSize: 20,
-                                fontWeight: 'bold',}}>
-                        {this.state.results.length-idx})
-                    </Text>
-                        <Text style={styles.text}>
-                                Date: {Moment(result.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
-                        </Text>
-                        <Text style={styles.text}>
-                            Severity: {result.severity}
-                        </Text>
-                        <Text style={styles.text}>
-                            Category: {result.category}
-                        </Text>
-                        
-                    </View>)
-
-                    })
-                    }
+                        let formattedDate = moment(result.createdAt).format('MMM Do, YYYY')
+                        console.log('this.state.results[idx - 1]: ', this.state.results[idx - 1])
+                        return(
+                            <Result key={idx} prevSeverity={this.state.results[idx - 1] !== undefined ? this.state.results[idx - 1].severity : null} result={result} date={formattedDate}/>
+                        )
+                    })}
                 </ScrollView>
                 <MenuBar navigation={this.props.navigation} screen={'data'} />
-                
             </KeyboardAvoidingView>
         )
     }
@@ -90,30 +77,5 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
-    },
-    scrollView: {
-        marginLeft: 20
-    },
-    text: {
-        fontSize: 18,
-        marginBottom: 10
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        alignSelf: 'center'
-    },
-    menu: {
-        display: 'flex',
-        borderTopColor: 'black',
-        borderTopWidth: .2,
-        backgroundColor: '#f2f2f2',
-        height: Dimensions.get('window').height * .055,
-        width: Dimensions.get('window').width,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        marginTop: 10
-    },
+    }
 });

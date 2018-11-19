@@ -12,7 +12,6 @@ class Result extends Component {
     }
 
     componentDidMount() {
-        console.log('this.props.prevSeverity: ', this.props.prevSeverity)
     }
 
     capitalizeFirstLetter = string => {
@@ -21,7 +20,6 @@ class Result extends Component {
 
     determineBackgroundColor = severity => {
         let score = parseInt(severity)
-        console.log(score)
         switch (true) {
             case (score < 50):
                 return 'rgba(118, 178, 236, 1)'
@@ -41,6 +39,17 @@ class Result extends Component {
         }
     }
 
+    determineTriangle = (prevSeverity, severity) => {
+        if (prevSeverity === null || prevSeverity === severity) {
+            return < Entypo size={37} color='black' name={'minus'} />
+        }
+        else if (prevSeverity > severity) {
+            return < Entypo size={37} color='green' name={'triangle-down'} />
+        }
+        else if (prevSeverity < severity) {
+            return < Entypo size={37} color='red' name={'triangle-up'} />
+        }
+    }
 
     render() {
         return (
@@ -76,15 +85,7 @@ class Result extends Component {
                         </Text>
 
                         <View style={{ marginLeft: 10}}>
-                            {this.props.prevSeverity > this.props.result.severity ?
-                            < Entypo size={37} color='green' name={'triangle-down'} />
-                            : this.props.prevSeverity < this.props.result.severity ?
-                            < Entypo size={37} color='red' name={'triangle-up'} />
-                            : this.props.prevSeverity === this.props.result.severity || this.props.prevSeverity === null ?
-                            < Entypo size={37} color='black' name={'minus'} />
-                            : <View />
-                            }
-
+                            {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
                         </View>
 
                         <Text style={{ fontSize: 25, fontWeight: 'bold', marginLeft: 5, color: this.determineBackgroundColor(this.props.result.severity)}}>

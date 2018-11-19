@@ -18,6 +18,7 @@ export default class ResultsScreen extends Component {
     componentDidMount() {
         AsyncStorage.getItem('currentUserUpi', (err,result)=>{
             if (err) console.log(err)
+            //below is only true if admin is currently logged in
             if (result !== null) {
                 api.getResults(JSON.parse(result), "Depression")
                     .then(results => {
@@ -25,14 +26,12 @@ export default class ResultsScreen extends Component {
                         this.setState({ results },
                             () => AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results)))
                     })
-
+            //below pertains to users being logged in
             } else {
                 AsyncStorage.getItem('surveyResults', (err, result) => {
                     if (err) console.log(err)
-                    if (result !== null) {
-                        this.setState({ results: JSON.parse(result) })
-                    }
-                    else {
+                    this.setState({ results: JSON.parse(result) },
+                    () => {
                         AsyncStorage.getItem('userInfo', (err, result) => {
                             api.getResults(JSON.parse(result).user.upi, "Depression")
                             .then(results => {
@@ -41,7 +40,7 @@ export default class ResultsScreen extends Component {
                                     () => AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results)))
                             })
                         })
-                    }
+                    })
                 })
             }
         })  
@@ -53,11 +52,10 @@ export default class ResultsScreen extends Component {
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <ScrollView>
-                    { this.state.results && this.state.results.map((result, idx) => {
+                    { this.state.results && this.state.results.map((result, idx, resultArray) => {
                         let formattedDate = moment(result.createdAt).format('MMM Do, YYYY')
-                        console.log('this.state.results[idx - 1]: ', this.state.results[idx - 1])
                         return(
-                            <Result key={idx} prevSeverity={this.state.results[idx - 1] !== undefined ? this.state.results[idx - 1].severity : null} result={result} date={formattedDate}/>
+                            <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={formattedDate}/>
                         )
                     })}
                 </ScrollView>

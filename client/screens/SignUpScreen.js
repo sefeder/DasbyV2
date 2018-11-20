@@ -151,7 +151,7 @@ export default class SignUpScreen extends Component {
                                 <View style={styles.passwordTextInput}>
                                     < View style={{ flex: 1 }}>
                                         <TextInput
-                                            style={{fontSize: this.state.hiddenPass ? 14 : 13.5}}
+                                            style={{ fontSize: this.state.hiddenPass ? 13.5 : 14}}
                                             onChangeText={(passwordInput) => this.setState({ passwordInput })}
                                             value={this.state.passwordInput}
                                             placeholder='Password'

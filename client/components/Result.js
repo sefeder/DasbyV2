@@ -12,6 +12,14 @@ class Result extends Component {
     }
 
     componentDidMount() {
+        
+        console.log('1) moment.utc(this.props.date).utcOffset(-360): ', moment.utc(this.props.date).utcOffset(-360))
+        console.log('2) moment(this.props.date).utcOffset(-360): ', moment(this.props.date).utcOffset(-360))
+       
+        console.log('3) moment.utc(this.props.date): ', moment.utc(this.props.date))
+        console.log('4) moment(this.props.date): ', moment(this.props.date))
+        
+    
     }
 
     capitalizeFirstLetter = string => {
@@ -67,10 +75,11 @@ class Result extends Component {
                         justifyContent: 'space-between'}}>
                             <View style={styles.resultHeader}>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                    {this.props.date}
+                                {/* Don't understand .utcOffset() below works for central time though*/}
+                                {moment(moment(this.props.date).utcOffset(0, true).valueOf()).format('MMM Do, YYYY')}
                                 </Text>
                                 <Text style={{ fontSize: 16, marginLeft: 5 }}>
-                                    ({moment(`${this.props.date}`, 'MMM Do, YYYY').fromNow()})
+                                ({moment(this.props.date).utcOffset(0, true).fromNow()})
                                     </Text>
                             </View>
                             <MaterialIcons size={40} color='black' name={'menu'}/>

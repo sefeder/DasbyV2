@@ -82,7 +82,7 @@ export default class LogInScreen extends Component {
                             }}>
                                 < View style={{ flex: 1 }}>
                                     <TextInput
-                                        style={{ fontSize: this.state.hiddenPass ? 14 : 13.5 }}
+                                        style={{ fontSize: this.state.hiddenPass ? 13.5 : 14 }}
                                         onChangeText={(passwordInput) => this.setState({ passwordInput })}
                                         value={this.state.passwordInput}
                                         placeholder='Password'

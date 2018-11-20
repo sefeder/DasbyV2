@@ -53,9 +53,8 @@ export default class ResultsScreen extends Component {
             <KeyboardAvoidingView style={styles.app}>
                 <ScrollView>
                     { this.state.results && this.state.results.map((result, idx, resultArray) => {
-                        let formattedDate = moment(result.createdAt).format('MMM Do, YYYY')
                         return(
-                            <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={formattedDate}/>
+                            <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt}/>
                         )
                     })}
                 </ScrollView>

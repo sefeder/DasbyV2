@@ -3,14 +3,22 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter } from 'victory-native';
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme } from 'victory-native';
 import MenuBar from '../components/MenuBar';
 import moment from 'moment';
 import 'moment-timezone';
-import Result from '../components/Result'
+import Result from '../components/Result';
 
-export default class ResultsScreen extends Component {
 
+// [
+    //     { quarter: 1, earnings: 13000 },
+    //     { quarter: 2, earnings: 16500 },
+    //     { quarter: 3, earnings: 14250 },
+    //     { quarter: 4, earnings: 19000 }
+    // ];
+    
+    export default class ResultsScreen extends Component {
+        
     state = {
         results: null
     }
@@ -51,6 +59,19 @@ export default class ResultsScreen extends Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
+                <View style={styles.container}>
+                    <VictoryGroup width={350} theme={VictoryTheme.material}>
+                        <VictoryBar 
+                        labels={this.state.results && this.state.results.map((result, idx) => {
+                            return `${result.severity}`
+                        })}
+                        data={this.state.results && this.state.results.map((result, idx) => {
+                            return { date: result.createdAt, severity: result.severity }
+                        })}
+                        x="date"
+                        y="severity" />
+                    </VictoryGroup>
+                </View>
                 <ScrollView>
                     { this.state.results && this.state.results.map((result, idx, resultArray) => {
                         return(
@@ -74,5 +95,21 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
+    },
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: '#d9d9d9',
+        shadowColor: "#000000",
+        shadowOpacity: 0.8,
+        shadowRadius: 7,
+        shadowOffset: {
+            height: 1,
+            width: 1
+        },
+        zIndex: 10
+    
     }
+
 });

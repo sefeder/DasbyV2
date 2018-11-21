@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Picker, TouchableOpacity, AsyncStorage } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Chance } from 'chance';
 import virgil from '../utils/virgilUtil';
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
+import { Picker } from 'react-native-woodpicker';
 
 export default class SignUpScreen extends Component {
 
@@ -14,13 +15,18 @@ export default class SignUpScreen extends Component {
         lastInput: null,
         hiddenPass: true,
         adminCodeInput: null,
-        roleInput: 'user',
+        roleInput: null,
 
         // NOT SURE IF WE WANNA DO IT THIS WAY
         userInfo: null
     }
+
+
     viewPass = () => {
         this.setState({ hiddenPass: !this.state.hiddenPass })
+    }
+    handleChange = value => {
+        this.setState({ roleInput: value })
     }
 
     submitSignUp = () => {
@@ -86,13 +92,18 @@ export default class SignUpScreen extends Component {
                                     Role:
                                 </Text>
                                 <Picker
-                                    selectedValue={this.state.roleInput}
-                                    style={{
-                                        height: 150, width: 300, marginBottom: 50 }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({ roleInput: itemValue })}>
-                                    <Picker.Item label="User" value="user" />
-                                    <Picker.Item label="Admin" value="admin" />
-                                </Picker>
+                                    onItemChange={this.handleChange}
+                                    value={this.state.roleInput}
+                                    style = { styles.textInput }
+                                    items={[
+                                        { label: "Please select a role", value: null },
+                                        { label: "User", value: "user" },
+                                        { label: "Admin", value: "admin" }
+                                    ]}
+                                    item={{label: "Please select a role", value: null}}
+                                    placeholder={'Please select a role'}
+                                    androidPickerMode="dropdown"
+                                />
                             </View>
                             {this.state.roleInput === 'admin' && 
                             <View>
@@ -113,7 +124,6 @@ export default class SignUpScreen extends Component {
                                     First Name:
                                 </Text>
                                 <TextInput
-                                    autoFocus
                                     style={styles.textInput}
                                     onChangeText={(firstInput) => this.setState({ firstInput })}
                                     value={this.state.firstInput}

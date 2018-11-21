@@ -12,14 +12,6 @@ class Result extends Component {
     }
 
     componentDidMount() {
-        
-        console.log('1) moment.utc(this.props.date).utcOffset(-360): ', moment.utc(this.props.date).utcOffset(-360))
-        console.log('2) moment(this.props.date).utcOffset(-360): ', moment(this.props.date).utcOffset(-360))
-       
-        console.log('3) moment.utc(this.props.date): ', moment.utc(this.props.date))
-        console.log('4) moment(this.props.date): ', moment(this.props.date))
-        
-    
     }
 
     capitalizeFirstLetter = string => {
@@ -63,6 +55,7 @@ class Result extends Component {
         return (
             <View>
                     <TouchableHighlight style={{
+                        marginTop: 5,
                         height: Dimensions.get('window').height * .055,
                         width: Dimensions.get('window').width,
                         backgroundColor: this.determineBackgroundColor(this.props.result.severity),
@@ -119,7 +112,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#434346',
         display: 'flex',
         flexDirection: 'row',
-        marginBottom: 10,
         alignItems: 'center',
         borderBottomColor: 'black',
         borderBottomWidth: 1.5

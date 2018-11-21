@@ -9,9 +9,9 @@ const VirgilCrypto = require('virgil-crypto').VirgilCrypto;
 const VirgilAccessTokenSigner = require('virgil-crypto').VirgilAccessTokenSigner;
 const VirgilCardCrypto = require('virgil-crypto').VirgilCardCrypto;
 
-const cardCrypto = new VirgilCardCrypto();
-const cardVerifier = new VirgilCardVerifier(cardCrypto);
 const virgilCrypto = new VirgilCrypto();
+const cardCrypto = new VirgilCardCrypto(virgilCrypto);
+const cardVerifier = new VirgilCardVerifier(cardCrypto);
 
 const generator = new JwtGenerator({
     appId: process.env.APP_ID,

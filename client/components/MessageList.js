@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Message from './Message'
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, RefreshControl } from 'react-native';
 import TypingIndicator from './TypingIndicator'
 
 class MessageList extends Component {
@@ -12,21 +12,42 @@ class MessageList extends Component {
     // static defaultProps = {
     //     messages: [],
     // }
+    state = {
+        refreshing: false
+    }
 
     componentDidMount() {
         // this.scrollView.scrollToEnd({ animated: false })
     }
 
     componentDidUpdate() {
-        this.scrollView.scrollToEnd({ animated: true })
+        if (!this.state.refreshing){
+            this.scrollView.scrollToEnd({ animated: true })
+        }
+    }
+
+    onRefresh = () => {
+        this.setState({ refreshing: true })
+        setTimeout(() => {
+            this.setState({ refreshing: false })
+        }, 4000);
+        // this.props.onRefresh()
     }
 
     render() {
         return (
-            <ScrollView style={styles.messageList} ref={ref => this.scrollView = ref}
+            <ScrollView
+                style={styles.messageList}
+                ref={ref => this.scrollView = ref}
                 onContentSizeChange={(contentWidth, contentHeight) => {
                     this.scrollView.scrollToEnd({ animated: true });
-                }}>
+                }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                    />
+                }>
                 {this.props.messages.map((message, i, array) => (
                     <Message  
                         sameAsPrevAuthor={message.sameAsPrevAuthor} 

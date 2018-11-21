@@ -19,7 +19,7 @@ class QuickReply extends Component {
     render() {
         return (
             <View >
-                < View style={styles.quickReplyView}>
+                < View style={styles.quickReplyButtonView}>
                     {this.props.isQrVisible &&
                         this.props.responseArray.map((responseObject, idx) => {
                             return [
@@ -39,7 +39,7 @@ class QuickReply extends Component {
 
 }
 const styles = StyleSheet.create({
-    quickReplyView: {
+    quickReplyButtonView: {
         height: 70,
         flex: 1,
         flexDirection: 'row',

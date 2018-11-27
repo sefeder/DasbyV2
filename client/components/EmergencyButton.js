@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert, Platform } from 'react-native';
 
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons, Entypo } from '@expo/vector-icons';
+import ActionSheet from 'react-native-action-sheet';
 
 export default class EmergencyButton extends Component {
 
@@ -13,24 +14,41 @@ export default class EmergencyButton extends Component {
     }
 
     render() {
+        const buttons = [
+            'Call MOMS HELPLINE',
+            'Text a suicide counselor',
+            'Cancel'
+        ];
+        // const DESTRUCTIVE_INDEX = 3;
+        const cancelIndex = 2;
         return (
             <TouchableHighlight
                 underlayColor={'rgba(255, 255, 255, 0)'}
                 onPress={ () => {
-                    Alert.alert(
-                        'EMERGENCY',
-                        'In case of emergency: ',
-                        [
-                            { text: 'Call MOMS HELPLINE', onPress: () => {
-                                console.log('Call MOMS HELPLINE pressed')
-                            } },
-                            { text: 'Text a suicide counselor', onPress: () => {
-                                console.log('Text a suicide counselor Pressed')
-                            } },
-                            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-                        ],
-                        { cancelable: false }
-                    )
+                    ActionSheet.showActionSheetWithOptions({
+                        options: buttons,
+                        cancelButtonIndex: cancelIndex,
+                        // destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                        tintColor: '#3377FF',
+                        title: 'EMERGENCY',
+                    },
+                        (buttonIndex) => {
+                            console.log('button clicked :', buttonIndex);
+                        });
+                    // Alert.alert(
+                    //     'EMERGENCY',
+                    //     'In case of emergency: ',
+                    //     [
+                    //         { text: 'Call MOMS HELPLINE', onPress: () => {
+                    //             console.log('Call MOMS HELPLINE pressed')
+                    //         } },
+                    //         { text: 'Text a suicide counselor', onPress: () => {
+                    //             console.log('Text a suicide counselor Pressed')
+                    //         } },
+                    //         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                    //     ],
+                    //     { cancelable: false }
+                    // )
                 }}>
                 <View>
                     <Entypo style={{

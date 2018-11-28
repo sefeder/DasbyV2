@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, Dimensions } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import {VirgilCrypto} from 'virgil-crypto';
 import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
+import { Ionicons } from '@expo/vector-icons';
+import MenuBar from '../components/MenuBar';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+
+
 
 export default class AdminChatScreen extends Component {
 
@@ -18,11 +24,17 @@ export default class AdminChatScreen extends Component {
         memberArray: [],
         isTyping: false,
         memberTyping: null,
+        spinnerVisible: true
     }
 
     componentDidMount() {
+        const startTime = Date.now();
+        console.log("----------------------------------------------------------")
+        console.log("hitting compoenentDidMount at: ", (Date.now() - startTime) / 1000)
+        console.log('this.state.channelDescriptor: ', this.state.channelDescriptor)
         virgil.getPrivateKey(this.state.adminInfo.upi)
             .then(adminPrivateKey => {
+                console.log("Virgil Private Key Retrieved: ", (Date.now() - startTime) / 1000)
                 this.setState({
                     adminPrivateKey: adminPrivateKey
                 })
@@ -31,11 +43,15 @@ export default class AdminChatScreen extends Component {
 
         this.state.channelDescriptor.getChannel()
         .then(channel => {
+            console.log("Channel Gotten from Channel Descriptor: ", (Date.now() - startTime) / 1000)
             this.setState({channel})
             this.configureChannelEvents(channel)
             channel.getMessages().then(result => {
+                console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
+                console.log("----------------------------------------------------------------------------------------")
                 this.setState({
                     messages: result.items.map((message, i, items) => {
+                        console.log("Messages Map Function - message #", i, " at: ", (Date.now() - startTime) / 1000)
                         return {
                             author: message.author,
                             body: this.parseIncomingPayloadData(this.decryptMessage(message.body)),
@@ -43,10 +59,16 @@ export default class AdminChatScreen extends Component {
                             sameAsPrevAuthor: items[i - 1] === undefined ? false : items[i - 1].author === message.author
                         }
                     })
+                }, () => {
+                    this.setState({
+                        spinnerVisible: false
+                    })
+                    console.log("---------------------END SET STATE MESSAGES-----------------------", (Date.now() - startTime) / 1000)
                 })
             })
             channel.getMembers().then(result => {
-                result.forEach(member => {
+                console.log("Channel Members Gotten: ", (Date.now() - startTime) / 1000)
+                result.forEach((member,i) => {
                     api.getUser(member.identity).then(dbUser => {
                         this.setState({
                             memberArray: [...this.state.memberArray, {
@@ -54,6 +76,8 @@ export default class AdminChatScreen extends Component {
                                 firstName: dbUser.user.first_name,
                                 lastName: dbUser.user.last_name
                             }]
+                        }, () => {
+                            console.log("Set State Member ", i, " at:", (Date.now() - startTime) / 1000)
                         })
                     })
                 })
@@ -83,8 +107,17 @@ export default class AdminChatScreen extends Component {
     parseIncomingPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
-            const message = payloadData.message
-            return message
+            if (typeof payloadData === 'number') {
+                const message = payloadData
+                return message
+            }
+            if (payloadData.imageURL || payloadData.videoURL) {
+                const message = payloadData
+                return message
+            } else {
+                const message = payloadData.message
+                return message
+            }
         } else {
             const message = payloadDataString
             return message
@@ -147,12 +180,23 @@ export default class AdminChatScreen extends Component {
 render () {
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Spinner
+                visible={this.state.spinnerVisible}
+                textContent={'Loading Conversation...'}
+                textStyle={{ color: 'rgba(91, 141, 249, 1)' }}
+                cancelable={false}
+                color={'#3377FF'}
+                animation={'fade'}
+                overlayColor={'rgba(255, 255, 255, 1)'}
+            />
             <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>
                 <Text>
                     Welcome Home {this.state.adminInfo.first_name} {this.state.adminInfo.last_name}
                 </Text>
                 <MessageList memberTyping={this.state.memberTyping} isTyping={this.state.isTyping} upi={this.state.adminInfo.upi} messages={this.state.messages} memberArray={this.state.memberArray} />
                 <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} />
+                <MenuBar navigation={this.props.navigation} screen={'chat'} />
+
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
@@ -168,6 +212,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10
-    }
+    },
+    menu: {
+        display: 'flex',
+        borderTopColor: 'black',
+        borderTopWidth: .2,
+        backgroundColor: '#f2f2f2',
+        height: Dimensions.get('window').height * .055,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        marginTop: 10
+    },
 })

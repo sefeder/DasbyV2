@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import { ChannelDescriptor } from 'twilio-chat/lib/channeldescriptor';
 import api from '../utils/api';
+import MenuBar from '../components/MenuBar';
 
 export default class AdminSelectionScreen extends Component {
 
@@ -36,7 +37,9 @@ export default class AdminSelectionScreen extends Component {
     }
 
     channelButtonHandler = selectedChannel => {
-        this.props.navigation.navigate('AdminChatScreen', { adminInfo: this.state.adminInfo, channelDescriptor: selectedChannel})
+        AsyncStorage.setItem('currentUserUpi', JSON.stringify(selectedChannel.uniqueName), ()=>{
+            this.props.navigation.navigate('AdminChatScreen', { adminInfo: this.state.adminInfo, channelDescriptor: selectedChannel})
+        })
     }
 
     determineUserName = (userUpi) => {

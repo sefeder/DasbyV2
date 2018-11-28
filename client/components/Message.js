@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import { VirgilCrypto } from 'virgil-crypto';
 import virgil from '../utils/virgilUtil';
 
@@ -15,11 +15,58 @@ class Message extends Component {
 
     determineAuthor = (authorUpi) => {
         if(this.props.upi === authorUpi){
-            return <View style={styles.meBubble}>< Text selectable style={styles.meMessageText}>{this.props.body}</Text></View>
+            return <View style={styles.meBubble}>
+                {
+                    this.props.body.imageURL ?
+                        <Image source={{ uri: this.props.body.imageURL }}
+                            style={{ width: 280, height: 190 }} />
+                        : this.props.body.videoURL ?
+                            < Text selectable style={styles.meMessageText}>
+                                this will be a video
+                            </Text>
+                            : < Text selectable style={styles.meMessageText}>
+                                {this.props.body}
+                            </Text>    
+                }
+            </View>
         }
         for(let i=0; i< this.props.memberArray.length; i++){
             if (this.props.memberArray[i].upi === authorUpi) {
-                return this.props.sameAsPrevAuthor ? <View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>{this.props.body}</Text></View> : <View><Text style={styles.notMeAuthor}>{this.props.memberArray[i].firstName}</Text><View style={styles.notMeBubble}>< Text selectable style={styles.notMeMessageText}>{this.props.body}</Text></View></View>
+                return this.props.sameAsPrevAuthor ? 
+                    <View style={styles.notMeBubble}>
+                        {
+                            this.props.body.imageURL ?
+                                <Image source={{ uri: this.props.body.imageURL }}
+                                    style={{ width: 280, height: 190 }} />
+                                : this.props.body.videoURL ?
+                                    < Text selectable style={styles.notMeMessageText}>
+                                        this will be a video
+                            </Text>
+                                    : < Text selectable style={styles.notMeMessageText}>
+                                        {this.props.body}
+                                    </Text>
+                        }
+                    </View>
+                    :
+                    <View>
+                        <Text style={styles.notMeAuthor}>
+                            {this.props.memberArray[i].firstName}
+                        </Text>
+                        <View style={styles.notMeBubble}>
+                            {
+                                this.props.body.imageURL ?
+                                    <Image source={{ uri: this.props.body.imageURL }}
+                                        style={{ width: 280, height: 190 }} />
+                                    : this.props.body.videoURL ?
+                                        < Text selectable style={styles.notMeMessageText}>
+                                            this will be a video
+                            </Text>
+                                        : < Text selectable style={styles.notMeMessageText}>
+                                            {this.props.body}
+                                        </Text>
+                            }
+                        </View>
+                    </View>
             }
         }
     }

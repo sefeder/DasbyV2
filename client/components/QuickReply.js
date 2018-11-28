@@ -8,23 +8,29 @@ class QuickReply extends Component {
         height: 0
     }
 
-    handleSubmit = (text) => {
-        this.props.onMessageSend(text)
+    handleSubmit = (responseObject) => {
+        responseObjectString = JSON.stringify(responseObject)
+        this.props.onMessageSend(responseObjectString)
+        if(responseObject.chapter === "Survey"){
+            this.props.handleNewSurvey();  
+        }
     }
 
     render() {
         return (
             <View >
-                < View style={styles.quickReplyView}>
-                    {this.props.responseArray.map((response, idx) => {
-                        return [
-                            <TouchableHighlight onPress={() => this.handleSubmit(JSON.stringify(response))} style={styles.quickReplyButton} key={idx}>
-                                <Text style={styles.quickReplyText}>
-                                {response.message}
-                                </Text>
-                        </TouchableHighlight>
-                        ]
-                    })}
+                < View style={styles.quickReplyButtonView}>
+                    {this.props.isQrVisible &&
+                        this.props.responseArray.map((responseObject, idx) => {
+                            return [
+                                <TouchableHighlight onPress={() => this.handleSubmit(responseObject)} style={styles.quickReplyButton} key={idx}>
+                                    <Text style={styles.quickReplyText}>
+                                    {responseObject.message}
+                                    </Text>
+                            </TouchableHighlight>
+                            ]
+                        })
+                    }
                 </View >
                 
             </View >
@@ -33,18 +39,26 @@ class QuickReply extends Component {
 
 }
 const styles = StyleSheet.create({
-    quickReplyView: {
+    quickReplyButtonView: {
         height: 70,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        alignItems: 'center'
+        alignItems: 'center',
+        shadowColor: "#000000",
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        shadowOffset: {
+            height: 1,
+            width: 1
+        },
+        zIndex: 10
     },
     quickReplyButton: {
         backgroundColor: 'white',
         borderColor: '#3377FF',
         borderWidth: 2,
-        width: 100,
+        maxWidth: 100,
         padding: 5,
         borderRadius: 20,
         justifyContent: 'center',

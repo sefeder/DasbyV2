@@ -1,14 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button, AsyncStorage, Animated, Easing } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import LandingScreen from './screens/LandingScreen.js';
 import SignUpScreen from './screens/SignUpScreen.js';
 import LogInScreen from './screens/LogInScreen.js';
 import UserHomeScreen from './screens/UserHomeScreen.js';
-import AdminLogInScreen from './screens/AdminLogInScreen.js';
 import AdminSelectionScreen from './screens/AdminSelectionScreen.js';
 import AdminChatScreen from './screens/AdminChatScreen.js';
-import AdminSignUpScreen from './screens/AdminSignUpScreen.js';
+import SurveyScreen from './screens/SurveyScreen.js';
+import ResultsScreen from './screens/ResultsScreen.js';
+import InfoScreen from './screens/InfoScreen.js';
+import EmergenyButton from './components/EmergencyButton';
 
 const RootStack = createStackNavigator(
   {
@@ -36,42 +38,81 @@ const RootStack = createStackNavigator(
     UserHomeScreen:
       {
         screen: UserHomeScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'User Home',
-        })
-      },
-    AdminLogInScreen:
-      {
-        screen: AdminLogInScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Log In',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'User Home',
+          };
+        }
       },
     AdminSelectionScreen:
       {
         screen: AdminSelectionScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Channel Selector',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Channel Selector',
+            headerRight: (
+              <Button
+                onPress={() => {
+                  AsyncStorage.clear()
+                  navigation.navigate('LandingScreen')
+                }}
+                title="Log Out"
+              />
+            ),
+          };
+        }
       },
     AdminChatScreen:
       {
         screen: AdminChatScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Chat Home',
-        })
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Admin Chat Home',
+          };
+        }
       },
-    AdminSignUpScreen:
+    SurveyScreen:
       {
-        screen: AdminSignUpScreen,
-        navigationOptions: ({ navigation }) => ({
-          title: 'Admin Sign Up',
-        })
+        screen: SurveyScreen,
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Survey',
+            headerRight: (
+              <EmergenyButton />
+            ),
+          };
+        }
       },
-    
-    initialRouteName: "LandingScreen"
-  }
+    ResultsScreen:
+      {
+        screen: ResultsScreen,
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Results',
+          };
+        }
+      },
+    InfoScreen:
+      {
+        screen: InfoScreen,
+        navigationOptions: ({ navigation }) => {
+          return {
+            headerTitle: 'Information',
+          };
+        }
+      },
 
+    initialRouteName: "LandingScreen"
+  },
+  {transitionConfig : () => ({
+    transitionSpec: {
+      duration: 0,
+      timing: Animated.timing,
+      easing: Easing.step0,
+    },
+  }),
+}
+  
 )
 
 export default class App extends React.Component {

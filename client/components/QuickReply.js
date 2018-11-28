@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: '#3377FF',
         borderWidth: 2,
-        width: 100,
+        maxWidth: 100,
         padding: 5,
         borderRadius: 20,
         justifyContent: 'center',

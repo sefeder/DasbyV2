@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert, Platform, Linking } from 'react-native';
 
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import ActionSheet from 'react-native-action-sheet';
+import call from 'react-native-phone-call'
 
 export default class EmergencyButton extends Component {
 
@@ -34,6 +35,15 @@ export default class EmergencyButton extends Component {
                     },
                         (buttonIndex) => {
                             console.log('button clicked :', buttonIndex);
+                            if (buttonIndex === 0) {
+                                call({
+                                    number: '18663646667',
+                                    prompt: true
+                                }).catch(console.error)
+                            }
+                            if (buttonIndex === 1) {
+                                Linking.openURL('https://www.crisistextline.org/').catch(err => console.error('An error occurred', err));
+                            }
                         });
                     // Alert.alert(
                     //     'EMERGENCY',

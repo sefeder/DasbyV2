@@ -186,6 +186,7 @@ export default class UserHomeScreen extends Component {
         const decryptedChannelPrivateKeyBytes = virgilCrypto.decrypt(channelPrivateKeyBytes, this.state.userPrivateKey)
         const channelPrivateKey = virgilCrypto.importPrivateKey(decryptedChannelPrivateKeyBytes);
         const decryptedMessage = virgilCrypto.decrypt(encrytpedMessage, channelPrivateKey).toString('utf8')
+        console.log('decryptedMessage: ', typeof decryptedMessage)
         return decryptedMessage
     }
 
@@ -201,6 +202,10 @@ export default class UserHomeScreen extends Component {
     parseDasbyPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
+            if (typeof payloadData === 'number') {
+                const message = payloadData
+                return message
+            }
             if (payloadData.payload) {
                 this.setState({
                     responseArray: payloadData.payload,
@@ -228,6 +233,10 @@ export default class UserHomeScreen extends Component {
     parseUserPayloadData = payloadDataString => {
         if (this.canParseStr(payloadDataString)) {
             const payloadData = JSON.parse(payloadDataString)
+            if (typeof payloadData === 'number') {
+                const message = payloadData
+                return message
+            }
             if (payloadData.imageURL || payloadData.videoURL) {
                 const message = payloadData
                 return message

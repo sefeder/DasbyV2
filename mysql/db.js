@@ -3,7 +3,7 @@ const mysql = require('mysql2');
  
 
 var pool = mysql.createPool({
-  host: process.env.JAWSDB_URL || 'localhost',
+  host: process.env.HOST || 'localhost',
   user: process.env.DBUSER,
   database: process.env.DATABASE,
   password: process.env.DBPASS,

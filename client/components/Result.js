@@ -4,15 +4,33 @@ import { Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
 import 'moment-timezone';
 import * as Animatable from 'react-native-animatable';
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme, VictoryAxis, VictoryCursorContainer, VictoryVoronoiContainer, Line, VictoryAnimation, VictoryPie, VictoryLabel  } from 'victory-native';
+import { Svg } from 'react-native-svg';
 
 class Result extends Component {
 
     state = {
-        contentVisible: false
+        contentVisible: true,
+        percent: 0,
+        data: this.getData(0)
     }
 
     componentDidMount() {
+        setTimeout(() => {
+            this.setState({
+                percent: this.props.result.severity, data: this.getData(this.props.result.severity)
+            });
+        }, 100);
     }
+
+    componentWillUnmount() {
+        window.clearInterval(this.setStateInterval);
+    }
+
+    getData(percent) {
+        return [{ x: 1, y: percent }, { x: 2, y: 100 - percent }];
+    }
+
 
     capitalizeFirstLetter = string => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -39,63 +57,117 @@ class Result extends Component {
         }
     }
 
-    determineTriangle = (prevSeverity, severity) => {
-        if (prevSeverity === null || prevSeverity === severity) {
-            return < Entypo size={37} color='black' name={'minus'} />
+    determineTriangle = (referenceSeverity, severity) => {
+        if (referenceSeverity === null || referenceSeverity === severity) {
+            return < Entypo style ={{marginTop: 10}} size={37} color='black' name={'minus'} />
         }
-        else if (prevSeverity > severity) {
-            return < Entypo size={37} color='green' name={'triangle-down'} />
+        else if (referenceSeverity > severity) {
+            return < Entypo style={{ marginTop: 10 }} size={37} color='green' name={'triangle-down'} />
         }
-        else if (prevSeverity < severity) {
-            return < Entypo size={37} color='red' name={'triangle-up'} />
+        else if (referenceSeverity < severity) {
+            return < Entypo style={{ marginTop: 10 }} size={37} color='red' name={'triangle-up'} />
         }
+    }
+
+    determineDelta = (referenceSeverity, severity, referenceName) => {
+        let delta;
+        if(referenceSeverity === null){
+            delta = "(no previous data)"
+        }else if(referenceSeverity === severity){
+            delta = `same as ${referenceName}`
+        }else{
+            delta = (severity - referenceSeverity).toFixed(1)
+            if (delta > 0) {
+                delta = `+${delta}`
+            }
+            delta = `${delta} from ${referenceName}`
+        }
+        
+        return <Text style={{color:"white", fontSize: 15}}> 
+            {this.determineTriangle(referenceSeverity, severity)} {delta}
+        </Text>
     }
 
     render() {
         return (
             <View>
-                    <TouchableHighlight style={{
-                        marginTop: 5,
-                        height: Dimensions.get('window').height * .055,
-                        width: Dimensions.get('window').width,
-                        backgroundColor: this.determineBackgroundColor(this.props.result.severity),
-                        borderBottomColor: 'black',
-                        borderBottomWidth: this.state.contentVisible ? 0 : 1.5, 
-                        }} underlayColor={this.determineBackgroundColor(this.props.result.severity)} onPress={() => this.setState({ contentVisible: !this.state.contentVisible })}>
+                <View style={{
+                    marginTop: 5,
+                    height: Dimensions.get('window').height * .40,
+                    width: Dimensions.get('window').width,
+                    backgroundColor: '#434346',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                    flexWrap: 'wrap'
+
+                    }}>
                     <View style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: 'space-between'}}>
-                            <View style={styles.resultHeader}>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: Dimensions.get('window').width,
+                        height: Dimensions.get('window').height * .07
+                    }}>
+                        <View style={styles.resultHeader}>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>
                                 {/* Don't understand .utcOffset() below works for central time though*/}
                                 {moment(moment(this.props.date).utcOffset(0, true).valueOf()).format('MMM Do, YYYY')}
-                                </Text>
-                                <Text style={{ fontSize: 16, marginLeft: 5 }}>
+                            </Text>
+                            <Text style={{ fontSize: 16, marginLeft: 5, color: 'white' }}>
                                 ({moment(this.props.date).utcOffset(0, true).fromNow()})
-                                    </Text>
-                            </View>
-                            <MaterialIcons size={40} color='black' name={'menu'}/>
+                            </Text>
                         </View>
-                        
-                    </TouchableHighlight>
-                    {this.state.contentVisible &&
-                    <Animatable.View animation="slideInDown" style={styles.resultContent}>
-
-                        <Text style={{ fontSize: 22, marginLeft: 10, fontWeight: 'bold', color: this.determineBackgroundColor(this.props.result.severity)}}>
-                        {this.capitalizeFirstLetter(this.props.result.category)}
+                    </View>
+                    <View style={{
+                        width: 200,
+                        height: 200
+                    }}>
+                        <Text style={{ fontSize: 22, marginLeft: 10, fontWeight: 'bold', color: 'white' }}>
+                            {this.capitalizeFirstLetter(this.props.result.category)}
                         </Text>
 
-                        <View style={{ marginLeft: 10}}>
-                            {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
+                        <View style={{ marginLeft: 10 }}>
+                            {/* {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)} */}
+                            {this.determineDelta(this.props.prevSeverity, this.props.result.severity, 'previous')}
+                            {this.determineDelta(this.props.averageSeverity, this.props.result.severity, 'average')}
                         </View>
-
-                        <Text style={{ fontSize: 25, fontWeight: 'bold', marginLeft: 5, color: this.determineBackgroundColor(this.props.result.severity)}}>
-                            {this.props.result.severity}
-                        </Text>
-
-                    </Animatable.View>
-                    }
+                       
+                    </View>
+                    <Svg width="200" height="200">
+                        <VictoryPie
+                            standalone={false}
+                            animate={{ duration: 1000 }}
+                            width={200} height={200}
+                            data={this.state.data}
+                            innerRadius={75}
+                            cornerRadius={5}
+                            labels={() => null}
+                            style={{
+                                data: {
+                                    fill: (d) => {
+                                        const color = this.determineBackgroundColor(d.y);
+                                        return d.x === 1 ? color : "transparent";
+                                    }
+                                }
+                            }}
+                        />
+                        <VictoryAnimation duration={1000} data={this.state}>
+                            {(newProps) => {
+                                return (
+                                    <VictoryLabel
+                                        textAnchor="middle" verticalAnchor="middle"
+                                        x={100} y={100}
+                                        text={`${Math.round(newProps.percent * 10) / 10}`}
+                                        style={{ fontSize: 38, fill: this.determineBackgroundColor(this.props.result.severity) }}
+                                    />
+                                );
+                            }}
+                        </VictoryAnimation>
+                    </Svg>
+                </View>
             </View>
         )
     }
@@ -106,7 +178,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     resultContent: {
         backgroundColor: '#434346',

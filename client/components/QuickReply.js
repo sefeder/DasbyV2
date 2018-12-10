@@ -14,6 +14,9 @@ class QuickReply extends Component {
         if(responseObject.chapter === "Survey"){
             this.props.handleNewSurvey();  
         }
+        if (responseObject.chapter === "Survey Completed"){
+            this.props.handleShowResults();  
+        }
     }
 
     render() {
@@ -59,6 +62,7 @@ const styles = StyleSheet.create({
         borderColor: '#3377FF',
         borderWidth: 2,
         maxWidth: 100,
+        minWidth: 70,
         padding: 5,
         borderRadius: 20,
         justifyContent: 'center',

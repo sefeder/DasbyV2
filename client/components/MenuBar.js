@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         borderTopColor: 'black',
         borderTopWidth: .2,
         backgroundColor: '#f2f2f2',
-        height: Dimensions.get('window').height * .062,
+        height: Dimensions.get('window').height * .068,
         width: Dimensions.get('window').width,
         flexDirection: 'row',
         justifyContent: 'space-evenly',

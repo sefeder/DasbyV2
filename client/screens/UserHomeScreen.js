@@ -119,7 +119,7 @@ export default class UserHomeScreen extends Component {
                     console.log("Twilio Channel Found: ", (Date.now() - startTime) / 1000)
                     this.setState({ channel })
                     this.configureChannelEvents(channel)
-                        channel.getMessages().then(result => {
+                        channel.getMessages(15).then(result => {
                             console.log("Twilio Messages Retrieved: ", (Date.now() - startTime) / 1000)
                             console.log("----------------------------------------------------------------------------------------")
                             this.setState({
@@ -313,6 +313,9 @@ export default class UserHomeScreen extends Component {
     handleNewSurvey = () => {
         this.props.navigation.navigate('SurveyScreen', { upi: this.state.userInfo.upi, channel: this.state.channel }) 
     }
+    handleShowResults = () => {
+        this.props.navigation.navigate('ResultsScreen') 
+    }
 
     render() {
         return (
@@ -337,7 +340,7 @@ export default class UserHomeScreen extends Component {
 
                     {this.state.responseArray.length === 0 ?
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
-                        <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
+                        <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} handleShowResults={this.handleShowResults} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
                     <MenuBar navigation={this.props.navigation} screen={'chat'} />
                 </KeyboardAvoidingView>

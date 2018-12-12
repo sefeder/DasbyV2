@@ -8,6 +8,7 @@ export default class LandingScreen extends Component {
     }
 
     componentDidMount() {
+        // AsyncStorage.clear();
         AsyncStorage.getItem('userInfo', (err, result)=>{
             if (err) console.log(err)
             if (result !== null){

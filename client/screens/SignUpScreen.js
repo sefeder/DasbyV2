@@ -65,12 +65,12 @@ export default class SignUpScreen extends Component {
                 virgil.initializeVirgil(res.user.upi)
                     .then(updatedUser => {
                         console.log("-- Virgil User Created, Public Card Returned!! --")
-                        if (this.state.roleInput === 'user') {
+                        if (updatedUser.user.role === 'user') {
                             AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser), () => {
                                 this.props.navigation.navigate('UserHomeScreen', { userInfo: updatedUser, newUser: true})
                             })
                         }
-                        else if (this.state.roleInput === 'admin') {
+                        else if (updatedUser.user.role === 'admin') {
                             AsyncStorage.setItem('userInfo', JSON.stringify(updatedUser), () => {
                                 this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: updatedUser })
                             })

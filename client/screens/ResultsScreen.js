@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme } from 'victory-native';
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme, VictoryAxis, VictoryCursorContainer, VictoryVoronoiContainer, Line, VictoryStack, VictoryArea } from 'victory-native';
 import MenuBar from '../components/MenuBar';
 import moment from 'moment';
 import 'moment-timezone';
@@ -12,7 +12,9 @@ import Result from '../components/Result';
     export default class ResultsScreen extends Component {
         
     state = {
-        results: null
+        results:null,
+        currentPoints: [],
+        averageSeverity: 0,
     }
 
     componentDidMount() {
@@ -24,7 +26,11 @@ import Result from '../components/Result';
                     .then(results => {
                         console.log('results from RS getResults: ', results)
                         this.setState({ results },
-                            () => AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results)))
+                            () => {
+                                this.setState({ averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length })
+                                AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
+                            }
+                        )
                     })
             //below pertains to users being logged in
             } else {
@@ -37,40 +43,147 @@ import Result from '../components/Result';
                             .then(results => {
                                 console.log('results from RS getResults: ', results)
                                 this.setState({ results },
-                                    () => AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results)))
+                                    () => {
+                                        this.setState({ averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length })
+                                        AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
+                                    }
+                                )
                             })
                         })
                     })
                 })
             }
         })  
-    }
-
-    
+    }    
 
     render() {
+        const data = this.state.results && this.state.results.map((result, idx, array) => {
+                return { date: array.length - idx, severity: result.severity }
+            })
+        
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <View style={styles.container}>
-                    <VictoryGroup width={350} theme={VictoryTheme.material}>
-                        <VictoryBar 
-                        labels={this.state.results && this.state.results.map((result, idx) => {
-                            return `${result.severity}`
-                        })}
-                        data={this.state.results && this.state.results.map((result, idx) => {
-                            return { date: result.createdAt, severity: result.severity }
-                        })}
+                    {/* <VictoryChart 
+                        width={350} 
+                        // theme={VictoryTheme.material}
+                        containerComponent={
+                            <VictoryVoronoiContainer
+                                voronoiDimension="x"
+                                onActivated={
+                                    (points, props) => {
+                                        this.setState({currentPoints: points})
+                                    }
+                                }
+                            />
+                        }
+                    > */}
+                        {/* <VictoryAxis
+                            tickValues={this.state.results && this.state.results.map((result, idx) => {
+                                return { date: idx + 1 }
+                            })}
+                        /> */}
+                        <VictoryChart
+                        containerComponent={
+                            <VictoryVoronoiContainer
+                                voronoiDimension="x"
+                                onActivated={
+                                    (points, props) => {
+                                        this.setState({ currentPoints: points })
+                                    }
+                                }
+                            />
+                        }>
+                        <VictoryStack>
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 49 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 49 },
+                                ]}
+                                style={{ data: { fill: "rgba(118, 178, 236, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 16 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 16 },
+                                ]}
+                                style={{ data: { fill: "rgba(78, 142, 204, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 10 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 10 },
+                                ]}
+                                style={{ data: { fill: "rgba(48, 114, 177, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 25 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 25 },
+                                ]}
+                                style={{ data: { fill: "rgba(11, 90, 167, 1)" } }} />
+                        </VictoryStack>
+                        <VictoryGroup
+                        width={Dimensions.get('window').width*.96} 
+                        // theme={VictoryTheme.material}
+                        
+                        // labels={this.state.results && this.state.results.map((result, idx) => {
+                        //     return `${result.severity}`
+                        // })}
+                            data={this.state.results && data.map((point, idx, array) => {
+                                if (this.state.currentPoints[0] && point.date === this.state.currentPoints[0].date) {
+                                    const highlightedPoint = {
+                                        date: point.date,
+                                        severity: point.severity,
+                                        size: 8,
+                                    }
+                                    return highlightedPoint
+                                }
+                                else {
+                                    return point
+                                }
+                            })
+                            }
                         x="date"
-                        y="severity" />
-                    </VictoryGroup>
+                        y="severity" 
+                        >
+                            <VictoryLine />
+                            <VictoryScatter
+                                style={{
+                                    data: {
+                                        fill: (d) => this.state.currentPoints[0] && d.x === this.state.currentPoints[0].date ?  "blue" : "grey",
+                                    }
+                                }}/>
+                        </VictoryGroup>
+                        <VictoryGroup>
+                            <VictoryLine
+                                style={{
+                                    data: {stroke: "yellow", strokeWidth: 1},
+                                }}
+                                labels={["        avg"]}
+                                data = {[
+                                    { x: 0, y: this.state.averageSeverity},
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: this.state.averageSeverity}
+                                ]}
+                            />
+                        </VictoryGroup>
+                    </VictoryChart>
                 </View>
-                <ScrollView>
+                {/* <ScrollView>
                     { this.state.results && this.state.results.map((result, idx, resultArray) => {
                         return(
                             <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt}/>
                         )
                     })}
-                </ScrollView>
+                </ScrollView> */}
+                <View>
+                    {this.state.results && this.state.results.map((result, idx, resultArray) => {
+                        if (this.state.currentPoints[0] && resultArray.length-idx === this.state.currentPoints[0].date)
+                        return (
+                            <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt} averageSeverity={this.state.averageSeverity}/>
+                        )
+                        else {
+                            return;
+                        }
+                    })}
+                </View>
                 <MenuBar navigation={this.props.navigation} screen={'data'} />
             </KeyboardAvoidingView>
         )
@@ -89,7 +202,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     container: {
-        flex: 1,
+        flex: 2,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: '#d9d9d9',

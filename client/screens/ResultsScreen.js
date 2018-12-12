@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme, VictoryAxis, VictoryCursorContainer, VictoryVoronoiContainer, Line } from 'victory-native';
+import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme, VictoryAxis, VictoryCursorContainer, VictoryVoronoiContainer, Line, VictoryStack, VictoryArea } from 'victory-native';
 import MenuBar from '../components/MenuBar';
 import moment from 'moment';
 import 'moment-timezone';
@@ -94,6 +94,32 @@ import Result from '../components/Result';
                                 }
                             />
                         }>
+                        <VictoryStack>
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 49 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 49 },
+                                ]}
+                                style={{ data: { fill: "rgba(118, 178, 236, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 16 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 16 },
+                                ]}
+                                style={{ data: { fill: "rgba(78, 142, 204, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 10 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 10 },
+                                ]}
+                                style={{ data: { fill: "rgba(48, 114, 177, 1)" } }} />
+                            <VictoryArea
+                                data={[
+                                    { x: 0, y: 25 },
+                                    { x: this.state.results === null ? 0 : this.state.results.length, y: 25 },
+                                ]}
+                                style={{ data: { fill: "rgba(11, 90, 167, 1)" } }} />
+                        </VictoryStack>
                         <VictoryGroup
                         width={Dimensions.get('window').width*.96} 
                         // theme={VictoryTheme.material}

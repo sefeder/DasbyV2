@@ -10,7 +10,6 @@ import { Svg } from 'react-native-svg';
 class Result extends Component {
 
     state = {
-        contentVisible: true,
         percent: 0,
         data: this.getData(0)
     }
@@ -59,13 +58,13 @@ class Result extends Component {
 
     determineTriangle = (referenceSeverity, severity) => {
         if (referenceSeverity === null || referenceSeverity === severity) {
-            return < Entypo style ={{marginTop: 10}} size={37} color='black' name={'minus'} />
+            return < Entypo size={37} color='black' name={'minus'} />
         }
         else if (referenceSeverity > severity) {
-            return < Entypo style={{ marginTop: 10 }} size={37} color='green' name={'triangle-down'} />
+            return < Entypo size={37} color='green' name={'triangle-down'} />
         }
         else if (referenceSeverity < severity) {
-            return < Entypo style={{ marginTop: 10 }} size={37} color='red' name={'triangle-up'} />
+            return < Entypo size={37} color='red' name={'triangle-up'} />
         }
     }
 
@@ -112,11 +111,11 @@ class Result extends Component {
                         height: Dimensions.get('window').height * .07
                     }}>
                         <View style={styles.resultHeader}>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>
+                            <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white' }}>
                                 {/* Don't understand .utcOffset() below works for central time though*/}
                                 {moment(moment(this.props.date).utcOffset(0, true).valueOf()).format('MMM Do, YYYY')}
                             </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 5, color: 'white' }}>
+                            <Text style={{ fontSize: 18, marginLeft: 5, color: 'white' }}>
                                 ({moment(this.props.date).utcOffset(0, true).fromNow()})
                             </Text>
                         </View>
@@ -125,7 +124,7 @@ class Result extends Component {
                         width: 200,
                         height: 200
                     }}>
-                        <Text style={{ fontSize: 22, marginLeft: 10, fontWeight: 'bold', color: 'white' }}>
+                        <Text style={{ fontSize: 28, marginLeft: 10, fontWeight: 'bold', color: 'white' }}>
                             {this.capitalizeFirstLetter(this.props.result.category)}
                         </Text>
 

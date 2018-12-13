@@ -8,13 +8,16 @@ import MenuBar from '../components/MenuBar';
 import moment from 'moment';
 import 'moment-timezone';
 import Result from '../components/Result';
+import Spinner from 'react-native-loading-spinner-overlay';
     
     export default class ResultsScreen extends Component {
         
     state = {
         results:null,
+        currentIndex: 0,
         currentPoints: [{arrayIndex:0}],
         averageSeverity: 0,
+        spinnerVisible: true
     }
 
     componentDidMount() {
@@ -27,7 +30,10 @@ import Result from '../components/Result';
                         console.log('results from RS getResults: ', results)
                         this.setState({ results },
                             () => {
-                                this.setState({ averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length })
+                                this.setState({ 
+                                    spinnerVisible: false,
+                                    averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length 
+                                })
                                 AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
                             }
                         )
@@ -44,7 +50,10 @@ import Result from '../components/Result';
                                 console.log('results from RS getResults: ', results)
                                 this.setState({ results },
                                     () => {
-                                        this.setState({ averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length })
+                                        this.setState({ 
+                                            spinnerVisible: false,
+                                            averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length 
+                                        })
                                         AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
                                     }
                                 )
@@ -59,38 +68,29 @@ import Result from '../components/Result';
     render() {
         const data = this.state.results && this.state.results.map((result, idx, array) => {
                 return { date: array.length - idx, severity: result.severity, arrayIndex: idx }
-            });
-        const correctIndex = this.state.currentPoints[4] ? this.state.currentPoints[4].arrayIndex : this.state.currentPoints[0].arrayIndex 
-        
+            });    
         return (
             <KeyboardAvoidingView style={styles.app}>
+                <Spinner
+                    visible={this.state.spinnerVisible}
+                    textContent={'Loading Results...'}
+                    textStyle={{ color: 'rgba(91, 141, 249, 1)'}}
+                    cancelable={false}
+                    color={'#3377FF'}
+                    animation={'fade'}
+                    overlayColor={'rgba(255, 255, 255, 1)'}
+                />
                 <View style={styles.container}>
-                    {/* <VictoryChart 
-                        width={350} 
-                        // theme={VictoryTheme.material}
-                        containerComponent={
-                            <VictoryVoronoiContainer
-                                voronoiDimension="x"
-                                onActivated={
-                                    (points, props) => {
-                                        this.setState({currentPoints: points})
-                                    }
-                                }
-                            />
-                        }
-                    > */}
-                        {/* <VictoryAxis
-                            tickValues={this.state.results && this.state.results.map((result, idx) => {
-                                return { date: idx + 1 }
-                            })}
-                        /> */}
                         <VictoryChart
                         containerComponent={
                             <VictoryVoronoiContainer
                                 voronoiDimension="x"
                                 onActivated={
                                     (points, props) => {
-                                        this.setState({ currentPoints: points },
+                                        this.setState({ 
+                                            currentPoints: points,
+                                            currentIndex: (points.length>2 && points[0].eventKey === 1) ? 0 : (points.length>2 && points[0].eventKey === 0) ? (this.state.results.length-1 ) : points[0].eventKey
+                                        },
                                             () => {
                                                 console.log('this.state.currentPoints: ', this.state.currentPoints)
                                                 console.log('props: ', props)
@@ -103,38 +103,33 @@ import Result from '../components/Result';
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 49 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 49 },
+                                        { x: this.state.results === null ? 1 : this.state.results.length+1, y: 49 },
                                     ]}
                                     style={{ data: { fill: "rgba(118, 178, 236, 1)" } }}/>
+
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 16 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 16 },
+                                        { x: this.state.results === null ? 1 : this.state.results.length+1, y: 16 },
                                     ]}
                                     style={{ data: { fill: "rgba(78, 142, 204, 1)" } }}/>
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 10 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 10 },
+                                        { x: this.state.results === null ? 1 : this.state.results.length+1, y: 10 },
                                     ]}
                                     style={{ data: { fill: "rgba(48, 114, 177, 1)" } }}/>
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 25 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 25 },
+                                        { x: this.state.results === null ? 1 : this.state.results.length+1, y: 25 },
                                     ]}
                                     style={{ data: { fill: "rgba(11, 90, 167, 1)" } }}/>
                             </VictoryStack>
                             <VictoryGroup
                             width={Dimensions.get('window').width*.96} 
-                            // theme={VictoryTheme.material}
-                            
-                            // labels={this.state.results && this.state.results.map((result, idx) => {
-                            //     return `${result.severity}`
-                            // })}
-                                // data={data}
                                 data={this.state.results && data.map((point, idx, array) => {
-                                    if (this.state.currentPoints[0] && point.arrayIndex === correctIndex) {
+                                    if (this.state.currentPoints[0] && point.arrayIndex === this.state.currentIndex) {
                                         const highlightedPoint = {
                                             arrayIndex: point.arrayIndex,
                                             date: point.date,
@@ -176,33 +171,14 @@ import Result from '../components/Result';
                             </VictoryGroup>
                     </VictoryChart>
                 </View>
-                {/* <ScrollView>
-                    { this.state.results && this.state.results.map((result, idx, resultArray) => {
-                        return(
-                            <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt}/>
-                        )
-                    })}
-                </ScrollView> */}
                 <View>
                     {this.state.results &&
                     <Result 
-                        prevSeverity={this.state.results[correctIndex + 1] !== undefined ? this.state.results[correctIndex + 1].severity : null} 
-                        result={this.state.results[correctIndex]} 
-                        date={this.state.results[correctIndex].createdAt} 
+                        prevSeverity={this.state.results[this.state.currentIndex + 1] !== undefined ? this.state.results[this.state.currentIndex + 1].severity : null} 
+                        result={this.state.results[this.state.currentIndex]} 
+                        date={this.state.results[this.state.currentIndex].createdAt} 
                         averageSeverity={this.state.averageSeverity} />
                     }
-                    {/* {this.state.results && this.state.results.map((result, idx, resultArray) => {
-                        if (this.state.currentPoints[0] && resultArray.length-idx === this.state.currentPoints[0].date)
-                            return (
-                                <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt} averageSeverity={this.state.averageSeverity}/>
-                            )
-                        else {
-                            return;
-                            // return(
-                            //     <Result key={0} prevSeverity={resultArray[1] !== undefined ? resultArray[1].severity : null} result={resultArray[0]} date={resultArray[0].createdAt} averageSeverity={this.state.averageSeverity} />
-                            // )
-                        }
-                    })} */}
                 </View>
                 <MenuBar navigation={this.props.navigation} screen={'data'} />
             </KeyboardAvoidingView>

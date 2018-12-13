@@ -160,6 +160,7 @@ import Result from '../components/Result';
                             <VictoryLine
                                 style={{
                                     data: {stroke: "yellow", strokeWidth: 1},
+                                    labels: {fill: 'yellow'}
                                 }}
                                 labels={["        avg"]}
                                 data = {[

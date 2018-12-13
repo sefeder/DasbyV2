@@ -103,25 +103,25 @@ import Result from '../components/Result';
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 49 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length, y: 49 },
+                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 49 },
                                     ]}
                                     style={{ data: { fill: "rgba(118, 178, 236, 1)" } }}/>
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 16 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length, y: 16 },
+                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 16 },
                                     ]}
                                     style={{ data: { fill: "rgba(78, 142, 204, 1)" } }}/>
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 10 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length, y: 10 },
+                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 10 },
                                     ]}
                                     style={{ data: { fill: "rgba(48, 114, 177, 1)" } }}/>
                                 <VictoryArea 
                                     data={[
                                         { x: 0, y: 25 },
-                                        { x: this.state.results === null ? 0 : this.state.results.length, y: 25 },
+                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: 25 },
                                     ]}
                                     style={{ data: { fill: "rgba(11, 90, 167, 1)" } }}/>
                             </VictoryStack>
@@ -170,7 +170,7 @@ import Result from '../components/Result';
                                     labels={["        avg"]}
                                     data = {[
                                         { x: 0, y: this.state.averageSeverity},
-                                        { x: this.state.results === null ? 0 : this.state.results.length, y: this.state.averageSeverity}
+                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: this.state.averageSeverity}
                                     ]}
                                 />
                             </VictoryGroup>

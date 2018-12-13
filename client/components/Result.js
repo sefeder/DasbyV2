@@ -22,6 +22,14 @@ class Result extends Component {
         }, 100);
     }
 
+    componentWillReceiveProps() {
+        setTimeout(() => {
+            this.setState({
+                percent: this.props.result.severity, data: this.getData(this.props.result.severity)
+            });
+        }, 100);
+    }
+
     componentWillUnmount() {
         window.clearInterval(this.setStateInterval);
     }

@@ -17,7 +17,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
         currentIndex: 0,
         currentPoints: [{arrayIndex:0}],
         averageSeverity: 0,
-        spinnerVisible: true
+        spinnerVisible: true,
+        data: []
     }
 
     componentDidMount() {
@@ -32,6 +33,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
                             () => {
                                 this.setState({ 
                                     spinnerVisible: false,
+                                    data: this.cleanUpData(this.state.results),
                                     averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length 
                                 })
                                 AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
@@ -52,6 +54,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
                                     () => {
                                         this.setState({ 
                                             spinnerVisible: false,
+                                            data: this.cleanUpData(this.state.results),
                                             averageSeverity: this.state.results.map(result => result.severity).reduce((a, b) => a + b, 0) / this.state.results.length 
                                         })
                                         AsyncStorage.setItem('surveyResults', JSON.stringify(this.state.results))
@@ -63,12 +66,64 @@ import Spinner from 'react-native-loading-spinner-overlay';
                 })
             }
         })  
-    }    
+    }
+
+    cleanUpData = (results) =>  {
+        if(results){
+           const cleanData = results.map((result, idx, array) => {
+                        return { date: array.length - idx, severity: result.severity, arrayIndex: idx }
+                    });
+            return cleanData    
+        }
+    }       
+    
+    handlePointTouch = (points, props) => {
+        console.log("hitting handlePointTouch. 'this' is: ", this)
+        let newIndex 
+        if(points.length>2 && points[0].eventKey === 1){ 
+            newIndex = 0
+        }else if (points.length>2 && points[0].eventKey === 0){
+            newIndex = (this.state.results.length-1 )
+        }else {
+            newIndex = points[0].eventKey
+        }
+        this.setState({ 
+            currentPoints: points,
+            currentIndex: newIndex
+        },
+            () => {
+                console.log('this.state.currentPoints: ', this.state.currentPoints)
+                console.log('props: ', props)
+                this.highlightPoint(this.state.data, this.state.currentIndex)
+        })
+    }
+
+    highlightPoint = (data, highlightIndex) => {
+        const newDataArray = data.map((point, idx, array) => {
+            if (point.arrayIndex === highlightIndex) {
+                return{
+                    arrayIndex: point.arrayIndex,
+                    date: point.date,
+                    severity: point.severity,
+                    size: 8,
+                    fill: 'blue'
+                }
+            }
+            else {
+                return{
+                    arrayIndex: point.arrayIndex,
+                    date: point.date,
+                    severity: point.severity,
+                    size: 3,
+                    fill: 'grey'
+                }
+            }
+        })
+        this.setState({data: newDataArray})
+    }
 
     render() {
-        const data = this.state.results && this.state.results.map((result, idx, array) => {
-                return { date: array.length - idx, severity: result.severity, arrayIndex: idx }
-            });    
+
         return (
             <KeyboardAvoidingView style={styles.app}>
                 <Spinner
@@ -85,18 +140,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
                         containerComponent={
                             <VictoryVoronoiContainer
                                 voronoiDimension="x"
-                                onActivated={
-                                    (points, props) => {
-                                        this.setState({ 
-                                            currentPoints: points,
-                                            currentIndex: (points.length>2 && points[0].eventKey === 1) ? 0 : (points.length>2 && points[0].eventKey === 0) ? (this.state.results.length-1 ) : points[0].eventKey
-                                        },
-                                            () => {
-                                                console.log('this.state.currentPoints: ', this.state.currentPoints)
-                                                console.log('props: ', props)
-                                        })
-                                    }
-                                }
+                                // onActivated={this.handlePointTouch}
                             />
                         }>
                             <VictoryStack>
@@ -126,26 +170,11 @@ import Spinner from 'react-native-loading-spinner-overlay';
                                     ]}
                                     style={{ data: { fill: "rgba(11, 90, 167, 1)" } }}/>
                             </VictoryStack>
-                            <VictoryGroup
-                            width={Dimensions.get('window').width*.96} 
-                                data={this.state.results && data.map((point, idx, array) => {
-                                    if (this.state.currentPoints[0] && point.arrayIndex === this.state.currentIndex) {
-                                        const highlightedPoint = {
-                                            arrayIndex: point.arrayIndex,
-                                            date: point.date,
-                                            severity: point.severity,
-                                            size: 8,
-                                            fill: 'blue'
-                                        }
-                                        return highlightedPoint
-                                    }
-                                    else {
-                                        return point
-                                    }
-                                })
-                                }
-                            x="date"
-                            y="severity" 
+                            {this.state.data.length>0 && <VictoryGroup
+                                width={Dimensions.get('window').width*.96} 
+                                data={this.state.data}
+                                x="date"
+                                y="severity" 
                             >
                                 <VictoryLine />
                                 <VictoryScatter
@@ -155,7 +184,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
                                     //     }
                                     // }}
                                     />
-                            </VictoryGroup>
+                            </VictoryGroup>}
                             <VictoryGroup>
                                 <VictoryLine
                                     style={{
@@ -165,13 +194,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
                                     labels={["        avg"]}
                                     data = {[
                                         { x: 0, y: this.state.averageSeverity},
-                                        { x: this.state.results === null ? 0 : this.state.results.length+1, y: this.state.averageSeverity}
+                                        { x: this.state.results === null ? 1 : this.state.results.length+1, y: this.state.averageSeverity}
                                     ]}
                                 />
                             </VictoryGroup>
                     </VictoryChart>
                 </View>
-                <View>
+                {/* <View>
                     {this.state.results &&
                     <Result 
                         prevSeverity={this.state.results[this.state.currentIndex + 1] !== undefined ? this.state.results[this.state.currentIndex + 1].severity : null} 
@@ -179,7 +208,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
                         date={this.state.results[this.state.currentIndex].createdAt} 
                         averageSeverity={this.state.averageSeverity} />
                     }
-                </View>
+                </View> */}
                 <MenuBar navigation={this.props.navigation} screen={'data'} />
             </KeyboardAvoidingView>
         )

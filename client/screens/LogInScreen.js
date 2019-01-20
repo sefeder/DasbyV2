@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, TouchableOpacity, AsyncStorage} from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, Dimensions, TextInput, TouchableHighlight, TouchableOpacity, AsyncStorage} from 'react-native';
 import api from '../utils/api';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -69,9 +69,9 @@ export default class LogInScreen extends Component {
                             </Text>
                             <View style={{
                                 flexDirection: 'row',
-                                borderColor: 'blue',
+                                borderColor: '#810000',
                                 borderWidth: 2,
-                                borderRadius: 25,
+                                borderRadius: 10,
                                 marginBottom: 40,
                                 height: 50,
                                 width: 300,
@@ -96,7 +96,7 @@ export default class LogInScreen extends Component {
                                         <TouchableOpacity
                                             onPress={this.viewPass}
                                         >
-                                            <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#3377FF' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                        <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#810000' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
                                         </TouchableOpacity>
                                     }
                                 </View>
@@ -105,7 +105,20 @@ export default class LogInScreen extends Component {
                         <TouchableHighlight style={styles.button} onPress={this.submitLogIn}>
                             <Text style={styles.buttonText}> Log In </Text>
                         </TouchableHighlight>
+                        <View style={styles.signUpLine}>
+                            <Text style={{fontSize: 18}}>
+                                Need to create an account? Click
+                            </Text>
+                            <Button
+                                style={{ paddingLeft: 2 }}
+                                onPress={() => {
+                                    this.props.navigation.navigate('SignUpScreen')
+                                }}
+                                title="here"
+                            />
+                        </View>
                     </View>
+                    
                 </KeyboardAvoidingView>
             </SafeAreaView>
         )
@@ -116,13 +129,15 @@ const styles = StyleSheet.create({
     app: {
         display: 'flex',
         overflow: 'scroll',
-        flexDirection: 'column',
+        flexDirection: 'row',
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#333333'
     },
     button: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
+        backgroundColor: '#810000',
+        borderRadius: 10,
         width: 300,
         height: 80,
         alignItems: 'center',
@@ -132,13 +147,12 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 30
     },
     textInput: {
-        borderColor: 'blue',
+        borderColor: '#810000',
         borderWidth: 2,
-        borderRadius: 25,
+        borderRadius: 10,
         marginBottom: 40,
         height: 50,
         width: 300,
@@ -150,10 +164,19 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        height: Dimensions.get('window').height * .65,
+        width: Dimensions.get('window').width * .65,
+        borderRadius: 10
     },
     inputLabel: {
         fontSize: 20,
         fontWeight: 'bold'
+    },
+    signUpLine: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center'
     }
 });

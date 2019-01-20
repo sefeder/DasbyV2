@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, Dimensions, KeyboardAvoidingView } from 'react-native';
 
 class QuickReply extends Component {
 
@@ -18,7 +18,7 @@ class QuickReply extends Component {
 
     render() {
         return (
-            <View >
+            <View style={styles.quickReplyView}>
                 < View style={styles.quickReplyButtonView}>
                     {this.props.isQrVisible &&
                         this.props.responseArray.map((responseObject, idx) => {
@@ -31,16 +31,25 @@ class QuickReply extends Component {
                             ]
                         })
                     }
-                </View >
-                
+                </View >  
             </View >
         )
     }
 
 }
 const styles = StyleSheet.create({
+    quickReplyView: {
+        backgroundColor: 'rgba(204, 203, 203, .6)',
+        height: Dimensions.get('window').height * .09,
+        width: Dimensions.get('window').width,
+        borderTopColor: 'black',
+        borderTopWidth: .2,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
     quickReplyButtonView: {
-        height: 70,
+        height: Dimensions.get('window').height * .09,
+        width: Dimensions.get('window').width*.7,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
@@ -55,18 +64,20 @@ const styles = StyleSheet.create({
         zIndex: 10
     },
     quickReplyButton: {
-        backgroundColor: 'white',
+        backgroundColor: '#3377FF',
         borderColor: '#3377FF',
         borderWidth: 2,
-        maxWidth: 100,
+        maxWidth: 200,
+        minHeight: 30,
         padding: 5,
-        borderRadius: 20,
+        borderRadius: 15,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginRight: 5
     },
     quickReplyText: {
-        color: '#3377FF'
+        color: 'white',
+        fontSize: 18
     }
 });
 

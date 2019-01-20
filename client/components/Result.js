@@ -22,10 +22,10 @@ class Result extends Component {
         let score = parseInt(severity)
         switch (true) {
             case (score < 50):
-                return 'rgba(118, 178, 236, 1)'
+                return 'rgba(156, 201, 241, 1)' //'rgba(118, 178, 236, 1)'
                 break;
             case (score >= 50 && score <= 65):
-                return 'rgba(78, 142, 204, 1)'
+                return 'rgba(90, 150, 240, 1)' //'rgba(78, 142, 204, 1)'
                 break;
             case (score > 65 && score <= 75):
                 return 'rgba(48, 114, 177, 1)'
@@ -54,46 +54,69 @@ class Result extends Component {
     render() {
         return (
             <View>
-                    <TouchableHighlight style={{
-                        marginTop: 5,
-                        height: Dimensions.get('window').height * .055,
-                        width: Dimensions.get('window').width,
-                        backgroundColor: this.determineBackgroundColor(this.props.result.severity),
-                        borderBottomColor: 'black',
-                        borderBottomWidth: this.state.contentVisible ? 0 : 1.5, 
-                        }} underlayColor={this.determineBackgroundColor(this.props.result.severity)} onPress={() => this.setState({ contentVisible: !this.state.contentVisible })}>
+                <TouchableHighlight
+                    style={{
+                    marginTop: 5,
+                    height: Dimensions.get('window').height * .055,
+                    width: Dimensions.get('window').width,
+                    backgroundColor: this.determineBackgroundColor(this.props.result.severity),
+                    borderBottomColor: 'black',
+                    borderBottomWidth: this.state.contentVisible ? 0 : 2, 
+                    }}
+                    underlayColor={this.determineBackgroundColor(this.props.result.severity)}
+                    onPress={() => this.setState({ contentVisible: !this.state.contentVisible })}
+                >
                     <View style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: 'space-between'}}>
-                            <View style={styles.resultHeader}>
-                                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                {/* Don't understand .utcOffset() below works for central time though*/}
-                                {moment(moment(this.props.date).utcOffset(0, true).valueOf()).format('MMM Do, YYYY')}
-                                </Text>
-                                <Text style={{ fontSize: 16, marginLeft: 5 }}>
-                                ({moment(this.props.date).utcOffset(0, true).fromNow()})
-                                    </Text>
+                        justifyContent: 'space-between'
+                        }}
+                    >
+                        <View style={styles.resultHeader}>
+                            <Text style={{
+                                fontSize: 20,
+                                marginLeft: 5
+                                }}
+                            >
+                            {/* Don't understand .utcOffset() below works for central time though*/}
+                            {moment(this.props.date).format('MM/DD/YY')} 
+                            </Text>
+                            {/* <Text style={{ fontSize: 16, marginLeft: 5 }}>
+                            ({moment(this.props.date).utcOffset(0, true).fromNow()})
+                                </Text> */}
+                            <Text style={{
+                                fontSize: 25,
+                                fontWeight: 'bold',
+                                marginLeft: 15, color: 'black'
+                                }}
+                            >
+                                {this.props.result.severity}
+                            </Text>
+                            <View style={{ marginLeft: 10 }}>
+                                {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
                             </View>
-                            <MaterialIcons size={40} color='black' name={'menu'}/>
                         </View>
-                        
-                    </TouchableHighlight>
+                        <MaterialIcons size={40} color='black' name={'menu'}/>
+                    </View>
+                </TouchableHighlight>
                     {this.state.contentVisible &&
-                    <Animatable.View animation="slideInDown" style={styles.resultContent}>
-
-                        <Text style={{ fontSize: 22, marginLeft: 10, fontWeight: 'bold', color: this.determineBackgroundColor(this.props.result.severity)}}>
-                        {this.capitalizeFirstLetter(this.props.result.category)}
+                    <Animatable.View style={{
+                        backgroundColor: this.determineBackgroundColor(this.props.result.severity),
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
+                        borderBottomColor: 'black',
+                        borderBottomWidth: 2
+                        }}
+                    >
+                        <Text style={{
+                            fontSize: 22,
+                            marginLeft: 10,
+                            color: 'black'
+                            }}
+                        >
+                            {this.capitalizeFirstLetter(this.props.result.category)} {this.props.result.category === 'normal' ? null : 'Depression'}
                         </Text>
-
-                        <View style={{ marginLeft: 10}}>
-                            {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
-                        </View>
-
-                        <Text style={{ fontSize: 25, fontWeight: 'bold', marginLeft: 5, color: this.determineBackgroundColor(this.props.result.severity)}}>
-                            {this.props.result.severity}
-                        </Text>
-
                     </Animatable.View>
                     }
             </View>
@@ -105,17 +128,17 @@ const styles = StyleSheet.create({
     resultHeader: {
         display: 'flex',
         flexDirection: 'row',
-        marginBottom: 10,
+        // marginBottom: 10,
         alignItems: 'center'
     },
-    resultContent: {
-        backgroundColor: '#434346',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderBottomColor: 'black',
-        borderBottomWidth: 1.5
-    }
+    // resultContent: {
+    //     backgroundColor: this.determineBackgroundColor(this.props.result.severity),
+    //     display: 'flex',
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     borderBottomColor: 'black',
+    //     borderBottomWidth: 1.5
+    // }
 });
 
 export default Result

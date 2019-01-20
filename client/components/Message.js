@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         maxWidth: 300,
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 15, //was 20
         marginBottom: 2.5,
         marginLeft: 25
     },
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         maxWidth: 300,
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 15, //was 20
         marginBottom: 2.5,
         marginRight: 25
     },

@@ -62,6 +62,16 @@ class MenuBar extends Component {
 
             <View style={styles.menu}>
                 <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => {
+                    this.props.navigation.navigate('AdminSelectionScreen')
+                }}>
+                    <View>
+                        <Ionicons style={{
+                            height: 30, width: 30, marginLeft: 8
+                        }} size={37} color='#808080' name='md-people' />
+                        <Text style={{ color: '#808080', fontSize: 10.5 }}> Patients </Text>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => {
                     this.props.navigation.navigate('AdminChatScreen')
                 }}>
                     <View>
@@ -89,16 +99,6 @@ class MenuBar extends Component {
                             height: 30, width: 27, marginRight: 1
                         }} size={33} color={this.props.screen === 'info' ? '#3377FF' : '#808080'} name='md-information-circle' />
                         <Text style={{ color: this.props.screen === 'info' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Info </Text>
-                    </View>
-                </TouchableHighlight>
-                        <TouchableHighlight underlayColor={'rgba(255, 255, 255, 0)'} onPress={() => {
-                            this.props.navigation.navigate('AdminSelectionScreen')
-                        }}>
-                    <View>
-                        <Ionicons style={{
-                            height: 30, width: 30, marginLeft: 8
-                        }} size={37} color='#808080' name='md-people' />
-                        <Text style={{ color: '#808080', fontSize: 10.5 }}> Patients </Text>
                     </View>
                 </TouchableHighlight>
             </View>

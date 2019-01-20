@@ -64,7 +64,7 @@ export default class InfoScreen extends Component {
                     <Button
                         onPress={() => {
                             AsyncStorage.clear()
-                            this.props.navigation.navigate('LandingScreen')
+                            this.props.navigation.navigate('LogInScreen')
                         }}
                         title="Log Out"
                     />

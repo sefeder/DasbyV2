@@ -88,7 +88,12 @@ export default class SignUpScreen extends Component {
                     <ScrollView>
                         <View style={styles.inputForm}>
                             <View>
-                                <Text style={styles.inputLabel}>
+                                <Text style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold',
+                                    marginTop: 20
+                                }}
+                                >
                                     Role:
                                 </Text>
                                 <Picker
@@ -175,7 +180,7 @@ export default class SignUpScreen extends Component {
                                             <TouchableOpacity
                                                 onPress={this.viewPass}
                                             >
-                                                <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#3377FF' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                            <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#810000' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
                                             </TouchableOpacity>
                                         }
                                     </View>
@@ -201,8 +206,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     button: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
+        backgroundColor: '#810000',
+        borderRadius: 10,
         width: 300,
         height: 80,
         alignItems: 'center',
@@ -212,14 +217,13 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 30
     },
     textInput: {
-        borderColor: 'blue',
+        borderColor: '#810000',
         borderWidth: 2,
-        borderRadius: 25,
-        marginBottom: 40,
+        borderRadius: 10,
+        marginBottom: 30,
         height: 50,
         width: 300,
         paddingLeft: 15,
@@ -227,10 +231,10 @@ const styles = StyleSheet.create({
     },
     passwordTextInput: {
         flexDirection: 'row',
-        borderColor: 'blue',
+        borderColor: '#810000',
         borderWidth: 2,
-        borderRadius: 25,
-        marginBottom: 40,
+        borderRadius: 10,
+        marginBottom: 5,
         height: 50,
         width: 300,
         paddingLeft: 15,

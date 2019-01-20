@@ -33,6 +33,7 @@ const RootStack = createStackNavigator(
         screen: LogInScreen,
         navigationOptions: ({ navigation }) => ({
           title: 'Log In',
+          headerLeft: null
         })
       },
     UserHomeScreen:
@@ -41,6 +42,16 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'User Home',
+            headerLeft: null,
+            headerRight: (
+            <Button
+              onPress={() => {
+                AsyncStorage.clear()
+                navigation.navigate('LogInScreen')
+              }}
+              title="Log Out"
+            />
+          ),
           };
         }
       },
@@ -50,11 +61,12 @@ const RootStack = createStackNavigator(
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: 'Channel Selector',
+            headerLeft: null,
             headerRight: (
               <Button
                 onPress={() => {
                   AsyncStorage.clear()
-                  navigation.navigate('LandingScreen')
+                  navigation.navigate('LogInScreen')
                 }}
                 title="Log Out"
               />

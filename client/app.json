@@ -1,9 +1,15 @@
 {
   "expo": {
+    "name": "Dasby-Test",
+    "icon": "./assets/dasby-no-backg",
+    "version": "1.0.0",
+    "slug": "client-slug",
     "sdkVersion": "27.0.0",
-    "name": "client",
-    "slug": "client",
-    "version": "0.1.0",
-    "description": ""
+    "ios": {
+      "bundleIdentifier": "com.Coderboiz.Dasby-Test"
+    },
+    "android": {
+      "package": "com.Coderboiz.Dasby-Test"
+    }
   }
 }

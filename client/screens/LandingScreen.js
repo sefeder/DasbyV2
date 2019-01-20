@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, AsyncStorage } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, AsyncStorage, Image, Dimensions, ImageBackground } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+
 
 export default class LandingScreen extends Component {
 
@@ -8,6 +10,7 @@ export default class LandingScreen extends Component {
     }
 
     componentDidMount() {
+        AsyncStorage.clear()
         AsyncStorage.getItem('userInfo', (err, result)=>{
             if (err) console.log(err)
             if (result !== null){
@@ -17,6 +20,10 @@ export default class LandingScreen extends Component {
                 } else {
                     this.props.navigation.navigate('AdminSelectionScreen', { adminInfo: JSON.parse(result) })
                 }
+            } else {
+                setTimeout(()=>{
+                    this.props.navigation.navigate('LogInScreen')
+                }, 2000)
             }
         })
     }
@@ -24,14 +31,23 @@ export default class LandingScreen extends Component {
     render() {
         return (
             <KeyboardAvoidingView style={styles.app}>
-                <TouchableHighlight style={styles.button}
-                    onPress={() => this.props.navigation.navigate('LogInScreen')}>
-                    <Text style={styles.buttonText}> Log In </Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={styles.button}
-                    onPress={() => this.props.navigation.navigate('SignUpScreen')}>
-                    <Text style={styles.buttonText}> Sign Up </Text>
-                </TouchableHighlight>
+                <Image
+                    source={require('../assets/qbkls.png')}
+                    style={{ width: '150%', height: '100%', opacity: 0.23, zIndex: -1, backgroundColor: '#810000', position: 'absolute'}}
+                />
+                <Animatable.Text
+                    animation="fadeInLeft"
+                    duration={2000}
+                    style={styles.splashText}
+                > 
+                    Dasby
+                </Animatable.Text>
+                <Animatable.Image
+                    duration={2000}
+                    animation="fadeInRight"
+                    source={require('../assets/dasby-no-backg.png')}
+                    style={styles.image}
+                />
             </KeyboardAvoidingView>
         )
     }
@@ -46,21 +62,19 @@ const styles = StyleSheet.create({
         overflow: 'scroll',
         flexDirection: 'column',
         flex: 1,
-        justifyContent: 'center'
-    },
-    button: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
-        width: 300,
-        height: 80,
-        alignItems: 'center',
         justifyContent: 'center',
-        alignSelf: 'center',
-        marginBottom: 10
+        alignItems: 'center',
+        backgroundColor: '#810000',
+        
+
     },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 30
+    image: {
+        height: Dimensions.get('window').height * .33,
+        width: Dimensions.get('window').width * .6,
+    },
+    splashText: {
+        color: 'black',
+        // fontWeight: 'bold',
+        fontSize: 70
     },
 });

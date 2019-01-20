@@ -323,7 +323,7 @@ export default class UserHomeScreen extends Component {
                     textStyle={{ color: 'rgba(91, 141, 249, 1)'}}
                     cancelable={false}
                     color={'#3377FF'}
-                    animation={'fade'}
+                    // animation={'fade'}
                     overlayColor={'rgba(255, 255, 255, 1)'}
                 />
                 <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}>

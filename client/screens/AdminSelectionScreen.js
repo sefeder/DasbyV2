@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View, Button, TextInput, TouchableHighlight, AsyncStorage, Dimensions } from 'react-native';
 import twilio from '../utils/twilioUtil';
 import { ChannelDescriptor } from 'twilio-chat/lib/channeldescriptor';
 import api from '../utils/api';
@@ -46,7 +46,18 @@ export default class AdminSelectionScreen extends Component {
         for (let i = 0; i < this.state.userArray.length; i++) {
             let user = this.state.userArray[i];
             if (user.upi === userUpi) {
-                return <Text style={styles.buttonText}> {user.firstName} {user.lastName} </Text>
+                return (<View style={styles.buttonView}>
+                            <Text style={styles.name}> 
+                                {user.firstName} {user.lastName} 
+                            </Text>
+                            <Text style={styles.dob}>
+                               DOB: 06/21/92
+                            </Text>
+                            <Text style={styles.severity}>
+                                Most recent severity: {Math.floor(Math.random() * 101)}
+                            </Text>
+                        </View> 
+                        )
             }
         }
     }
@@ -92,19 +103,37 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
-        width: 300,
-        height: 80,
+        backgroundColor: 'white',
+        // borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#810000',
+        height: Dimensions.get('window').height * .1,
+        width: Dimensions.get('window').width * .95,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignSelf: 'center',
-        marginBottom: 10
+        // marginBottom: 1
     },
-    buttonText: {
-        color: 'white',
+    buttonView: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        alignSelf: 'flex-start',
+    },
+    name: {
+        color: 'black',
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 18,
+        alignSelf: 'flex-start'
+    },
+    dob: {
+        color: 'black',
+        // fontWeight: 'bold',
+        fontSize: 14,
+        alignSelf: 'flex-start'
+    },
+    severity: {
+        fontSize: 16,
+        alignSelf: 'center'
     },
     chatList: {
         overflow: 'scroll'

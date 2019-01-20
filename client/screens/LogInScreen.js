@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Button, Dimensions, TextInput, TouchableHighlight, TouchableOpacity, AsyncStorage} from 'react-native';
 import api from '../utils/api';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class LogInScreen extends Component {
 
@@ -95,8 +95,8 @@ export default class LogInScreen extends Component {
                                     {this.state.passwordInput !== null && this.state.passwordInput !== '' &&
                                         <TouchableOpacity
                                             onPress={this.viewPass}
-                                        >
-                                        <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#810000' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                        > 
+                                            <Icon name={this.state.hiddenPass ? "ios-eye" : "ios-eye-off"} size={37} color={'#810000'}/>
                                         </TouchableOpacity>
                                     }
                                 </View>

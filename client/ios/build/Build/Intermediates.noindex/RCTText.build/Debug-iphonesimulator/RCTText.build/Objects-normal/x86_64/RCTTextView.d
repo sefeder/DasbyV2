@@ -1,0 +1,25 @@
+dependencies: \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/Text/RCTTextView.m \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/Text/RCTTextView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTComponent.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUtils.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/UIView+React.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/Text/RCTTextShadowView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTShadowView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLayout.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTRootView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/BaseText/RCTBaseTextShadowView.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/RCTTextAttributes.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTTextDecorationLineType.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/RCTTextTransform.h

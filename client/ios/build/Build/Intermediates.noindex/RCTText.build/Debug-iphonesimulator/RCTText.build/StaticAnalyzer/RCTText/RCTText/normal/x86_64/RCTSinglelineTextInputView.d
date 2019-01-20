@@ -1,0 +1,18 @@
+dependencies: \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTSinglelineTextInputView.m \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTSinglelineTextInputView.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTView.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBorderStyle.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTComponent.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTPointerEvents.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegate.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputViewProtocol.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridge.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeDelegate.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTJavaScriptLoader.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBridgeModule.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTFrameUpdate.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTInvalidating.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/Libraries/Text/TextInput/Singleline/RCTUITextField.h

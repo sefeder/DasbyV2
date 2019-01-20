@@ -1,0 +1,20 @@
+dependencies: \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTView.m \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTView.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTBorderStyle.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTComponent.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTPointerEvents.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTAutoInsetsProtocol.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTBorderDrawing.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Base/RCTConvert.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTAnimationType.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Base/RCTDefines.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Base/RCTLog.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Base/RCTAssert.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Base/RCTUtils.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/RCTTextDecorationLineType.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Views/UIView+React.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native/React/Modules/RCTI18nUtil.h

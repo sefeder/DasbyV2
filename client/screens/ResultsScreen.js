@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, ScrollView, FlatList, Dimensions, AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import api from '../utils/api';
-import { Ionicons } from '@expo/vector-icons';
 import { VictoryBar, VictoryChart, VictoryGroup, VictoryLine, VictoryTooltip, VictoryScatter, VictoryTheme, VictoryZoomContainer, VictoryAxis } from 'victory-native';
 import MenuBar from '../components/MenuBar';
 import moment from 'moment';
@@ -88,9 +87,7 @@ import Svg from 'react-native-svg'
                     {/* <ScrollView
                         horizontal={true}
                     > */}
-                    <Svg> 
                     <VictoryChart
-                        standAlone={false}
                         style={{
                             alignItems: 'stretch'
                         }}
@@ -137,33 +134,33 @@ import Svg from 'react-native-svg'
                             // animate={{
                             //     duration: 2000
                             // }}
-                            // events={[{
-                            //     target: 'data',
-                            //     childName:["bar"],
-                            //     eventHandlers: {
-                            //         onPressIn: (event) => {
-                            //             console.log('event: ', event)
-                            //             return [
-                            //                 {
-                            //                     target: 'data',
-                            //                     eventKey: "all",
-                            //                     mutation: (props) => {
-                            //                         return {style: {fill: 'green'}}
-                            //                     }
-                            //                 },
-                            //                 {
-                            //                     target: 'data',
-                            //                     mutation: (props) => {
-                            //                         console.log('props: ', props)
-                            //                         this.setState({selectedDatum: props.datum})
-                            //                         const fill = props.style && props.style.fill;
-                            //                         return fill === 'black' ? null : { style: { fill: 'black' } }
-                            //                     }
-                            //                 }
-                            //             ]
-                            //         }
-                            //     }
-                            // }]}
+                            events={[{
+                                target: 'data',
+                                childName:["bar"],
+                                eventHandlers: {
+                                    onPressIn: (event) => {
+                                        console.log('event: ', event)
+                                        return [
+                                            {
+                                                target: 'data',
+                                                eventKey: "all",
+                                                mutation: (props) => {
+                                                    return {style: {fill: 'green'}}
+                                                }
+                                            },
+                                            {
+                                                target: 'data',
+                                                mutation: (props) => {
+                                                    console.log('props: ', props)
+                                                    this.setState({selectedDatum: props.datum})
+                                                    const fill = props.style && props.style.fill;
+                                                    return fill === 'black' ? null : { style: { fill: 'black' } }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }]}
                             barWidth={30}
                             alignment="middle"
                             domain={{ x: [0, this.state.dataArray.length + 0.5]}} 
@@ -177,10 +174,10 @@ import Svg from 'react-native-svg'
                             y="severity"
                             />
                         </VictoryChart>
-                        </Svg>
+                        
                     {/* </ScrollView> */}
                 </View>
-                <ScrollView>
+                <ScrollView style={{flex:1}}>
                     { this.state.results && this.state.results.map((result, idx, resultArray) => {
                         return(
                             <Result key={idx} prevSeverity={resultArray[idx + 1] !== undefined ? resultArray[idx + 1].severity : null} result={result} date={result.createdAt}/>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, AsyncStorage } from 'react-native';
-import { Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
 import 'moment-timezone';
 import * as Animatable from 'react-native-animatable';
@@ -41,13 +40,13 @@ class Result extends Component {
 
     determineTriangle = (prevSeverity, severity) => {
         if (prevSeverity === null || prevSeverity === severity) {
-            return < Entypo size={37} color='black' name={'minus'} />
+            return < Text > No Change</Text>
         }
         else if (prevSeverity > severity) {
-            return < Entypo size={37} color='green' name={'triangle-down'} />
+            return < Text > Down </Text>
         }
         else if (prevSeverity < severity) {
-            return < Entypo size={37} color='red' name={'triangle-up'} />
+            return < Text > Up </Text>
         }
     }
 
@@ -96,7 +95,6 @@ class Result extends Component {
                                 {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
                             </View>
                         </View>
-                        <MaterialIcons size={40} color='black' name={'menu'}/>
                     </View>
                 </TouchableHighlight>
                     {this.state.contentVisible &&

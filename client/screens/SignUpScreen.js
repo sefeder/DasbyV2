@@ -3,9 +3,8 @@ import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View,
 import { Chance } from 'chance';
 import virgil from '../utils/virgilUtil';
 import api from '../utils/api';
-import { Ionicons } from '@expo/vector-icons';
 import { Picker } from 'react-native-woodpicker';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 export default class SignUpScreen extends Component {
 
     state = {
@@ -180,7 +179,7 @@ export default class SignUpScreen extends Component {
                                             <TouchableOpacity
                                                 onPress={this.viewPass}
                                             >
-                                            <Ionicons style={{ alignSelf: 'flex-end' }} size={30} color='#810000' name={this.state.hiddenPass ? 'md-eye' : 'md-eye-off'} />
+                                                <Icon name={this.state.hiddenPass ? "ios-eye" : "ios-eye-off"} size={37} color={'#810000'} />
                                             </TouchableOpacity>
                                         }
                                     </View>

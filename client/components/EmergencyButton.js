@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighlight, Dimensions, AsyncStorage, Image, WebView, ScrollView, Modal, Alert, Platform, Linking } from 'react-native';
 
 // import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Ionicons, Entypo } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import ActionSheet from 'react-native-action-sheet';
 import call from 'react-native-phone-call'
 
@@ -61,9 +61,9 @@ export default class EmergencyButton extends Component {
                     // )
                 }}>
                 <View>
-                    <Entypo style={{
-                        height: 30, width: 28.5, marginLeft: 17.5
-                    }} size={28.5} color={'red'} name='warning' />
+                    <Icon style={{
+                        height: 30, width: 28.5, marginLeft: 19.5
+                    }} size={31} color={'red'} name='ios-warning' />
                     <Text style={{ color: 'red', fontSize: 10, marginRight: 8 }}> EMERGENCY </Text>
                 </View>
             </TouchableHighlight>

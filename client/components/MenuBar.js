@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, AsyncStorage } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import EmergencyButton from './EmergencyButton'
 
 class MenuBar extends Component {
@@ -29,9 +29,9 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('UserHomeScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
+                        <Icon style={{
                             height: 30, width: 27, marginLeft: 2.5
-                        }} size={33} color={this.props.screen === 'chat' ? '#3377FF':'#808080'} name='md-chatboxes' />
+                        }} size={33} color={this.props.screen === 'chat' ? '#3377FF':'#808080'} name='ios-chatboxes' />
                         <Text style={{ color: this.props.screen === 'chat'? '#3377FF' : '#808080', fontSize: 10.5 }}> Chat </Text>
                     </View>
                 </TouchableHighlight>
@@ -39,7 +39,7 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('ResultsScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
+                        <Icon style={{
                             height: 30, width: 28.5, marginLeft: 2.25
                         }} size={33} color={this.props.screen === 'data' ? '#3377FF' : '#808080'} name='md-pulse' />
                         <Text style={{ color: this.props.screen === 'data' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Data </Text>
@@ -49,9 +49,14 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('InfoScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
-                            height: 30, width: 27, marginRight: 1
-                        }} size={33} color={this.props.screen === 'info' ? '#3377FF' : '#808080'} name='md-information-circle' />
+                        <Icon 
+                        style={{
+                            height: 30, width: 28.5
+                        }}
+                        name="ios-information-circle-outline"
+                        size={33}
+                        color={this.props.screen === 'info' ? '#3377FF' : '#808080'}
+                        />
                         <Text style={{ color: this.props.screen === 'info' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Info </Text>
                     </View>
                 </TouchableHighlight>
@@ -65,9 +70,9 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('AdminSelectionScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
-                            height: 30, width: 30, marginLeft: 8
-                        }} size={37} color='#808080' name='md-people' />
+                        <Icon style={{
+                            height: 34, width: 30, marginLeft: 8
+                        }} size={37} color='#808080' name='ios-people' />
                         <Text style={{ color: '#808080', fontSize: 10.5 }}> Patients </Text>
                     </View>
                 </TouchableHighlight>
@@ -75,9 +80,9 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('AdminChatScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
+                        <Icon style={{
                             height: 30, width: 27, marginLeft: 2.5
-                        }} size={33} color={this.props.screen === 'chat' ? '#3377FF' : '#808080'} name='md-chatboxes' />
+                        }} size={33} color={this.props.screen === 'chat' ? '#3377FF' : '#808080'} name='ios-chatboxes' />
                         <Text style={{ color: this.props.screen === 'chat' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Chat </Text>
                     </View>
                 </TouchableHighlight>
@@ -85,7 +90,7 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('ResultsScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
+                        <Icon style={{
                             height: 30, width: 28.5, marginLeft: 2.25
                         }} size={33} color={this.props.screen === 'data' ? '#3377FF' : '#808080'} name='md-pulse' />
                         <Text style={{ color: this.props.screen === 'data' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Data </Text>
@@ -95,9 +100,9 @@ class MenuBar extends Component {
                     this.props.navigation.navigate('InfoScreen')
                 }}>
                     <View>
-                        <Ionicons style={{
+                        <Icon style={{
                             height: 30, width: 27, marginRight: 1
-                        }} size={33} color={this.props.screen === 'info' ? '#3377FF' : '#808080'} name='md-information-circle' />
+                                }} size={33} color={this.props.screen === 'info' ? '#3377FF' : '#808080'} name='ios-information-circle-outline' />
                         <Text style={{ color: this.props.screen === 'info' ? '#3377FF' : '#808080', fontSize: 10.5 }}> Info </Text>
                     </View>
                 </TouchableHighlight>

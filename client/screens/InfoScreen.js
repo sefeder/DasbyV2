@@ -3,7 +3,6 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Button, TouchableHighligh
 import MenuBar from '../components/MenuBar'
 
 // import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Ionicons } from '@expo/vector-icons';
 
 export default class InfoScreen extends Component {
 
@@ -44,13 +43,13 @@ export default class InfoScreen extends Component {
                 <ScrollView>
                     <View style={styles.textView}>
                         <Text style={styles.text}>
-                            <Ionicons size={30} color='black' name='md-person' />  David Beiser, MD
+                            David Beiser, MD
                         </Text>
                         <Text style={styles.text}>
-                            <Ionicons size={30} color='black' name='md-mail' />  dbeiser@uchicago.edu
+                            dbeiser@uchicago.edu
                         </Text>
                         <Text selectable style={styles.text}>
-                            <Ionicons size={30} color='black' name='md-call' /> 773-217-8020
+                            773-217-8020
                         </Text>
                     </View>
                     <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, marginLeft: 5 }}>A message from Dr. Beiser:

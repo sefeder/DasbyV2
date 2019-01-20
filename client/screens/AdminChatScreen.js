@@ -6,7 +6,6 @@ import MessageForm from '../components/MessageForm';
 import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
-import { Ionicons } from '@expo/vector-icons';
 import MenuBar from '../components/MenuBar';
 import Spinner from 'react-native-loading-spinner-overlay';
 

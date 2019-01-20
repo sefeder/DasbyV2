@@ -1,0 +1,28 @@
+dependencies: \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Elements/RNSVGSvgView.m \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Elements/RNSVGSvgView.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Brushes/RNSVGPainter.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RCTConvert+RNSVG.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGCGFloatArray.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTConvert.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAnimationType.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTBorderStyle.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTDefines.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTLog.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTAssert.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTUtils.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTPointerEvents.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTTextDecorationLineType.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/Yoga.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGEnums.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/yoga/YGMacros.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGCGFCRule.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGVBMOS.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGUnits.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGPathParser.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Brushes/RNSVGBrushType.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/RNSVGContainer.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/Utils/RNSVGViewBox.h \
+  /Users/Seth/Desktop/DasbyV2/client/node_modules/react-native-svg/ios/RNSVGNode.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/UIView+React.h \
+  /Users/Seth/Desktop/DasbyV2/client/ios/build/Build/Products/Debug-iphonesimulator/include/React/RCTComponent.h

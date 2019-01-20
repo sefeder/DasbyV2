@@ -98,7 +98,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.client"
+        applicationId "com.dasbytest"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -137,7 +137,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-action-sheet')
     compile project(':react-native-vector-icons')
     compile project(':react-native-svg')
     compile fileTree(dir: "libs", include: ["*.jar"])

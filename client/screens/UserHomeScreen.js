@@ -7,7 +7,6 @@ import MessageList from '../components/MessageList';
 import api from '../utils/api';
 import virgil from '../utils/virgilUtil';
 import QuickReply from '../components/QuickReply';
-import { Ionicons } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MenuBar from '../components/MenuBar';
 

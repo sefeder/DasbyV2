@@ -60,17 +60,18 @@ suicideCheck = (currentQuestion, choice, userUpi) => {
  Functions (Private)
 ************************************************/
 takeAction = (userUpi, action) => {
+    let body
     switch (action) {
         case "warn":
-            let body = "has been thinking about suicide lately. \nNo immediate actions necessary.";
+            body = "has been thinking about suicide lately. \nNo immediate actions necessary.";
             contactPI(userUpi, body);
             break;
         case "call_now":
-            let body = "needs your assistance. \n**PLEASE CALL IMMEDIATELY**";
+            body = "needs your assistance. \n**PLEASE CALL IMMEDIATELY**";
             contactPI(userUpi, body);
             break;
         case "follow_up":
-            let body = "needs you to follow up tomorrow.";
+            body = "needs you to follow up tomorrow.";
             contactPI(userUpi, body);
             break;
     }

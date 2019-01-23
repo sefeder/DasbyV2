@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         borderTopWidth: .2,
         flexDirection: 'row',
         justifyContent: 'center',
+        marginTop: 10
     },
     quickReplyButtonView: {
         height: Dimensions.get('window').height * .09,

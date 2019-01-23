@@ -42,6 +42,16 @@ export default class AdminSelectionScreen extends Component {
         })
     }
 
+    channelFilterCriteria = (channel,idx,arr) => {
+        for (let i = 0; i < this.state.userArray.length; i++) {
+            let user = this.state.userArray[i];
+            if (user.upi === channel.uniqueName) {
+                return true
+            }
+        }
+        return false
+    }
+
     determineUserName = (userUpi) => {
         for (let i = 0; i < this.state.userArray.length; i++) {
             let user = this.state.userArray[i];
@@ -74,9 +84,13 @@ export default class AdminSelectionScreen extends Component {
                     </Text>
                     <View style={styles.chatList}>
 
-                        {this.state.channels.map((ChannelDescriptor, index) => {
+                        {this.state.channels.filter(this.channelFilterCriteria).map((ChannelDescriptor, index) => {
                             return (
-                                <TouchableHighlight key={index} style={styles.button} onPress={() => this.channelButtonHandler(ChannelDescriptor)}>
+                                <TouchableHighlight 
+                                    key={index} 
+                                    style={styles.button} 
+                                    onPress={() => this.channelButtonHandler(ChannelDescriptor)}
+                                >
                                     {this.determineUserName(ChannelDescriptor.uniqueName)}
                                 </TouchableHighlight>
                             )

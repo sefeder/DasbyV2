@@ -338,7 +338,7 @@ export default class UserHomeScreen extends Component {
                         <MessageForm channel={this.state.channel} onMessageSend={this.handleNewMessage} /> :
                         <QuickReply ref={ref => this.QuickReply = ref} handleNewSurvey={this.handleNewSurvey} onMessageSend={this.handleNewMessage} responseArray={this.state.responseArray} isQrVisible={this.state.isQrVisible}/>
                     }
-                    <MenuBar navigation={this.props.navigation} screen={'chat'} />
+                    <MenuBar handleNewSurvey={this.handleNewSurvey} navigation={this.props.navigation} screen={'chat'} />
                 </KeyboardAvoidingView>
             </SafeAreaView>
         )

@@ -23,7 +23,30 @@ getTwilioJwt = (req, res) => {
     });
 };
 
+sendSMS = (message) => {
+
+    console.log("Sending SMS via Twilio");
+
+    // Find your account sid and auth token in your Twilio account Console.
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+    // Send the text message.
+    client.messages.create({
+        to: '8472543681',
+        from: process.env.TWILIO_PHONE_NUMBER,
+        body: message
+    });
+
+    client.messages.create({
+        to: '8476092500',
+        from: process.env.TWILIO_PHONE_NUMBER,
+        body: message
+    });
+
+}
+
 module.exports = {
     generateTwilioJwt: generateTwilioJwt,
-    getTwilioJwt: getTwilioJwt
+    getTwilioJwt: getTwilioJwt,
+    sendSMS: sendSMS
 }

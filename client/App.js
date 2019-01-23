@@ -43,15 +43,6 @@ const RootStack = createStackNavigator(
           return {
             headerTitle: 'User Home',
             headerLeft: null,
-            headerRight: (
-            <Button
-              onPress={() => {
-                AsyncStorage.clear()
-                navigation.navigate('LogInScreen')
-              }}
-              title="Log Out"
-            />
-          ),
           };
         }
       },

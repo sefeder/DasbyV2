@@ -56,6 +56,9 @@ suicideCheck = (currentQuestion, choice, userUpi) => {
 //         })
 // }
 
+/************************************************
+ Functions (Private)
+************************************************/
 takeAction = (userUpi, action) => {
     switch (action) {
         case "warn":
@@ -71,13 +74,9 @@ takeAction = (userUpi, action) => {
             contactPI(userUpi, body);
             break;
     }
+} 
 
-}
-
-/************************************************
- Functions (Private)
-************************************************/
- contactPI = (userUpi, body) => {
+contactPI = (userUpi, body) => {
     console.log("CONTACTING PI");
     dbUsers.findOne({ upi: userUpi })
         .then(user => {
@@ -90,7 +89,5 @@ takeAction = (userUpi, action) => {
  Modules 
 ************************************************/
 module.exports = {
-    suicideWatch: suicideWatch,
-    suicideTrigger: suicideTrigger,
-    takeAction: takeAction
+    suicideCheck: suicideCheck,
 }

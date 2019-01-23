@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, AsyncStorage } from 'react-native';
 import moment from 'moment';
 import 'moment-timezone';
+import Icon from 'react-native-vector-icons/Entypo';
 import * as Animatable from 'react-native-animatable';
 
 class Result extends Component {
@@ -40,13 +41,13 @@ class Result extends Component {
 
     determineTriangle = (prevSeverity, severity) => {
         if (prevSeverity === null || prevSeverity === severity) {
-            return < Text > No Change</Text>
+            return < Icon size={37} color='black' name={'minus'} />
         }
         else if (prevSeverity > severity) {
-            return < Text > Down </Text>
+            return < Icon size={37} color='green' name={'triangle-down'} />
         }
         else if (prevSeverity < severity) {
-            return < Text > Up </Text>
+            return < Icon size={37} color='red' name={'triangle-up'} />
         }
     }
 

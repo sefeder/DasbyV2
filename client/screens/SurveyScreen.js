@@ -72,12 +72,15 @@ export default class SurveyScreen extends Component {
                     <View>
                         {this.showAnsers()}
                     </View>
-                    {this.state.currentChoice !==0 &&
+                    {this.state.currentChoice !==0 ?
                     <TouchableHighlight onPress={() => this.handleAnswerSubmit(this.state.currentChoice, this.state.currentQuestion)} style={styles.nextQuestionButton}>
                         <Text style={styles.nextText}>
                             Next
                         </Text>
                     </TouchableHighlight>
+                    :
+                    <View style={{height: 60}}>
+                    </View>
                     }
                 </View>
                 }
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     selectedButton: {
-        backgroundColor: 'blue',
-        borderRadius: 40,
+        backgroundColor: '#810000',
+        borderRadius: 10,
         width: 300,
         height: 80,
         alignItems: 'center',
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     unselectedButton: {
         backgroundColor: 'grey',
         opacity: .9,
-        borderRadius: 40,
+        borderRadius: 10,
         width: 300,
         height: 80,
         alignItems: 'center',
@@ -125,7 +128,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 20
     },
     text: {
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
         marginBottom: 30
     },
     nextQuestionButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#810000',
         borderRadius: 40,
         width: 80,
         height: 50,
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
     },
     nextText: {
         color: 'white',
-        fontWeight: 'bold',
         fontSize: 20
     }
 });

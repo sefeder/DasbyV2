@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, View,
 import { Chance } from 'chance';
 import virgil from '../utils/virgilUtil';
 import api from '../utils/api';
-import { Picker } from 'react-native-woodpicker';
+import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/Ionicons';
 export default class SignUpScreen extends Component {
 
@@ -81,6 +81,16 @@ export default class SignUpScreen extends Component {
     }
 
     render() {
+        const inputIOS = {
+            borderColor: '#810000',
+            borderWidth: 2,
+            borderRadius: 10,
+            marginBottom: 30,
+            height: 50,
+            width: 300,
+            paddingLeft: 15,
+            paddingRight: 15
+    }
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <KeyboardAvoidingView enabled behavior="padding" style={styles.app} keyboardVerticalOffset={64}> 
@@ -95,18 +105,42 @@ export default class SignUpScreen extends Component {
                                 >
                                     Role:
                                 </Text>
-                                <Picker
-                                    onItemChange={this.handleChange}
-                                    value={this.state.roleInput}
-                                    style = { styles.textInput }
+                                <RNPickerSelect
+                                    placeholder={{
+                                        label: 'Please select a role',
+                                        value: null,
+                                        color: 'rgba(32, 32, 32, 0.3)',
+                                    }}
                                     items={[
-                                        { label: "Please select a role", value: null },
-                                        { label: "User", value: "user" },
-                                        { label: "Admin", value: "admin" }
+                                        {
+                                            label: 'User',
+                                            value: 'user',
+                                        },
+                                        {
+                                            label: 'Admin',
+                                            value: 'admin',
+                                        },
                                     ]}
-                                    item={{label: "Please select a role", value: null}}
-                                    placeholder={'Please select a role'}
-                                    androidPickerMode="dropdown"
+                                    onValueChange={(value) => {
+                                        this.setState({
+                                            roleInput: value,
+                                        });
+                                    }}
+                                    style={{inputIOS:
+                                        {
+                                            color: 'black',
+                                            borderColor: '#810000',
+                                            borderWidth: 2,
+                                            borderRadius: 10,
+                                            marginBottom: 30,
+                                            height: 50,
+                                            width: 300,
+                                            paddingLeft: 15,
+                                            paddingRight: 15
+                                        }
+                                    }}
+                                    value={this.state.roleInput}
+                                    placeholderTextColor="rgba(32, 32, 32, 0.3)"
                                 />
                             </View>
                             {this.state.roleInput === 'admin' && 

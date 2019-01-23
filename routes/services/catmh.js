@@ -7,7 +7,7 @@ const Results = require("../../models/results")
 // var Interview = require("../models/interview");
 // var Result = require("../models/result");
 // var DasbyActions = require('../dasbyActions')
-// var suicideInterventionModule = require("../dasby_modules/suicideInterventionModule");
+const suicideInterventionModule = require("../../dasbyLogic/suicideInterventionModule");
 
 /************************************************
  Init 
@@ -62,6 +62,11 @@ module.exports = {
             };
     
             // Step 1. Send Answer Choice
+            
+            // check for suicide trigger
+            suicideInterventionModule.suicideCheck(currentQuestion, choice, userUpi)
+
+            // continue sending response
             sendAnswers(cookies, currentQuestion.questionID, choice)
             .then(body => {
                 console.log(body)
@@ -197,9 +202,9 @@ sendAnswers = (cookies, questionId, response) => {
     
         const j = request.jar();
         const jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
-        const awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
+        const awselbCookie = request.cookie("AWSELB=" + cookies.AWSELB);
         j.setCookie(jsessionCookie, url);
-        j.setCookie(awselbCokkie, url);
+        j.setCookie(awselbCookie, url);
     
         const seconds = new Date().getTime() / 1000;
         const parameters = JSON.stringify({
@@ -244,9 +249,9 @@ getItem = (cookies, callback) => {
     
         const j = request.jar();
         const jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
-        const awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
+        const awselbCookie = request.cookie("AWSELB=" + cookies.AWSELB);
         j.setCookie(jsessionCookie, url);
-        j.setCookie(awselbCokkie, url);
+        j.setCookie(awselbCookie, url);
     
         request.get({
             headers: {
@@ -459,9 +464,9 @@ function saveResults(userUpi, currentQuestion) {
 
         const j = request.jar();
         const jsessionCookie = request.cookie("JSESSIONID=" + cookies.JSESSIONID);
-        const awselbCokkie = request.cookie("AWSELB=" + cookies.AWSELB);
+        const awselbCookie = request.cookie("AWSELB=" + cookies.AWSELB);
         j.setCookie(jsessionCookie, url);
-        j.setCookie(awselbCokkie, url);
+        j.setCookie(awselbCookie, url);
 
         request.get({
             headers: {

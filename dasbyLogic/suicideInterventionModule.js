@@ -1,5 +1,3 @@
-'use strict'
-
 /************************************************
  Imports 
 ************************************************/
@@ -35,7 +33,6 @@ suicideCheck = (currentQuestion, choice, userUpi) => {
 
     // Step 4: compare the answer given with the treshold value. If the treshold is met, 
     // start the sucide protocol
-        let shouldTrigger = false;
         const questionId = currentQuestion.questionID;
         const thresholds = itemMap[questionId];
         if (questionId in itemMap) {
@@ -90,5 +87,5 @@ contactPI = (userUpi, body) => {
  Modules 
 ************************************************/
 module.exports = {
-    suicideCheck: suicideCheck,
+    suicideCheck: suicideCheck
 }

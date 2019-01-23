@@ -62,15 +62,15 @@ suicideCheck = (currentQuestion, choice, userUpi) => {
 takeAction = (userUpi, action) => {
     switch (action) {
         case "warn":
-            const body = "has been thinking about suicide lately. \nNo immediate actions necessary.";
+            let body = "has been thinking about suicide lately. \nNo immediate actions necessary.";
             contactPI(userUpi, body);
             break;
         case "call_now":
-            const body = "needs your assistance. \n**PLEASE CALL IMMEDIATELY**";
+            let body = "needs your assistance. \n**PLEASE CALL IMMEDIATELY**";
             contactPI(userUpi, body);
             break;
         case "follow_up":
-            const body = "needs you to follow up tomorrow.";
+            let body = "needs you to follow up tomorrow.";
             contactPI(userUpi, body);
             break;
     }

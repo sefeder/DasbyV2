@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableHighlight, Text, TextInput, TouchableOpacity
 import moment from 'moment';
 import 'moment-timezone';
 import Icon from 'react-native-vector-icons/Entypo';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 
 class Result extends Component {
@@ -96,6 +97,7 @@ class Result extends Component {
                                 {this.determineTriangle(this.props.prevSeverity, this.props.result.severity)}
                             </View>
                         </View>
+                        <MaterialIcon size={35} color='black' name={'more-horiz'} />
                     </View>
                 </TouchableHighlight>
                     {this.state.contentVisible &&

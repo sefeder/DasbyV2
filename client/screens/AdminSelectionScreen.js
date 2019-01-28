@@ -86,7 +86,8 @@ export default class AdminSelectionScreen extends Component {
 
                         {this.state.channels.filter(this.channelFilterCriteria).map((ChannelDescriptor, index) => {
                             return (
-                                <TouchableHighlight 
+                                <TouchableHighlight
+                                    underlayColor={'rgba(255, 255, 255, 0)'}
                                     key={index} 
                                     style={styles.button} 
                                     onPress={() => this.channelButtonHandler(ChannelDescriptor)}

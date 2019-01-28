@@ -60,13 +60,6 @@ export default class InfoScreen extends Component {
                             style={styles.webView}
                         />
                     </View>
-                    <Button
-                        onPress={() => {
-                            AsyncStorage.clear()
-                            this.props.navigation.navigate('LogInScreen')
-                        }}
-                        title="Log Out"
-                    />
                 </ScrollView>
                 <MenuBar navigation={this.props.navigation} screen={'info'}/>
             </KeyboardAvoidingView>

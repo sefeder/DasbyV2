@@ -3,10 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>application-identifier</key>
-	<string>9MCY9G2ZZ3.org.reactjs.native.example.dasbytest</string>
-	<key>keychain-access-groups</key>
-	<array>
-		<string>9MCY9G2ZZ3.org.reactjs.native.example.dasbytest</string>
-	</array>
+	<string>8ZLMF6ASL9.org.reactjs.native.dasbytest</string>
+	<key>com.apple.developer.default-data-protection</key>
+	<string>NSFileProtectionComplete</string>
 </dict>
 </plist>

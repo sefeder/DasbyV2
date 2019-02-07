@@ -139,102 +139,6 @@ import Svg from 'react-native-svg'
             <KeyboardAvoidingView style={styles.app}>
                 <View style={styles.container}>
                     <VictoryChart
-                        containerComponent={
-                            <VictoryVoronoiContainer
-                                // activateData={false}
-                                // radius={100}
-                                voronoiDimension="x"
-                                onTouchStart={() => this.setState({ lockedOut: true})}
-                                onTouchEnd={() => this.setState({ lockedOut: false })}
-                                onActivated={this.handlePointTouch}
-
-                            />
-                        }>
-                        <VictoryAxis
-                            independentAxis
-                            tickFormat={(t) => `${moment(t).format('MM/DD/YY')}`}
-                            style={{
-                                tickLabels: {
-                                    angle: -38,
-                                    fontSize: 14,
-                                    verticalAnchor: 'start',
-                                    padding: 18
-                                }
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis
-                            label="Severity"
-                            style={{
-                                axisLabel: {
-                                    fontSize: 18,
-                                },
-                                tickLabels: {
-                                    padding: 3
-                                }
-                            }}
-                        />
-                        <VictoryStack
-                        disable={true}
-                        >
-                            <VictoryArea
-                                data={[
-                                    { x: 0, y: 49 },
-                                    { x: this.state.results === null ? 1 : this.state.results.length + 1, y: 49 },
-                                ]}
-                                style={{ data: { fill: "rgba(156, 201, 241, 1)" } }} />
-
-                            <VictoryArea
-                                data={[
-                                    { x: 0, y: 16 },
-                                    { x: this.state.results === null ? 1 : this.state.results.length + 1, y: 16 },
-                                ]}
-                                style={{ data: { fill: "rgba(90, 150, 240, 1)" } }} />
-                            <VictoryArea
-                                data={[
-                                    { x: 0, y: 10 },
-                                    { x: this.state.results === null ? 1 : this.state.results.length + 1, y: 10 },
-                                ]}
-                                style={{ data: { fill: "rgba(48, 114, 177, 1)" } }} />
-                            <VictoryArea
-                                data={[
-                                    { x: 0, y: 25 },
-                                    { x: this.state.results === null ? 1 : this.state.results.length + 1, y: 25 },
-                                ]}
-                                style={{ data: { fill: "rgba(11, 90, 167, 1)" } }} />
-                        </VictoryStack>
-                        {this.state.dataArray.length > 0 && <VictoryGroup
-                            disable={true}
-                            width={Dimensions.get('window').width * .96}
-                            data={this.state.dataArray}
-                            x="date"
-                            y="severity"
-                        >
-                            <VictoryLine
-                            />
-                            <VictoryScatter
-                            // style={{
-                            //     data: {
-                            //         fill: (d) => (this.state.currentPoints[0] && d.date === this.state.currentPoints[0].date) ?  "blue" : "grey",
-                            //     }
-                            // }}
-                            />
-                        </VictoryGroup>}
-                        {/* <VictoryGroup>
-                            <VictoryLine
-                                style={{
-                                    data: { stroke: "yellow", strokeWidth: 1 },
-                                    labels: { fill: 'yellow' }
-                                }}
-                                labels={["        avg"]}
-                                data={[
-                                    { x: 0, y: this.state.averageSeverity },
-                                    { x: this.state.results === null ? 1 : this.state.results.length + 1, y: this.state.averageSeverity }
-                                ]}
-                            />
-                        </VictoryGroup> */}
-                    </VictoryChart>
-                    {/* <VictoryChart
                         style={{
                             alignItems: 'stretch'
                         }}
@@ -320,9 +224,8 @@ import Svg from 'react-native-svg'
                             x="date"
                             y="severity"
                             />
-                        </VictoryChart> */}
-                        
-                    {/* </ScrollView> */}
+                        </VictoryChart>
+                    
                 </View>
                 <ScrollView style={{flex:1}}>
                     { this.state.results && this.state.results.map((result, idx, resultArray) => {
@@ -352,7 +255,7 @@ const styles = StyleSheet.create({
         flex: 1.2,
         justifyContent: "center",
         alignItems: "stretch",
-        backgroundColor: '#FD8A8A',
+        backgroundColor: 'white',
         shadowColor: "#000000",
         shadowOpacity: 0.8,
         shadowRadius: 7,

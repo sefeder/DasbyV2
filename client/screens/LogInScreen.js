@@ -9,11 +9,14 @@ export default class LogInScreen extends Component {
         emailInput: null,
         passwordInput: null,
         hiddenPass: true,
+        buttonLockout: false
     }
     viewPass = () => {
         this.setState({hiddenPass: !this.state.hiddenPass})
     }
     submitLogIn = () => {
+        if (this.state.buttonLockout) {return;}
+        this.setState({buttonLockout: true})
         api.logIn({
             email: this.state.emailInput,
             password: this.state.passwordInput
@@ -21,12 +24,12 @@ export default class LogInScreen extends Component {
             .then(res => {
                 if (!res.status && res.message === "invalid email") {
                     console.log('that email is invalid')
-                    this.setState({emailInput: '', passwordInput: ''})
+                    this.setState({emailInput: '', passwordInput: '', buttonLockout: false})
                     return;
                 }
                 if (!res.status && res.message === "password does not match") {
                     console.log('that password does not match that email')
-                    this.setState({ emailInput: '', passwordInput: '' })
+                    this.setState({ emailInput: '', passwordInput: '', buttonLockout: false})
                     return;
                 }
                 if (res.user.role === "user"){

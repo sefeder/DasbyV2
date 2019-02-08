@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 export default class SignUpScreen extends Component {
 
     state = {
+        buttonLockout: false,
         emailInput: null,
         passwordInput: null,
         firstInput: null,
@@ -29,10 +30,45 @@ export default class SignUpScreen extends Component {
     }
 
     submitSignUp = () => {
+        if (this.state.buttonLockout) { return; }
+        console.log('Ow that hurt!!')
+        this.setState({ buttonLockout: true })
 
         //need signup validation here
-        if (this.state.roleInput === null) {
+
+        if (!this.state.emailInput) {
+            console.log('Please enter an email')
+            this.setState({
+                buttonLockout: false
+            })
+            return;
+        }
+        if (!this.state.passwordInput) {
+            console.log('Please enter a password')
+            this.setState({
+                buttonLockout: false
+            })
+            return;
+        }
+        if (!this.state.firstInput) {
+            console.log('Please enter a first name')
+            this.setState({
+                buttonLockout: false
+            })
+            return;
+        }
+        if (!this.state.lastInput) {
+            console.log('Please enter a last name')
+            this.setState({
+                buttonLockout: false
+            })
+            return;
+        }
+        if (!this.state.roleInput) {
             console.log('Please enter a role')
+            this.setState({
+                buttonLockout: false
+            })
             return;
         }
         if (this.state.roleInput === 'admin' && this.state.adminCodeInput !== 'Admin') {
@@ -42,7 +78,8 @@ export default class SignUpScreen extends Component {
                 passwordInput: null,
                 firstInput: null,
                 lastInput: null,
-                adminCodeInput: null
+                adminCodeInput: null,
+                buttonLockout: false
             })
             return
         }

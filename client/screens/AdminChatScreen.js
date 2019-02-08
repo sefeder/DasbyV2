@@ -26,6 +26,15 @@ export default class AdminChatScreen extends Component {
         spinnerVisible: true
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params.adminInfo !== this.props.navigation.state.params.adminInfo) {
+            this.setState({ adminInfo: nextProps.navigation.state.params.adminInfo })
+        }
+        if (nextProps.navigation.state.params.channelDescriptor !== this.props.navigation.state.params.channelDescriptor) {
+            this.setState({ channelDescriptor: nextProps.navigation.state.params.channelDescriptor })
+        }
+    }
+
     componentDidMount() {
         const startTime = Date.now();
         console.log("----------------------------------------------------------")

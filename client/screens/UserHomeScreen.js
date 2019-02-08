@@ -27,6 +27,14 @@ export default class UserHomeScreen extends Component {
         isQrVisible: true,
         spinnerVisible: true
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params.userInfo.user !== this.props.navigation.state.params.userInfo.user) {
+            this.setState({ userInfo: nextProps.navigation.state.params.userInfo.user})
+        }
+        if (nextProps.navigation.state.params.newUser !== this.props.navigation.state.params.newUser) {
+            this.setState({ newUser: nextProps.navigation.state.params.newUser})
+        }
+    }
 
     componentDidMount() {
         const startTime = Date.now();
